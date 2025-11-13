@@ -14,15 +14,24 @@ export function useServerErrors<T extends Record<string, any> = any>(
     if (Object.keys(grouped).length > 0) {
       setServerErrors(grouped);
     }
-    
+
     // Erros de rede e outros
     if (error.response) {
       toast.error(error.response.data.message || "Erro do servidor.");
     } else if (error.request) {
       toast.error("Sem resposta do servidor.");
     } else {
-      toast.error("Erro desconhecido.");
+      if(grouped.global){
+        const messages = grouped.global as String[];
+        messages.forEach( message => {
+          toast.error(message);
+        })
+      }else{
+        toast.error("Erro desconhecido.");
+      }
     }
+
+    
   }
 
   // Remove erros de um campo específico

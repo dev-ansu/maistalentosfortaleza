@@ -7,33 +7,43 @@ import { Input, Field, Stack, Button, Center, Text } from "@chakra-ui/react"
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
+import { PasswordInput } from "@/components/ui/password-input";
+import { ServerErrors } from "@/components/ui/ServerErrors";
+import { useServerErrors } from "@/hooks/useServerErrors";
 
 export const LoginForm = ()=>{
     const { signIn } = useAuthContext();
-    const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginFormType>({
+    const { register, handleSubmit,watch, formState: { errors, isSubmitting }} = useForm<LoginFormType>({
         mode: "all",
         criteriaMode: "all",
         resolver: zodResolver(LoginSchema)
     });
-
+    const { serverErrors, handleServerError } = useServerErrors(watch);
+    
     const onSubmit = async (data: LoginFormType) => {
-        await signIn(data);
+        try {
+            await signIn(data);
+        } catch (errors: any) {
+            handleServerError(errors)
+        }
     };
 
     return(
         <form onSubmit={handleSubmit(onSubmit)}>
             <Stack>
 
-                <Field.Root invalid={!!errors.email}>
+                <Field.Root invalid={!!errors.email || !!serverErrors.email}>
                     <Field.Label>E-mail</Field.Label>
                     <Input {...register("email")} placeholder="Digite seu e-mail"/>
                     <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+                    <ServerErrors serverErrors={serverErrors} field="email"/>
                 </Field.Root>
                 
-                <Field.Root invalid={!!errors.password}>
+                <Field.Root invalid={!!errors.password || !!!!serverErrors.password}>
                     <Field.Label>Senha</Field.Label>
-                    <Input {...register("password")} type="password" placeholder="********" />
+                    <PasswordInput {...register("password")} placeholder="********" />
                     <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+                    <ServerErrors serverErrors={serverErrors} field="password"/>
                 </Field.Root>
 
                 <Button background="button.cta"

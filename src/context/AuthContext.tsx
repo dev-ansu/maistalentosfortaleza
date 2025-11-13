@@ -70,19 +70,13 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             Router.push("/dashboard");
 
         }catch(error: any){
-            if (error.response) {
-                // Erro vindo do servidor (com status e mensagem)
-                console.error("Erro do backend:", error.response.data.message);
-                console.error("Status HTTP:", error.response.status);
-                toast.error(error.response.data.message)
-            } else if (error.request) {
-                // Servidor não respondeu
-                console.error("Sem resposta do servidor:", error.request);
-                toast.error("Sem resposta do servidor.")
+            if (error.response && error.response.data.errors) {
+                // express-validator retorna normalmente um array de erros
+                throw error.response.data.errors;
+            } else if (error.response?.data?.message) {
+                throw [{ path: "global", msg: error.response.data.message }];
             } else {
-                // Erro na configuração da requisição
-                console.error("Erro desconhecido:", error.message);
-                toast.error("Erro desconhecido ao tentar entrar.")
+                throw [{ path: "global", msg: "Erro inesperado. Tente novamente." }];
             }
         }
     }
