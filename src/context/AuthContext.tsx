@@ -1,7 +1,7 @@
 import { api } from "@/services/apiClient";
 import Router from "next/router";
-import { destroyCookie, setCookie } from "nookies";
-import { createContext, ReactNode, useState, useContext } from "react"
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { createContext, ReactNode, useState, useContext, useEffect } from "react"
 import { toast } from "react-toastify";
 import { COOKIE_NAME, DEFAULT_REDIRECT, TOKEN_MAX_AGE } from "@/constants";
 
@@ -19,6 +19,24 @@ interface UserProps{
     email: string;
     token: string;
     isSuperAdmin: boolean;
+    candidate?: CandidateProps;
+}
+
+interface CandidateProps{
+    id: string;
+    userId: string;
+    birthDate: Date | string;
+    summary: string;
+    resumeUrl?: string;
+    phone: string;
+    whatsapp: string;  
+    stateId: string;
+    cityId: string;
+    // education: Education[];
+    // courses: Course[]
+    // languages: Language[]
+    // experiences: Experience[]
+    // applications: Application[]
 }
 
 export const AuthContext = createContext({} as AuthContenxtData) 
@@ -50,6 +68,27 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const [user, setUser] = useState<UserProps | null>(null);
     const isAuthenticated = !!user;
     
+    useEffect(() => {
+        const { [COOKIE_NAME]: token} = parseCookies();
+        if(token){
+            api.get("/me").then( (response) => {
+                const { data } = response.data;
+       
+                setUser({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    isSuperAdmin: data.isSuperAdmin,
+                    candidate: data.candidate,
+                    token,
+                });
+    
+            }).catch(()=>{
+                signOut();
+            });
+        }
+    }, [])
+
     const signIn = async({ email, password }: SignInProps)=>{
         try{
             const response = await api.post("/session", {
