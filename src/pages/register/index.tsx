@@ -1,4 +1,5 @@
 import { RegisterForm } from "@/components/Authentication/Register/Index";
+import { canSSRGuest } from "@/utils/canSSRGuest";
 import { Flex} from "@chakra-ui/react"
 import Head from "next/head";
 
@@ -18,3 +19,9 @@ export default function Register(){
     )
 
 }
+
+export const getServerSideProps = canSSRGuest(async (ctx)=>{
+    return{
+        props: {}
+    }
+})

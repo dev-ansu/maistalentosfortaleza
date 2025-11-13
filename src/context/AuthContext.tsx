@@ -3,6 +3,7 @@ import Router from "next/router";
 import { destroyCookie, setCookie } from "nookies";
 import { createContext, ReactNode, useState, useContext } from "react"
 import { toast } from "react-toastify";
+import { COOKIE_NAME, DEFAULT_REDIRECT, TOKEN_MAX_AGE } from "@/constants";
 
 interface AuthContenxtData{
     user: UserProps | null;
@@ -37,7 +38,7 @@ interface SignUpProps extends SignInProps{
 
 export const signOut = ()=>{
     try{
-        destroyCookie(null, '@maistalentos.token', { path: "/" })
+        destroyCookie(null, COOKIE_NAME, { path: "/" })
         Router.push("/login")
     }catch(err){
         
@@ -56,8 +57,8 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             });
             console.log(response.data.data)
             const {id, name, isSuperAdmin, token} = response.data.data;
-            setCookie(undefined, '@maistalentos.token', token, {
-                maxAge: 60 * 60 * 24 * 30, // expira em 1 mês
+            setCookie(undefined, COOKIE_NAME, token, {
+                maxAge: TOKEN_MAX_AGE, // expira em 1 mês
                 path: "/"            
             });
             
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`
             
-            Router.push("/dashboard");
+            Router.push(DEFAULT_REDIRECT);
 
         }catch(error: any){
             if (error.response && error.response.data.errors) {
@@ -107,7 +108,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
 
     const logoutUser = async()=>{
         try{
-            destroyCookie(null, "@maistalentos.token", {path: "/"})
+            destroyCookie(null, COOKIE_NAME, {path: "/"})
             Router.push("/login")
             setUser(null);
         }catch(err){
