@@ -1,3 +1,4 @@
+import { SemCurriculo } from "@/components/ui/SemCurriculo/Index";
 import { Sidebar } from "@/components/ui/sidebar/Index";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
@@ -11,6 +12,7 @@ export default function Dashboard(){
                 <title> Mais Talentos Fortaleza - Dashboard</title>
             </Head>
             <Sidebar>
+                <SemCurriculo />
                 <Flex>
                     <Text>Bem-vindo ao dashboard</Text>
                 </Flex>

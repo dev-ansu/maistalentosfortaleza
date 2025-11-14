@@ -1,9 +1,11 @@
-import { api } from "@/services/apiClient";
+import { getAPIClient } from "@/services/apiClient";
 import Router from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, ReactNode, useState, useContext, useEffect } from "react"
 import { toast } from "react-toastify";
 import { COOKIE_NAME, DEFAULT_REDIRECT, TOKEN_MAX_AGE } from "@/constants";
+import { refreshAPIClient } from "@/services/apiClient";
+
 
 interface AuthContenxtData{
     user: UserProps | null;
@@ -11,6 +13,8 @@ interface AuthContenxtData{
     signIn: (credentials: SignInProps) => Promise<void>;
     signUp: (data: SignUpProps) => Promise<void>;
     logoutUser: () => Promise<void>;
+    haveResume: boolean;
+    handleHaveResume: ()=> void;
 }
 
 interface UserProps{
@@ -57,7 +61,8 @@ interface SignUpProps extends SignInProps{
 export const signOut = ()=>{
     try{
         destroyCookie(null, COOKIE_NAME, { path: "/" })
-        Router.push("/login")
+        refreshAPIClient();
+        Router.push("/login");
     }catch(err){
         
         console.log("Erro ao sair.")
@@ -66,12 +71,25 @@ export const signOut = ()=>{
 
 export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const [user, setUser] = useState<UserProps | null>(null);
+    const [haveResume, setHaveResume] = useState(!!user?.candidate)
     const isAuthenticated = !!user;
     
     useEffect(() => {
+        if (user?.candidate) {
+            setHaveResume(!!user?.candidate);
+        } else {
+            setHaveResume(false);
+        }
+    }, [user?.candidate]); // <-- Atualiza sempre que o candidate mudar
+
+    const handleHaveResume = () => {
+        setHaveResume(prev => !prev);
+    };
+
+    useEffect(() => {
         const { [COOKIE_NAME]: token} = parseCookies();
         if(token){
-            api.get("/me").then( (response) => {
+            getAPIClient().get("/me").then( (response) => {
                 const { data } = response.data;
        
                 setUser({
@@ -87,26 +105,31 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 signOut();
             });
         }
-    }, [])
+    }, []);
 
     const signIn = async({ email, password }: SignInProps)=>{
         try{
-            const response = await api.post("/session", {
+            const response = await getAPIClient().post("/session", {
                 email, password
             });
-            console.log(response.data.data)
-            const {id, name, isSuperAdmin, token} = response.data.data;
+     
+            const {id, name, isSuperAdmin, token, candidate} = response.data.data;
+            
             setCookie(undefined, COOKIE_NAME, token, {
                 maxAge: TOKEN_MAX_AGE, // expira em 1 mês
                 path: "/"            
             });
+
             
+
             setUser({
-                id, name, email, isSuperAdmin, token
+                id, name, email, isSuperAdmin, token, candidate
             });
+
+            getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`
             
-            api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            
+            refreshAPIClient();
+
             Router.push(DEFAULT_REDIRECT);
 
         }catch(error: any){
@@ -124,11 +147,9 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const signUp = async( {name, email, password}: SignUpProps)=>{
         try{
             
-            const response = await api.post("/users", {
+            const response = await getAPIClient().post("/users", {
                 name, email, password
             });
-
-            console.log(response);
 
             toast.success("Cadastro feito com sucesso!");
             Router.push("/login");
@@ -149,6 +170,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
         try{
             destroyCookie(null, COOKIE_NAME, {path: "/"})
             Router.push("/login")
+            refreshAPIClient();
             setUser(null);
         }catch(err){
             console.log('ERRO AO SAIR.', err);
@@ -156,7 +178,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     }
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, logoutUser}}>
+        <AuthContext.Provider value={{ user, haveResume, handleHaveResume, isAuthenticated, signIn, signUp, logoutUser}}>
             {children}
         </AuthContext.Provider>
     )

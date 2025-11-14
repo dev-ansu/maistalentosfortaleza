@@ -8,7 +8,7 @@ export default function Register(){
     return(
         <>
             <Head>
-                <title>Mais Talentos Fortaleza - Login</title>
+                <title>Mais Talentos Fortaleza - Registro</title>
             </Head>
             <Flex background="talento.900" height="100vh" alignItems="center" justifyContent="center">
                 <Flex width={640} direction="column" p={14} rounded={8}>

@@ -16,16 +16,14 @@ interface LinkItemsProps{
     name: string;
     icon: IconType;
     route: string;
+    view: boolean;
 }
 
-const LinkItems: LinkItemsProps[] = [
-    { name: 'Home', icon: CiHome, route: "/dashboard"},
-    { name: 'Currículo', icon: IoDocumentTextOutline, route: "/dashboard"},
-    { name: 'Candidaturas', icon: BsSend, route: "/dashboard"},
-]
+
 
 export function Sidebar({children}: {children: ReactNode}){
     const {open, onOpen, onClose} = useDisclosure();
+
     return(
         <Box minH="100vh" bg="talento.900">
             <SidebarContent onClose={onClose}
@@ -58,11 +56,18 @@ interface SidebarProps extends BoxProps{
 }
 
 const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
-    const { logoutUser } = useAuthContext();
+    const { logoutUser, haveResume } = useAuthContext();
 
     const handleLogout = async()=>{
         await logoutUser();
     }
+    
+    const LinkItems: LinkItemsProps[] = [
+        { name: 'Home', icon: CiHome, route: "/dashboard", view: true},
+        { name: 'Currículo', icon: IoDocumentTextOutline, route: "/curriculo", view: haveResume},
+        { name: 'Candidaturas', icon: BsSend, route: "/dashboard", view: true},
+    ]
+    
     
     return(
         <Box
@@ -83,10 +88,14 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
                 </Link>
                 <CloseButton display={{ base: "flex", md:"none"}} onClick={onClose}/>
             </Flex>
-            {LinkItems.map( item => (
-                <NavItem icon={item.icon} route={item.route} key={item.name}>
-                    {item.name}
-                </NavItem>
+            {LinkItems.map( (item: LinkItemsProps) => (
+                <>
+                    {item.view &&
+                        <NavItem icon={item.icon} route={item.route} key={item.name}>
+                            {item.name}
+                        </NavItem>
+                    }
+                </>
             ))}
 
             {/* 🔥 BOTÃO DE SAIR */}

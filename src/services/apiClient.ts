@@ -1,3 +1,11 @@
 import { setupAPIClient } from "./api";
 
-export const api = setupAPIClient();
+let api = setupAPIClient();
+
+export function getAPIClient(ctx?: any) {
+  return setupAPIClient(ctx);
+}
+
+export function refreshAPIClient() {
+  api = setupAPIClient(); // recria a instância com novo token
+}
