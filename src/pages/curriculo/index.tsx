@@ -4,14 +4,42 @@ import { getAPIClient } from "@/services/apiClient";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { PersonalInformation, StateProps } from "./components/PersonalInformation";
+import { PersonalInformation } from "./components/PersonalInformation";
+import { FormProvider, useForm } from "react-hook-form";
+import { personalInfoSchema, PersonalInfoFormData } from "@/validations/curriculo";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CandidateProfile, StateProps } from "@/types/CandidateProfile";
 
-interface CurriculoProps{
-    states: StateProps[],
+export interface PersonalInformationProps{
+    states: StateProps[];
+    candidate: CandidateProfile;
 }
 
-export default function Curriculo({ states }: CurriculoProps){
+
+export default function Curriculo({ states, candidate }: PersonalInformationProps){
     const { user } = useAuthContext();
+    const methods = useForm<PersonalInfoFormData>({
+        mode: "all",
+        criteriaMode:"all",
+        defaultValues: {
+            birthdate: candidate.birthDate
+                ? candidate.birthDate.split("T")[0]
+                : "",
+
+            stateId: candidate.stateId
+                ? [candidate.stateId]
+                : [],
+
+            cityId: candidate.cityId
+                ? [candidate.cityId]
+                : [],
+
+            phone: candidate.phone ?? "",
+            whatsapp: candidate.whatsapp ?? "",
+            summary: candidate.summary,
+        },
+        resolver: zodResolver(personalInfoSchema)
+    });
     
     return(
         <>
@@ -20,10 +48,12 @@ export default function Curriculo({ states }: CurriculoProps){
             </Head>
             <Sidebar>
                 <Flex direction="column" w="full" alignItems="center" justifyContent="center">
-                    <Text fontSize="2xl">
-                        {user?.name}
-                    </Text>
-                    <PersonalInformation states={states}/>
+                    <FormProvider {...methods}>
+                        <Text fontSize="2xl">
+                            {user?.name}
+                        </Text>
+                        <PersonalInformation candidate={candidate} states={states}/>
+                    </FormProvider>
                 </Flex>
             </Sidebar>
         </>
@@ -54,6 +84,8 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     return{
         props:{
             states,
+            userServer: user,
+            candidate: user.candidate,
         }
     }
 });
