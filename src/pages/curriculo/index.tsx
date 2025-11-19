@@ -4,11 +4,14 @@ import { getAPIClient } from "@/services/apiClient";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { PersonalInformation } from "./components/PersonalInformation";
+import { PersonalInformation } from "../../components/Curriculo/PersonalInformation";
 import { FormProvider, useForm } from "react-hook-form";
 import { personalInfoSchema, PersonalInfoFormData } from "@/validations/curriculo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CandidateProfile, StateProps } from "@/types/CandidateProfile";
+
+import { EducationFormData, educationValidationSchema } from "@/validations/education";
+import { Education } from "../../components/Curriculo/Education";
 
 export interface PersonalInformationProps{
     states: StateProps[];
@@ -18,6 +21,11 @@ export interface PersonalInformationProps{
 
 export default function Curriculo({ states, candidate }: PersonalInformationProps){
     const { user } = useAuthContext();
+    const methodsEducation = useForm<EducationFormData>({
+        mode:"all",
+        criteriaMode:"all",
+        resolver: zodResolver(educationValidationSchema)
+    });
     const methods = useForm<PersonalInfoFormData>({
         mode: "all",
         criteriaMode:"all",
@@ -47,12 +55,15 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
                 <title> Mais Talentos Fortaleza - Curríulo</title>
             </Head>
             <Sidebar>
-                <Flex direction="column" w="full" alignItems="center" justifyContent="center">
+                <Flex direction="column" w="full" gap="4" alignItems="center" justifyContent="center">
                     <FormProvider {...methods}>
                         <Text fontSize="2xl">
                             {user?.name}
                         </Text>
                         <PersonalInformation candidate={candidate} states={states}/>
+                    </FormProvider>
+                    <FormProvider {...methodsEducation}>
+                        <Education candidate={candidate} />
                     </FormProvider>
                 </Flex>
             </Sidebar>

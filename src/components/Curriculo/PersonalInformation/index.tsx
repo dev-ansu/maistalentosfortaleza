@@ -2,7 +2,7 @@ import { getAPIClient } from "@/services/apiClient";
 import { PersonalInfoFormData } from "@/validations/curriculo";
 import { Button, createListCollection, Field, Flex, Input, ListCollection, Portal, Select, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
-import { PersonalInformationProps } from "../..";
+import { PersonalInformationProps } from "../../../pages/curriculo";
 import { useServerErrors } from "@/hooks/useServerErrors";
 import { ServerErrors } from "@/components/ui/ServerErrors";
 import { toast } from "react-toastify";
@@ -92,7 +92,7 @@ export const PersonalInformation = ({ states, candidate }: PersonalInformationPr
                             <ServerErrors serverErrors={serverErrors} field="summary"/>
                     </Field.Root>
                     
-                    <Button alignSelf="flex-start" type="submit" _hover={{ background: "orange.600"}} background="orange.400" color="gray.100">
+                    <Button alignSelf="flex-start" type="submit" _hover={{ background: "orange.500"}} background="orange.400" >
                         Salvar Informações pessoais
                     </Button>
                 </Flex>

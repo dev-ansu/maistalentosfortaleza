@@ -1,3 +1,5 @@
+import { EducationFormData } from "@/validations/education";
+
 export interface CandidateProfile{
     id: string;
     userId: string;
@@ -9,7 +11,14 @@ export interface CandidateProfile{
     cityId: string;
     city: CityProps;
     state: StateProps;
+    education: EducationListProps[];
 }
+
+export interface EducationListProps extends Omit<EducationFormData, "degree">{
+    id: string;
+    candidateId: string;
+    degree: string;
+};
 
 export interface StateProps{
     id: string;

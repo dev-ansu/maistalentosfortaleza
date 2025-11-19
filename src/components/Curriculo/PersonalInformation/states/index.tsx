@@ -17,7 +17,7 @@ export interface ListStatesProps{
 
 export const StateItems = ({ states, candidate }: StateItems)=>{
     const {control, formState:{errors}, watch } = useFormContext<PersonalInfoFormData>();
-    const { serverErrors, handleServerError } = useServerErrors(watch);
+    const { serverErrors } = useServerErrors(watch);
         
     return(
         <Field.Root  invalid={!!errors.stateId}>
