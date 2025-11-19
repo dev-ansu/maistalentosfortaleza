@@ -2,7 +2,7 @@ import { Sidebar } from "@/components/ui/sidebar/Index";
 import { useAuthContext } from "@/context/AuthContext";
 import { getAPIClient } from "@/services/apiClient";
 import { canSSRAuth } from "@/utils/canSSRAuth";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Tabs, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import { PersonalInformation } from "../../components/Curriculo/PersonalInformation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -12,6 +12,8 @@ import { CandidateProfile, StateProps } from "@/types/CandidateProfile";
 
 import { EducationFormData, educationValidationSchema } from "@/validations/education";
 import { Education } from "../../components/Curriculo/Education";
+import { LuUser } from "react-icons/lu";
+import { FaSchool } from "react-icons/fa";
 
 export interface PersonalInformationProps{
     states: StateProps[];
@@ -56,15 +58,33 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
             </Head>
             <Sidebar>
                 <Flex direction="column" w="full" gap="4" alignItems="center" justifyContent="center">
-                    <FormProvider {...methods}>
-                        <Text fontSize="2xl">
-                            {user?.name}
-                        </Text>
-                        <PersonalInformation candidate={candidate} states={states}/>
-                    </FormProvider>
-                    <FormProvider {...methodsEducation}>
-                        <Education candidate={candidate} />
-                    </FormProvider>
+                    <Tabs.Root w="full" defaultValue="Informações pessoais">
+                    <Tabs.List>
+                        <Tabs.Trigger value="Informações pessoais">
+                        <LuUser />
+                            Informações pessoais
+                        </Tabs.Trigger>
+                        <Tabs.Trigger value="Escolaridade">
+                        <FaSchool />
+                            Escolaridade
+                        </Tabs.Trigger>
+                    </Tabs.List>
+                        <Tabs.Content value="Informações pessoais">
+                            <FormProvider {...methods}>
+                                <Text fontSize="2xl">
+                                    {user?.name}
+                                </Text>
+                                <PersonalInformation candidate={candidate} states={states}/>
+                            </FormProvider>
+                        </Tabs.Content>
+                        <Tabs.Content value="Escolaridade">
+                            <FormProvider {...methodsEducation}>
+                                <Education candidate={candidate} />
+                            </FormProvider>
+                        </Tabs.Content>
+                    </Tabs.Root>
+              
+                 
                 </Flex>
             </Sidebar>
         </>
