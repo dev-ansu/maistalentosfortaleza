@@ -1,4 +1,4 @@
-import { Tabs, Text } from "@chakra-ui/react"
+import { Flex, Tabs, Text } from "@chakra-ui/react"
 import { FaSchool } from "react-icons/fa"
 import { LuUser } from "react-icons/lu"
 import { MdInterests, MdLanguage, MdWorkHistory } from "react-icons/md"
@@ -6,14 +6,14 @@ import { PiStudentBold } from "react-icons/pi"
 
 export const TabList = ()=>{
     return(
-        <Tabs.List maxW="full">
+        <Tabs.List>
             <Tabs.Trigger title="Informações pessoais" value="Informações pessoais">
                 <LuUser />
-                <Text display={{ base:"none", md:"block" }}> informações pessoais</Text>
+                <Text display={{ base:"none", md:"block" }}>Pessoais</Text>
             </Tabs.Trigger>
             <Tabs.Trigger title="Escolaridade" value="Escolaridade">
                 <FaSchool />
-                <Text display={{ base:"none", md:"block" }}> Escolaridade</Text>
+                <Text display={{ base:"none", md:"block" }}>Escolaridade</Text>
             </Tabs.Trigger>
             <Tabs.Trigger title="Cursos" value="Cursos">
                 <PiStudentBold />

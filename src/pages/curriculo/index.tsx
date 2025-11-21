@@ -82,32 +82,32 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
                     w="full" 
                     defaultValue="Informações pessoais">
                     <TabList />
-                    <Tabs.Content w="full" value="Informações pessoais">
+                    <Tabs.Content w="full" overflow="hidden" value="Informações pessoais">
                         <FormProvider {...methods}>
                             <PersonalInformation userName={user?.name} candidate={candidate} states={states}/>
                         </FormProvider>
                     </Tabs.Content>
-                    <Tabs.Content overflow="hidden" value="Escolaridade">
+                    <Tabs.Content w="full" overflow="hidden" value="Escolaridade">
                         <FormProvider {...methodsEducation}>
                             <Education candidate={candidate} />
                         </FormProvider>
                     </Tabs.Content>
-                    <Tabs.Content w="full" value="Cursos">
+                    <Tabs.Content w="full" overflow="hidden" value="Cursos">
                         <FormProvider {...methodsCurso}>
                             <Course candidate={candidate} />
                         </FormProvider>
                     </Tabs.Content>
-                    <Tabs.Content value="Experiência">
+                    <Tabs.Content w="full" overflow="hidden" value="Experiência">
                         <FormProvider {...methodsExperience}>
                             <Experience candidate={candidate} />
                         </FormProvider>
                     </Tabs.Content>
-                    <Tabs.Content value="Idiomas">
+                    <Tabs.Content w="full" overflow="hidden" value="Idiomas">
                         <FormProvider {...methodsExperience}>
                             <Language candidate={candidate} />
                         </FormProvider>
                     </Tabs.Content>
-                    <Tabs.Content value="Áreas de interesse">
+                    <Tabs.Content w="full" overflow="hidden" value="Áreas de interesse">
                         <FormProvider {...methodsExperience}>
                             <InterestArea candidate={candidate} />
                         </FormProvider>

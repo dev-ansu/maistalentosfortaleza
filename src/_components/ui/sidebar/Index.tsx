@@ -65,7 +65,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     const LinkItems: LinkItemsProps[] = [
         { name: 'Home', icon: CiHome, route: "/dashboard", view: true},
         { name: 'Currículo', icon: IoDocumentTextOutline, route: "/curriculo", view: haveResume},
-        { name: 'Candidaturas', icon: BsSend, route: "/dashboard", view: true},
+        { name: 'Candidaturas', icon: BsSend, route: "/candidaturas", view: true},
     ]
     
     

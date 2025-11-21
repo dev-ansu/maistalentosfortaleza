@@ -62,7 +62,7 @@ export const Course = ( { candidate }: CourseProps )=>{
                         <ServerErrors serverErrors={serverErrors} field="hours"/>
                     </Field.Root>
                 </Stack>
-                <Stack direction={{ base: "column", md: "row" }}>
+                <Stack mt={{ md:"4" }} direction={{ base: "column", md: "row" }}>
                     <Field.Root invalid={!!errors.completionDate}>
                         <Field.Label>Data de conclusão</Field.Label>
                         <Input {...register("completionDate")} placeholder="Data de conclusão" type="date"/>
