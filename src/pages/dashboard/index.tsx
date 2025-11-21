@@ -1,6 +1,6 @@
-import { SemCurriculo } from "@/components/ui/SemCurriculo/Index";
-import { Sidebar } from "@/components/ui/sidebar/Index";
-import { canSSRAuth } from "@/utils/canSSRAuth";
+import { SemCurriculo } from "@/_components/ui/SemCurriculo/Index";
+import { Sidebar } from "@/_components/ui/sidebar/Index";
+import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 

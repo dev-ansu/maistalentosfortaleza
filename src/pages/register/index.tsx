@@ -1,5 +1,5 @@
-import { RegisterForm } from "@/components/Authentication/Register/Index";
-import { canSSRGuest } from "@/utils/canSSRGuest";
+import { RegisterForm } from "@/_components/Authentication/Register/Index";
+import { canSSRGuest } from "@/_utils/canSSRGuest";
 import { Flex} from "@chakra-ui/react"
 import Head from "next/head";
 

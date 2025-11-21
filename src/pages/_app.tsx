@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { system } from "./theme";
 import { ThemeProvider } from "next-themes"
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/_context/AuthContext";
 import { ToastContainer } from "react-toastify";
 
 
