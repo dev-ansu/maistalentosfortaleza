@@ -56,7 +56,7 @@ export const CourseList = ({ courseList, setCourseList }: CourseListPropsCompone
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {courseList.map((item) => {
+          {courseList && courseList.map((item) => {
             return(
             <Table.Row key={item.id}>
               <Table.Cell>

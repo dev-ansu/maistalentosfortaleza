@@ -60,7 +60,7 @@ export const EducationList = ({ educationList, setEducationList }: EducationList
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {educationList.map((item) => {
+          {educationList && educationList.map((item) => {
             const degreeLevel = DEGREE_LEVEL.filter( i => i.id == item.degree)[0];
             return(
             <Table.Row key={item.id}>
