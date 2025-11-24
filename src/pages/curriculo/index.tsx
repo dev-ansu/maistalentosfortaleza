@@ -14,20 +14,23 @@ import { Education } from "../../_components/Curriculo/Education";
 import { Experience } from "@/_components/Curriculo/Experience";
 import { Course } from "@/_components/Curriculo/Course";
 import { Language } from "@/_components/Curriculo/Language";
-import { InterestArea } from "@/_components/Curriculo/InterestAreas";
 import { TabList } from "./_components/TabList";
 import { CourseFormData, createCourseSchema } from "@/_validations/course";
 import { createExperienceSchema, ExperienceFormData } from "@/_validations/experience";
 import { createLanguageSchema, LanguageFormData } from "@/_validations/language";
+import { InterestAreas } from "@/_types/InterestArea";
+import { InterestAreaFormData, interestAreaSchema } from "@/_components/Curriculo/InterestAreas/InterestAreasSelect";
+import { InterestArea } from "@/_components/Curriculo/InterestAreas";
 
-export interface PersonalInformationProps{
+export interface CurriculoProps{
     states: StateProps[];
     candidate: CandidateProfile;
     userName: string | undefined;
+    interestAreas: InterestAreas[];
 }
 
 
-export default function Curriculo({ states, candidate }: PersonalInformationProps){
+export default function Curriculo({ states, candidate, interestAreas }: CurriculoProps){
     const orientation = useBreakpointValue<"horizontal" | "vertical">({
         base: "vertical",
         md: "horizontal",
@@ -47,6 +50,11 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
         mode:"all",
         criteriaMode:"all",
         resolver: zodResolver(createExperienceSchema)
+    });
+    const methodsInterestAreas = useForm<InterestAreaFormData>({
+        mode:"all",
+        criteriaMode:"all",
+        resolver: zodResolver(interestAreaSchema)
     });
     const methodsLanguage = useForm<LanguageFormData>({
         mode:"all",
@@ -116,8 +124,8 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
                         </FormProvider>
                     </Tabs.Content>
                     <Tabs.Content w="full" overflow="hidden" value="Áreas de interesse">
-                        <FormProvider {...methodsExperience}>
-                            <InterestArea candidate={candidate} />
+                        <FormProvider {...methodsInterestAreas}>
+                            <InterestArea candidate={candidate} interestAreas={interestAreas} />
                         </FormProvider>
                     </Tabs.Content>
                     </Tabs.Root>
@@ -132,7 +140,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
 
     const api = getAPIClient(ctx);
     const response = await api.get("/me");
-
+    
     const user = response.data.data;
 
     // Se o usuário NÃO tem currículo → redireciona
@@ -147,12 +155,15 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     
     const statesResponse = await api.get("/state");
     const states = statesResponse.data.data;
+    const interestAreasResponse = await api.get("/interestAreas")
+    const interestAreas = interestAreasResponse.data.data
     
     return{
         props:{
             states,
             userServer: user,
             candidate: user.candidate,
+            interestAreas
         }
     }
 });

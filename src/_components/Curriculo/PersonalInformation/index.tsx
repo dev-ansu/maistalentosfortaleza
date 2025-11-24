@@ -2,14 +2,18 @@ import { getAPIClient } from "@/_services/apiClient";
 import { PersonalInfoFormData } from "@/_validations/curriculo";
 import { Button, createListCollection, Field, Flex, Input, ListCollection, Portal, Select, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
-import { PersonalInformationProps } from "../../../pages/curriculo";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { toast } from "react-toastify";
 import { ListStatesProps, StateItems } from "./states";
 import { CitiesItems } from "./cities";
+import { CandidateProfile, StateProps } from "@/_types/CandidateProfile";
 
-
+interface PersonalInformationProps{
+    states: StateProps[];
+    candidate: CandidateProfile;
+    userName: string | undefined;
+}
 
 export const PersonalInformation = ({ states, userName, candidate }: PersonalInformationProps)=>{
     const { register,handleSubmit, formState:{errors, isSubmitting}, watch} = useFormContext<PersonalInfoFormData>();

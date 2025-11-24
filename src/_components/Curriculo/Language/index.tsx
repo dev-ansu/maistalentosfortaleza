@@ -20,24 +20,24 @@ export const Language = ( { candidate }: LanguageProps )=>{
     const [languageList, setLanguageList] = useState(candidate.languages ?? []);
 
     const onSubmit = async (data: LanguageFormData)=>{
-            const candidateId = candidate.id as string;
-            
-            try{
-                const response = await getAPIClient().post("/candidate/language", {
-                    proficiency: data.proficiency[0],
-                    name: data.name,
-                });
-                setLanguageList((prev) => [...prev, response.data.data])
-                reset();
-                setValue("proficiency", []);
-                clearErrors();
-                clearAllErrors();
-                toast.success(response.data.message);
-            }catch(error: any){
-                handleServerError(error)
-            }
+        const candidateId = candidate.id as string;
         
+        try{
+            const response = await getAPIClient().post("/candidate/language", {
+                proficiency: data.proficiency[0],
+                name: data.name,
+            });
+            setLanguageList((prev) => [...prev, response.data.data])
+            reset();
+            setValue("proficiency", []);
+            clearErrors();
+            clearAllErrors();
+            toast.success(response.data.message);
+        }catch(error: any){
+            handleServerError(error)
         }
+    
+    }
     
     return(
         <Flex direction="column" w="full">
