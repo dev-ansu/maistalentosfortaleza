@@ -13,10 +13,12 @@ import { EducationFormData, educationValidationSchema } from "@/_validations/edu
 import { Education } from "../../_components/Curriculo/Education";
 import { Experience } from "@/_components/Curriculo/Experience";
 import { Course } from "@/_components/Curriculo/Course";
-import { Language } from "@/_components/Curriculo/Languages";
+import { Language } from "@/_components/Curriculo/Language";
 import { InterestArea } from "@/_components/Curriculo/InterestAreas";
 import { TabList } from "./_components/TabList";
 import { CourseFormData, createCourseSchema } from "@/_validations/course";
+import { createExperienceSchema, ExperienceFormData } from "@/_validations/experience";
+import { createLanguageSchema, LanguageFormData } from "@/_validations/language";
 
 export interface PersonalInformationProps{
     states: StateProps[];
@@ -41,9 +43,15 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
         criteriaMode:"all",
         resolver: zodResolver(createCourseSchema)
     });
-    const methodsExperience = useForm({
+    const methodsExperience = useForm<ExperienceFormData>({
         mode:"all",
         criteriaMode:"all",
+        resolver: zodResolver(createExperienceSchema)
+    });
+    const methodsLanguage = useForm<LanguageFormData>({
+        mode:"all",
+        criteriaMode:"all",
+        resolver: zodResolver(createLanguageSchema)
     });
 
     const methods = useForm<PersonalInfoFormData>({
@@ -103,7 +111,7 @@ export default function Curriculo({ states, candidate }: PersonalInformationProp
                         </FormProvider>
                     </Tabs.Content>
                     <Tabs.Content w="full" overflow="hidden" value="Idiomas">
-                        <FormProvider {...methodsExperience}>
+                        <FormProvider {...methodsLanguage}>
                             <Language candidate={candidate} />
                         </FormProvider>
                     </Tabs.Content>

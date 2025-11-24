@@ -15,6 +15,8 @@ export function useServerErrors<T extends Record<string, any> = any>(
       setServerErrors(grouped);
     }
 
+    console.log(grouped);
+
     // Erros de rede e outros
     if (error.response) {
       toast.error(error.response.data.message || "Erro do servidor.");

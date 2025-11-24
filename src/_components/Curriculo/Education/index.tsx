@@ -16,7 +16,7 @@ interface EducationProps{
 
 
 export const Education = ({ candidate }: EducationProps)=>{
-    const { register, reset, control, handleSubmit, formState:{ errors, isSubmitting }, watch} = useFormContext<EducationFormData>()
+    const { register, setValue, reset, control, handleSubmit, formState:{ errors, isSubmitting}, clearErrors ,watch} = useFormContext<EducationFormData>()
     const { serverErrors, handleServerError } = useServerErrors(watch);
     const [educationList, setEducationList] = useState(candidate.education);
 
@@ -40,6 +40,9 @@ export const Education = ({ candidate }: EducationProps)=>{
             });
             setEducationList((prev) => [...prev, response.data.data])
             reset();
+            setValue("degree", []);
+            setValue("currentlyStudying", false);
+            clearErrors();
             toast.success(response.data.message);
         }catch(error: any){
             handleServerError(error)

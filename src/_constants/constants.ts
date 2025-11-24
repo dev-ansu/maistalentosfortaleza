@@ -36,3 +36,11 @@ export const DEGREE_LEVEL = [
         name:'Doutorado',
     },
 ]
+
+export const LANGUAGE_PROFICIENCY = [
+    {id: 'basico',      name: "Básico"},
+    {id: 'intermediario', name: "Intermediário"},
+    {id: 'avancado', name:"Avançado"},
+    {id: 'fluente', name:"Fluente"},
+    {id: 'nativo', name:"Nativo"},
+];
