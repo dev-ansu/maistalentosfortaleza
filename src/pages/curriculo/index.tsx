@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { useAuthContext } from "@/_context/AuthContext";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
-import { Flex, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, Stack, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Head from "next/head";
 import { PersonalInformation } from "../../_components/Curriculo/PersonalInformation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,6 +21,9 @@ import { createLanguageSchema, LanguageFormData } from "@/_validations/language"
 import { InterestAreas } from "@/_types/InterestArea";
 import { InterestAreaFormData, interestAreaSchema } from "@/_components/Curriculo/InterestAreas/InterestAreasSelect";
 import { InterestArea } from "@/_components/Curriculo/InterestAreas";
+import { VerCurriculo } from "./_components/VerCurriculo";
+import Link from "next/link";
+import { IoDocumentAttachOutline } from "react-icons/io5";
 
 export interface CurriculoProps{
     states: StateProps[];
@@ -91,6 +94,9 @@ export default function Curriculo({ states, candidate, interestAreas }: Curricul
                 <title> Mais Talentos Fortaleza - Curríulo</title>
             </Head>
             <Sidebar>
+                <Flex alignItems="center" gap="1" w="max-content" mb="12px"  borderWidth={1} px={3} py={2}>
+                    <IoDocumentAttachOutline /><Link href={`/curriculo/${candidate.id}`}> Ver currículo </Link>
+                </Flex>
                 <Flex direction="column" w="full" gap="4" alignItems="center" justifyContent="center">
                     <Tabs.Root 
                     variant="subtle"
@@ -137,7 +143,7 @@ export default function Curriculo({ states, candidate, interestAreas }: Curricul
 
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
-
+    
     const api = getAPIClient(ctx);
     const response = await api.get("/me");
     

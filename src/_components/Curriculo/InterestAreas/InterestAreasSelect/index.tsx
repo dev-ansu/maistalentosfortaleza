@@ -8,7 +8,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
 export const interestAreaSchema = z.object({
-    id: z.array(z.uuid({message: "Id inválido"}).nonempty({message:"Campo obrigatório"}), {message:"Campo obrigatório."}).length(1, {message: "Campo obrigatório."}),
+    interest: z.array(z.uuid({message: "Id inválido"}).nonempty({message:"Campo obrigatório"}), {message:"Campo obrigatório."}).length(1, {message: "Campo obrigatório."}),
 });
 
 export type InterestAreaFormData = z.infer<typeof interestAreaSchema> 
@@ -25,11 +25,11 @@ export const InterestAreasSelect = ({ interestAreas }: { interestAreas: Interest
     });
 
     return (
-        <Field.Root invalid={!!errors.id || !!serverErrors.id}>
+        <Field.Root invalid={!!errors.interest || !!serverErrors.interest}>
             <Field.Label>Áreas de interesse</Field.Label>
             <Controller 
                 control={control}
-                name="id"
+                name="interest"
                 render={({field}) => (
                         <Select.Root 
                             name={field.name}
@@ -63,8 +63,8 @@ export const InterestAreasSelect = ({ interestAreas }: { interestAreas: Interest
                     </Select.Root>
                 )}
             />
-            <Field.ErrorText>{errors.id?.message}</Field.ErrorText>
-            <ServerErrors serverErrors={serverErrors} field="id"/>
+            <Field.ErrorText>{errors.interest?.message}</Field.ErrorText>
+            <ServerErrors serverErrors={serverErrors} field="interest"/>
             </Field.Root>
     )
 }

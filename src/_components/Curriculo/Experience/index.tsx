@@ -17,7 +17,7 @@ interface ExperienceProps{
 export const Experience = ({ candidate }: ExperienceProps)=>{
     const { register, setValue, reset, control, handleSubmit, formState:{ errors, isSubmitting}, clearErrors ,watch} = useFormContext<ExperienceFormData>()
     const { serverErrors, handleServerError, clearAllErrors } = useServerErrors(watch);
-    const [experienceList, setExperienceList] = useState(candidate.experience ?? []);
+    const [experienceList, setExperienceList] = useState(candidate.experiences ?? []);
 
     const enabled = useController({
         control: control,

@@ -2,9 +2,11 @@ import { CourseFormData } from "@/_validations/course";
 import { EducationFormData } from "@/_validations/education";
 import { ExperienceFormData } from "@/_validations/experience";
 import { LanguageFormData } from "@/_validations/language";
+import { InterestAreas } from "./InterestArea";
 
 export interface CandidateProfile{
     id: string;
+    user: UserProps;
     userId: string;
     birthDate: string;
     summary: string;
@@ -16,9 +18,17 @@ export interface CandidateProfile{
     state: StateProps;
     courses: CourseListProps[];
     education: EducationListProps[];
-    experience: ExperienceListProps[];
+    experiences: ExperienceListProps[];
     languages: LanguageListProps[];
+    candidateInterests: CandidateInterestList[];
 }
+
+export interface CandidateInterestList{
+    id: string;
+    interest: InterestAreas;
+}
+
+
 
 export interface EducationListProps extends Omit<EducationFormData, "degree">{
     id: string;
@@ -45,10 +55,17 @@ export interface LanguageListProps extends Omit<LanguageFormData, "proficiency">
 export interface StateProps{
     id: string;
     name: string;
+    acronym: string;
 }
 
 export interface CityProps{
     id: string;
     name: string;
     stateId: string;
+}
+
+export interface UserProps{
+    id: string;
+    name: string;
+    email: string;
 }
