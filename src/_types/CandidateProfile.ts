@@ -3,6 +3,7 @@ import { EducationFormData } from "@/_validations/education";
 import { ExperienceFormData } from "@/_validations/experience";
 import { LanguageFormData } from "@/_validations/language";
 import { InterestAreas } from "./InterestArea";
+import { CompanyProfile } from "./CompanyProfile";
 
 export interface CandidateProfile{
     id: string;
@@ -21,6 +22,7 @@ export interface CandidateProfile{
     experiences: ExperienceListProps[];
     languages: LanguageListProps[];
     candidateInterests: CandidateInterestList[];
+    company: CompanyProfile;
 }
 
 export enum UserType{'candidate', 'company'}

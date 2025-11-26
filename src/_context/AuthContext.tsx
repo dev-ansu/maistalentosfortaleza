@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { COOKIE_NAME, DEFAULT_REDIRECT, TOKEN_MAX_AGE } from "@/_constants";
 import { refreshAPIClient } from "@/_services/apiClient";
 import { UserType } from "@/_types/CandidateProfile";
+import { CompanyProfile } from "@/_types/CompanyProfile";
 
 
 interface AuthContenxtData{
@@ -25,6 +26,7 @@ interface UserProps{
     token: string;
     isSuperAdmin: boolean;
     candidate?: CandidateProps;
+    company: CompanyProfile;
     userType: 'candidate' | 'company' | undefined;
 }
 
@@ -101,6 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                     email: data.email,
                     isSuperAdmin: data.isSuperAdmin,
                     candidate: data.candidate,
+                    company: data.company,
                     token,
                     userType: data.userType,
                 });
