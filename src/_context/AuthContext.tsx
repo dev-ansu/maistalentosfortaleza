@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 email, password
             });
      
-            const {id, name, isSuperAdmin, token, candidate, userType} = response.data.data;
+            const {id, name, isSuperAdmin, token, candidate, userType, company} = response.data.data;
             
             setCookie(undefined, COOKIE_NAME, token, {
                 maxAge: TOKEN_MAX_AGE, // expira em 1 mês
@@ -130,7 +130,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             
 
             setUser({
-                id, name, email, isSuperAdmin, token, candidate, userType
+                id, name, email, isSuperAdmin, token, candidate, userType, company
             });
 
             getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`

@@ -7,6 +7,7 @@ import { useAuthContext } from "@/_context/AuthContext";
 export const RegisterFormCompany = ()=>{
     const { user } = useAuthContext();
     const { handleSubmit, formState:{ isSubmitting } } = useFormContext<CompanyProfileFormData>();
+    
 
     const onSubmit = (data: CompanyProfileFormData)=>{
         console.log(data)

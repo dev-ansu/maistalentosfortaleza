@@ -15,8 +15,7 @@ export const DadosBasicos = ({ company }: { company: CompanyProfile | undefined}
         control: control,
         name: "isActive",
     });
-    console.log(company)
-    console.log(company?.isActive)
+    
     return(
         <Flex w="full" direction="column">
             <Stack w="full" direction={{ base: "column", md: "row" }}>
