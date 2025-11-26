@@ -1,3 +1,4 @@
+import { UserType } from "../_types/CandidateProfile"
 import { z } from "zod"
 
 export const LoginSchema = z.object({
@@ -12,6 +13,7 @@ export const RegisterSchema = z.object({
     .refine((val) => val.replace(/\s/g, "").length > 0, {
       message: "O nome não pode conter apenas espaços.",
     }),
+    userType: z.array(z.enum(['candidate', 'company'], { message: "Escolha uma opção válida."})),
     email: z.email("Digite um e-mail válido.").trim().toLowerCase(),
     password: z.string("A senha é obrigatória.").trim().nonempty("A senha não pode estar vazia.")
     .min(6, "Míninmo 6 caracteres.")

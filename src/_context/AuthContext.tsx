@@ -5,6 +5,7 @@ import { createContext, ReactNode, useState, useContext, useEffect } from "react
 import { toast } from "react-toastify";
 import { COOKIE_NAME, DEFAULT_REDIRECT, TOKEN_MAX_AGE } from "@/_constants";
 import { refreshAPIClient } from "@/_services/apiClient";
+import { UserType } from "@/_types/CandidateProfile";
 
 
 interface AuthContenxtData{
@@ -24,6 +25,7 @@ interface UserProps{
     token: string;
     isSuperAdmin: boolean;
     candidate?: CandidateProps;
+    userType: 'candidate' | 'company' | undefined;
 }
 
 interface CandidateProps{
@@ -56,6 +58,7 @@ interface SignInProps{
 
 interface SignUpProps extends SignInProps{
     name: string;
+    userType: ('candidate' | 'company')[];
 }
 
 export const signOut = ()=>{
@@ -99,6 +102,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                     isSuperAdmin: data.isSuperAdmin,
                     candidate: data.candidate,
                     token,
+                    userType: data.userType,
                 });
     
             }).catch(()=>{
@@ -113,7 +117,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 email, password
             });
      
-            const {id, name, isSuperAdmin, token, candidate} = response.data.data;
+            const {id, name, isSuperAdmin, token, candidate, userType} = response.data.data;
             
             setCookie(undefined, COOKIE_NAME, token, {
                 maxAge: TOKEN_MAX_AGE, // expira em 1 mês
@@ -123,7 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             
 
             setUser({
-                id, name, email, isSuperAdmin, token, candidate
+                id, name, email, isSuperAdmin, token, candidate, userType
             });
 
             getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -144,11 +148,11 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
         }
     }
 
-    const signUp = async( {name, email, password}: SignUpProps)=>{
+    const signUp = async( {name, email, password, userType}: SignUpProps)=>{
         try{
             
             const response = await getAPIClient().post("/users", {
-                name, email, password
+                name, email, password, userType: userType[0]
             });
 
             toast.success("Cadastro feito com sucesso!");

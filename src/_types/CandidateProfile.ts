@@ -23,6 +23,8 @@ export interface CandidateProfile{
     candidateInterests: CandidateInterestList[];
 }
 
+export enum UserType{'candidate', 'company'}
+
 export interface CandidateInterestList{
     id: string;
     interest: InterestAreas;

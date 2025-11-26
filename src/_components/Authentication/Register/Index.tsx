@@ -1,8 +1,8 @@
 "use client";
 import { RegisterFormType, RegisterSchema } from "@/_validations/authentication";
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Field, Stack, Button, Center, Text  } from "@chakra-ui/react"
+import { Input, Field, Stack, Button, Center, Text, Select, createListCollection, Portal  } from "@chakra-ui/react"
 import {
   PasswordInput,
 } from "@/_components/ui/password-input"
@@ -14,7 +14,7 @@ import { ServerErrors } from "@/_components/ui/ServerErrors";
 
 export const RegisterForm = ()=>{
     const {signUp} = useAuthContext();
-    const { register,handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<RegisterFormType>({
+    const { register, control, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<RegisterFormType>({
         mode: "all",
         criteriaMode: "all",
         resolver: zodResolver(RegisterSchema)
@@ -35,6 +35,13 @@ export const RegisterForm = ()=>{
             handleServerError(errors)
         }
     };
+
+    const userTypes = createListCollection({
+        items: [{userType: 'candidate', name: 'Quero trabalhar'}, {userType: 'company', name: 'Quero contratar'}].map((c) => ({
+            label: c.name,
+            value: c.userType
+        }))
+    });
 
     return(
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -71,6 +78,49 @@ export const RegisterForm = ()=>{
                         ))}
                     </Stack>
                 </Field.Root>
+
+                <Field.Root invalid={!!errors.userType || !!serverErrors.userType}>
+                    <Field.Label>Você quer trabalhar ou contratar?</Field.Label>
+                    <Controller 
+                        control={control}
+                        name="userType"
+                        render={({field}) => (
+                                <Select.Root
+                                    defaultValue={['candidate']} 
+                                    name={field.name}
+                                    value={field.value}
+                                    onValueChange={({ value }) => field.onChange(value)}
+                                    onInteractOutside={() => field.onBlur()}
+                                    collection={userTypes}  
+                                    width="full"
+                                >
+                                <Select.HiddenSelect />
+                                <Select.Control>
+                                    <Select.Trigger>
+                                    <Select.ValueText placeholder="Selecione uma opção" />
+                                        </Select.Trigger>
+                                    <Select.IndicatorGroup>
+                                        <Select.Indicator />
+                                    </Select.IndicatorGroup>
+                                </Select.Control>
+                                <Portal>
+                                    <Select.Positioner>
+                                    <Select.Content>
+                                        {userTypes.items && userTypes.items.map((userType) => (
+                                        <Select.Item item={userType} key={userType.value}>
+                                            {userType.label}
+                                            <Select.ItemIndicator />
+                                        </Select.Item>
+                                        ))}
+                                    </Select.Content>
+                                    </Select.Positioner>
+                                </Portal>
+                            </Select.Root>
+                        )}
+                    />
+                    <Field.ErrorText>{errors.userType?.message}</Field.ErrorText>
+                        <ServerErrors serverErrors={serverErrors} field="userType"/>
+                    </Field.Root>
 
                 <Button background="button.cta"
                     mb={6}

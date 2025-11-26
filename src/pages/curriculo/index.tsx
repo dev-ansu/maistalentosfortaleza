@@ -150,7 +150,16 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const user = response.data.data;
 
     // Se o usuário NÃO tem currículo → redireciona
-    if (!user.candidate) {
+    if (user.userType == 'candidate' && !user.candidate) {
+        return {
+            redirect: {
+                destination: "/dashboard",
+                permanent: false,
+            },
+        };
+    }
+
+    if(user.userType != 'candidate'){
         return {
             redirect: {
                 destination: "/dashboard",

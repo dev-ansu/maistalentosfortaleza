@@ -19,10 +19,10 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
         </Flex>
         <Flex direction="column" w="full">
             <Flex direction="column" w="full" justifyContent="center" alignItems="center">
-                <Text fontSize="4xl" >{candidate.user.name}</Text>
-                <Text>{candidate.user.email}</Text>
-                <Text>{candidate.whatsapp} | {candidate.phone}</Text>
-                <Text>{candidate.city.name}, {candidate.state.acronym}</Text>
+                <Text fontSize="4xl" >{candidate.user?.name}</Text>
+                <Text>{candidate.user?.email}</Text>
+                <Text>{candidate?.whatsapp} | {candidate?.phone}</Text>
+                <Text>{candidate.city?.name}, {candidate.state?.acronym}</Text>
             </Flex>
 
             <Flex w="full" gap="2" direction="column">
@@ -34,7 +34,7 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
 
             <Flex w="full" direction="column">
                  <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Resumo</Text>
-                 <Text>{candidate.summary}</Text>
+                 <Text>{candidate?.summary}</Text>
             </Flex>
 
             <Flex w="full" direction="column">

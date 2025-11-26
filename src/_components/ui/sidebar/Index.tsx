@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import {
   useColorModeValue,
 } from "@/_components/ui/color-mode"
@@ -11,12 +11,13 @@ import {FiMenu, FiSettings} from "react-icons/fi"
 import { IconType } from "react-icons"
 import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
+import { AiFillProfile } from "react-icons/ai";
+import { CgProfile } from "react-icons/cg";
 
 interface LinkItemsProps{
     name: string;
     icon: IconType;
     route: string;
-    view: boolean;
 }
 
 
@@ -52,21 +53,26 @@ export function Sidebar({children}: {children: ReactNode}){
 
 interface SidebarProps extends BoxProps{
     onClose: ()=> void;
-
 }
 
+
+
 const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
-    const { logoutUser, haveResume } = useAuthContext();
+    
+    const { logoutUser, haveResume, user } = useAuthContext();
+    let LinkItems: LinkItemsProps[] = [
+        { name: 'Home', icon: CiHome, route: "/dashboard"},
+    ]
+
 
     const handleLogout = async()=>{
         await logoutUser();
     }
-    
-    const LinkItems: LinkItemsProps[] = [
-        { name: 'Home', icon: CiHome, route: "/dashboard", view: true},
-        { name: 'Currículo', icon: IoDocumentTextOutline, route: "/curriculo", view: haveResume},
-        { name: 'Candidaturas', icon: BsSend, route: "/candidaturas", view: true},
-    ]
+
+
+    if(user?.userType === 'candidate') {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/curriculo"})}
+    if(user?.userType === 'candidate')  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidaturas"})}
+    if(user?.userType === 'company')  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/perfil"})}
     
     
     return(
@@ -89,13 +95,9 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
                 <CloseButton display={{ base: "flex", md:"none"}} onClick={onClose}/>
             </Flex>
             {LinkItems.map( (item: LinkItemsProps) => (
-                <>
-                    {item.view &&
-                        <NavItem icon={item.icon} route={item.route} key={item.name}>
-                            {item.name}
-                        </NavItem>
-                    }
-                </>
+                <NavItem icon={item.icon} route={item.route} key={item.name}>
+                    {item.name}
+                </NavItem>
             ))}
 
             {/* 🔥 BOTÃO DE SAIR */}
