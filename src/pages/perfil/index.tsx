@@ -5,14 +5,22 @@ import { FormProvider, useForm } from "react-hook-form";
 import { RegisterFormCompany } from "./_components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CompanyProfileFormData, companyProfileSchema } from "@/_validations/company_profile";
+import { canSSRAuth } from "@/_utils/canSSRAuth";
+import { StateProps } from "@/_types/CandidateProfile";
+import { getAPIClient } from "@/_services/apiClient";
 
-export default function Perfil(){
+interface PerfilProps{
+    states: StateProps[];
+}
+
+export default function Perfil({ states }: PerfilProps){
     
     const methods = useForm<CompanyProfileFormData>({
         mode:"all",
         criteriaMode:"all",
         resolver: zodResolver(companyProfileSchema)
     });
+    
     return(
         <>
           <Head>
@@ -22,7 +30,7 @@ export default function Perfil(){
                 <Flex w="full" direction="column">
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Dados da empresa</Text>
                     <FormProvider {...methods}>
-                        <RegisterFormCompany />
+                        <RegisterFormCompany states={states} />
                     </FormProvider>
                 </Flex>
             </Sidebar>
@@ -30,3 +38,14 @@ export default function Perfil(){
     )
 }
 
+export const getServerSideProps = canSSRAuth(async (ctx)=>{
+    const api = getAPIClient(ctx);
+    const statesResponse = await api.get("/state");
+    const states = statesResponse.data.data;
+
+    return{
+        props:{
+            states: states,        
+        }
+    }
+});

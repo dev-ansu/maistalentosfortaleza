@@ -5,9 +5,9 @@ import { useFormContext } from "react-hook-form";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { toast } from "react-toastify";
-import { ListStatesProps, StateItems } from "./states";
-import { CitiesItems } from "./cities";
 import { CandidateProfile, StateProps } from "@/_types/CandidateProfile";
+import { ListStatesProps, StateItems } from "@/_components/StateSelect";
+import { CitiesItems } from "@/_components/CitySelect";
 
 interface PersonalInformationProps{
     states: StateProps[];
@@ -18,16 +18,7 @@ interface PersonalInformationProps{
 export const PersonalInformation = ({ states, userName, candidate }: PersonalInformationProps)=>{
     const { register,handleSubmit, formState:{errors, isSubmitting}, watch} = useFormContext<PersonalInfoFormData>();
     const { serverErrors, handleServerError } = useServerErrors(watch);
-
-    const newStates2 = states.map( state => {
-        return {
-            label: state.name,
-            value: state.id,
-        } as ListStatesProps;
-    })
-    const newStates = createListCollection({
-        items: newStates2
-    });
+    
 
     const onSubmit = async (data: PersonalInfoFormData)=>{
         const stateId = data.stateId[0];
@@ -81,10 +72,9 @@ export const PersonalInformation = ({ states, userName, candidate }: PersonalInf
                     </Stack>
                     
                     <Field.Root flexDir="row" w="full">
-                        <StateItems states={newStates} candidate={candidate} />
-                        <CitiesItems candidate={candidate} />
+                        <StateItems states={states} />
+                        <CitiesItems city={candidate.city} />
                     </Field.Root>
-                
 
                     <Field.Root invalid={!!errors.summary}>
                             <Field.Label>Resumo</Field.Label>

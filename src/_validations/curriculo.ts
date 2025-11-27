@@ -20,7 +20,7 @@ const birthdateSchema = z
   }, { message: "É necessário ter pelo menos 14 anos" });
 
 
-const phoneSchema = z
+export const phoneSchema = z
     .string()
     .transform((val) => val.replace(/\D/g, "")) // remove máscara
     .refine((val) => phoneRegex.test(val), {

@@ -7,7 +7,7 @@ import { createListCollection, Field, Portal, Select } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-export const CitiesItems = ({ candidate }: {candidate: CandidateProfile})=>{
+export const CitiesItems = ({ city }: {city: CityProps | undefined})=>{
     const {watch, setValue, control, formState:{errors}} = useFormContext<PersonalInfoFormData>();
     const stateId = watch("stateId"); // <- observa o estado selecionado
     const [cities, setCities] = useState<CityProps[]>([]);
@@ -33,7 +33,11 @@ export const CitiesItems = ({ candidate }: {candidate: CandidateProfile})=>{
                 setLoadingCities(true);
                 const response = await getAPIClient().get(`/city/state/${stateId}`);
                 setCities(response.data.data);
-                setValue("cityId", []); // reseta cidade ao trocar o estado
+                // Só altera a cidade se o usuário não escolheu nenhuma ainda
+                const currentCity = watch("cityId");
+                if (!currentCity || currentCity.length === 0) {
+                    setValue("cityId", city?.id ? [city.id]:[]);
+                }
             } catch (error) {
                 console.error("Erro ao carregar cidades:", error);
             } finally {
@@ -45,12 +49,13 @@ export const CitiesItems = ({ candidate }: {candidate: CandidateProfile})=>{
 }, [stateId, setValue]);
     return (
         <Field.Root invalid={!!errors.cityId}>
-            <Field.Label>Cidade{`${candidate.city?.name ? ": " + candidate.city.name:''}`}</Field.Label>
+            <Field.Label>Cidade{`${city?.name ? ": " + city.name:''}`}</Field.Label>
             <Controller 
                 control={control}
                 name="cityId"
                 render={({field}) => (
-                        <Select.Root 
+                        <Select.Root
+                            defaultValue={city?.id ? [city.id]:[]} 
                             name={field.name}
                             value={field.value}
                             onValueChange={({ value }) => field.onChange(value)}
@@ -85,8 +90,8 @@ export const CitiesItems = ({ candidate }: {candidate: CandidateProfile})=>{
                     </Select.Root>
                 )}
             />
-            <Field.ErrorText>{errors.cityId?.message}</Field.ErrorText>
-                <ServerErrors serverErrors={serverErrors} field="city"/>
-            </Field.Root>
+        <Field.ErrorText>{errors.cityId?.message}</Field.ErrorText>
+            <ServerErrors serverErrors={serverErrors} field="city"/>
+        </Field.Root>
     )
 }

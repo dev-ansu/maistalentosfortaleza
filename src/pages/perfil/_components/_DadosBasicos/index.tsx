@@ -1,12 +1,14 @@
+import { CitiesItems } from "@/_components/CitySelect"
+import { StateItems } from "@/_components/StateSelect"
 import { ServerErrors } from "@/_components/ui/ServerErrors"
 import { useServerErrors } from "@/_hooks/useServerErrors"
-import { CandidateProfile } from "@/_types/CandidateProfile"
+import { StateProps } from "@/_types/CandidateProfile"
 import { CompanyProfile } from "@/_types/CompanyProfile"
 import { CompanyProfileFormData } from "@/_validations/company_profile"
 import { Checkbox, Field, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import { Controller, useController, useFormContext } from "react-hook-form"
 
-export const DadosBasicos = ({ company }: { company: CompanyProfile | undefined})=>{
+export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
     
     const { register, control, formState:{ errors }} = useFormContext<CompanyProfileFormData>();
     const { serverErrors } = useServerErrors();
@@ -14,6 +16,7 @@ export const DadosBasicos = ({ company }: { company: CompanyProfile | undefined}
     const enabled = useController({
         control: control,
         name: "isActive",
+        defaultValue: true,
     });
     
     return(
@@ -27,14 +30,14 @@ export const DadosBasicos = ({ company }: { company: CompanyProfile | undefined}
                 </Field.Root>
                 <Field.Root invalid={!!errors.cnpj || !!serverErrors.cnpj}>
                     <Field.Label>CNPJ</Field.Label>
-                    <Input value={company?.cnpj} {...register("cnpj")} placeholder="Digite o nome do cargo"/>
+                    <Input value={company?.cnpj} {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
                     <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
                     <Field.ErrorText>{errors.cnpj?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="cnpj"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.website || !!serverErrors.website}>
                     <Field.Label>Website</Field.Label>
-                    <Input value={company?.website} {...register("website")} placeholder="Digite o nome do cargo"/>
+                    <Input value={company?.website} {...register("website")} placeholder="Digite o website da empresa (opcional)"/>
                     <Field.HelperText>Opcional</Field.HelperText>
                     <Field.ErrorText>{errors.website?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="website"/>
@@ -54,6 +57,10 @@ export const DadosBasicos = ({ company }: { company: CompanyProfile | undefined}
                     <ServerErrors serverErrors={serverErrors} field="description"/>
                 </Field.Root>
             </Stack>
+            <Field.Root flexDir="row" w="full">
+                <StateItems states={states}  />
+                <CitiesItems city={company?.city} />
+            </Field.Root>
             <Field.Root mt="4">
                 <Controller
                     control={control}

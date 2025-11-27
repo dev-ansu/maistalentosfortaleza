@@ -1,13 +1,12 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { useServerErrors } from "@/_hooks/useServerErrors";
-import { CandidateProfile, CityProps } from "@/_types/CandidateProfile";
+import { StateProps } from "@/_types/CandidateProfile";
 import { PersonalInfoFormData } from "@/_validations/curriculo";
-import { Field, ListCollection, Select, Stack, Portal } from "@chakra-ui/react";
+import { Field, ListCollection, Select, Stack, Portal, createListCollection } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface StateItems{
-    states: ListCollection<ListStatesProps>;
-    candidate: CandidateProfile;
+    states: StateProps[];
 }
 
 export interface ListStatesProps{
@@ -15,9 +14,19 @@ export interface ListStatesProps{
     value: string;
 }
 
-export const StateItems = ({ states, candidate }: StateItems)=>{
+export const StateItems = ({ states }: StateItems)=>{
     const {control, formState:{errors}, watch } = useFormContext<PersonalInfoFormData>();
     const { serverErrors } = useServerErrors(watch);
+
+    const newStates2 = states.map( state => {
+        return {
+            label: state.name,
+            value: state.id,
+        } as ListStatesProps;
+    })
+    const newStates = createListCollection({
+        items: newStates2
+    });
         
     return(
         <Field.Root  invalid={!!errors.stateId}>
@@ -31,7 +40,7 @@ export const StateItems = ({ states, candidate }: StateItems)=>{
                             value={field.value}
                             onValueChange={({ value }) => field.onChange(value)}
                             onInteractOutside={() => field.onBlur()}
-                            collection={states}  
+                            collection={newStates}  
                             width="full"
                         >
                         <Select.HiddenSelect />
@@ -46,7 +55,7 @@ export const StateItems = ({ states, candidate }: StateItems)=>{
                         <Portal>
                             <Select.Positioner>
                             <Select.Content>
-                                {states.items && states.items.map((state) => (
+                                {newStates.items && newStates.items.map((state) => (
                                 <Select.Item item={state} key={state.value}>
                                     {state.label}
                                     <Select.ItemIndicator />
