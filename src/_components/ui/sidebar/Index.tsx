@@ -71,9 +71,9 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     }
 
 
-    if(user?.userType === USER_TYPES.candidate) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
+    if(user?.userType === USER_TYPES.company) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
     if(user?.userType === USER_TYPES.candidate)  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidate/candidaturas"})}
-    if(user?.userType === USER_TYPES.candidate)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
+    if(user?.userType === USER_TYPES.company)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
     
     
     return(

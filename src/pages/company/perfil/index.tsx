@@ -43,21 +43,18 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
 
     const api = getAPIClient(ctx);
 
-    const allowed = await api.get("/check-user-type", {
-        params: {
-            path: "perfil"
-        }
-    });
+    const response = await api.get("/me");
+        
+    const user = response.data.data;
 
-    if(!allowed.data.allowed){
+    if (user.userType != USER_TYPES.company) {
         return {
             redirect: {
                 destination: "/dashboard",
-                permanent: false
-            }
+                permanent: false,
+            },
         };
     }
-
 
     const statesResponse = await api.get("/state");
     const states = statesResponse.data.data;

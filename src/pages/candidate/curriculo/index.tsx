@@ -146,12 +146,12 @@ export default function Curriculo({ states, candidate, interestAreas }: Curricul
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
     
     const api = getAPIClient(ctx);
+
+
     const response = await api.get("/me");
     
     const user = response.data.data;
-
-    // Se o usuário NÃO tem currículo → redireciona
-    if (user.userType == USER_TYPES.candidate && !user.candidate) {
+    if (user.userType != USER_TYPES.candidate){
         return {
             redirect: {
                 destination: "/dashboard",
@@ -160,7 +160,8 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
         };
     }
 
-    if(user.userType != USER_TYPES.candidate){
+    // Se o usuário NÃO tem currículo → redireciona
+    if (user.userType == USER_TYPES.candidate && !user.candidate) {
         return {
             redirect: {
                 destination: "/dashboard",
