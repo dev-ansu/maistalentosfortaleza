@@ -13,6 +13,7 @@ import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
 import { AiFillProfile } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
+import { USER_TYPES } from "@/_constants";
 
 interface LinkItemsProps{
     name: string;
@@ -70,9 +71,9 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     }
 
 
-    if(user?.userType === 'candidate') {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/curriculo"})}
-    if(user?.userType === 'candidate')  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidaturas"})}
-    if(user?.userType === 'company')  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/perfil"})}
+    if(user?.userType === USER_TYPES.candidate) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
+    if(user?.userType === USER_TYPES.candidate)  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidate/candidaturas"})}
+    if(user?.userType === USER_TYPES.candidate)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
     
     
     return(

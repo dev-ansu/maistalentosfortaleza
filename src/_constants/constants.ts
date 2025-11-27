@@ -44,3 +44,5 @@ export const LANGUAGE_PROFICIENCY = [
     {id: 'fluente', name:"Fluente"},
     {id: 'nativo', name:"Nativo"},
 ];
+
+export const USER_TYPES = {company: "company", candidate:"candidate"};

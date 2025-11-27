@@ -49,7 +49,7 @@ export const CitiesItems = ({ city }: {city: CityProps | undefined})=>{
 }, [stateId, setValue]);
     return (
         <Field.Root invalid={!!errors.cityId}>
-            <Field.Label>Cidade{`${city?.name ? ": " + city.name:''}`}</Field.Label>
+            <Field.Label>Cidade</Field.Label>
             <Controller 
                 control={control}
                 name="cityId"

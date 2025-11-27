@@ -8,6 +8,7 @@ import { CompanyProfileFormData, companyProfileSchema } from "@/_validations/com
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { StateProps } from "@/_types/CandidateProfile";
 import { getAPIClient } from "@/_services/apiClient";
+import { USER_TYPES } from "@/_constants";
 
 interface PerfilProps{
     states: StateProps[];
@@ -24,7 +25,7 @@ export default function Perfil({ states }: PerfilProps){
     return(
         <>
           <Head>
-                <title> Mais Talentos Fortaleza - Dashboard</title>
+                <title> Mais Talentos Fortaleza - Perfil</title>
             </Head>
             <Sidebar>
                 <Flex w="full" direction="column">
@@ -39,7 +40,25 @@ export default function Perfil({ states }: PerfilProps){
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
+
     const api = getAPIClient(ctx);
+
+    const allowed = await api.get("/check-user-type", {
+        params: {
+            path: "perfil"
+        }
+    });
+
+    if(!allowed.data.allowed){
+        return {
+            redirect: {
+                destination: "/dashboard",
+                permanent: false
+            }
+        };
+    }
+
+
     const statesResponse = await api.get("/state");
     const states = statesResponse.data.data;
 

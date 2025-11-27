@@ -4,13 +4,13 @@ import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex, Stack, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Head from "next/head";
-import { PersonalInformation } from "../../_components/Curriculo/PersonalInformation";
+import { PersonalInformation } from "../../../_components/Curriculo/PersonalInformation";
 import { FormProvider, useForm } from "react-hook-form";
 import { personalInfoSchema, PersonalInfoFormData } from "@/_validations/curriculo";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CandidateProfile, StateProps } from "@/_types/CandidateProfile";
 import { EducationFormData, educationValidationSchema } from "@/_validations/education";
-import { Education } from "../../_components/Curriculo/Education";
+import { Education } from "../../../_components/Curriculo/Education";
 import { Experience } from "@/_components/Curriculo/Experience";
 import { Course } from "@/_components/Curriculo/Course";
 import { Language } from "@/_components/Curriculo/Language";
@@ -24,6 +24,7 @@ import { InterestArea } from "@/_components/Curriculo/InterestAreas";
 import { VerCurriculo } from "./_components/VerCurriculo";
 import Link from "next/link";
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import { USER_TYPES } from "@/_constants";
 
 export interface CurriculoProps{
     states: StateProps[];
@@ -95,7 +96,7 @@ export default function Curriculo({ states, candidate, interestAreas }: Curricul
             </Head>
             <Sidebar>
                 <Flex alignItems="center" gap="1" w="max-content" mb="12px"  borderWidth={1} px={3} py={2}>
-                    <IoDocumentAttachOutline /><Link href={`/curriculo/${candidate.id}`}> Ver currículo </Link>
+                    <IoDocumentAttachOutline /><Link href={`/candidate/curriculo/${candidate.id}`}> Ver currículo </Link>
                 </Flex>
                 <Flex direction="column" w="full" gap="4" alignItems="center" justifyContent="center">
                     <Tabs.Root 
@@ -150,7 +151,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const user = response.data.data;
 
     // Se o usuário NÃO tem currículo → redireciona
-    if (user.userType == 'candidate' && !user.candidate) {
+    if (user.userType == USER_TYPES.candidate && !user.candidate) {
         return {
             redirect: {
                 destination: "/dashboard",
@@ -159,7 +160,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
         };
     }
 
-    if(user.userType != 'candidate'){
+    if(user.userType != USER_TYPES.candidate){
         return {
             redirect: {
                 destination: "/dashboard",

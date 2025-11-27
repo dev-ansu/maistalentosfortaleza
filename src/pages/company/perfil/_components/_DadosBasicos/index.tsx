@@ -20,7 +20,7 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
     });
     
     return(
-        <Flex w="full" direction="column">
+        <Flex w="full" direction="column" gap="4">
             <Stack w="full" direction={{ base: "column", md: "row" }}>
                 <Field.Root invalid={!!errors.name || !!serverErrors.name}>
                     <Field.Label>Nome da empresa</Field.Label>
@@ -61,7 +61,7 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                 <StateItems states={states}  />
                 <CitiesItems city={company?.city} />
             </Field.Root>
-            <Field.Root mt="4">
+            <Field.Root>
                 <Controller
                     control={control}
                     name="isActive"
