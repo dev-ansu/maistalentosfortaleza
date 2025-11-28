@@ -11,13 +11,17 @@ import Link from "next/link";
 import { useAuthContext } from "@/_context/AuthContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { ServerErrors } from "@/_components/ui/ServerErrors";
+import { USER_TYPES } from "@/_constants";
 
 export const RegisterForm = ()=>{
     const {signUp} = useAuthContext();
     const { register, control, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<RegisterFormType>({
         mode: "all",
         criteriaMode: "all",
-        resolver: zodResolver(RegisterSchema)
+        resolver: zodResolver(RegisterSchema),
+        defaultValues:{
+            userType: [USER_TYPES.candidate as 'candidate']
+        }
     });
     const { serverErrors, handleServerError } = useServerErrors(watch);
     const passwordValue = watch("password") || "";
@@ -86,7 +90,7 @@ export const RegisterForm = ()=>{
                         name="userType"
                         render={({field}) => (
                                 <Select.Root
-                                    defaultValue={['candidate']} 
+                                    defaultValue={[USER_TYPES.candidate]} 
                                     name={field.name}
                                     value={field.value}
                                     onValueChange={({ value }) => field.onChange(value)}
