@@ -20,7 +20,6 @@ interface PerfilProps{
 }
 
 export default function Perfil({ states, interestAreas, company }: PerfilProps){
-    console.log(company);
     const methods = useForm<CompanyProfileFormData>({
         mode:"all",
         criteriaMode:"all",

@@ -35,6 +35,7 @@ export interface CurriculoProps{
 
 
 export default function Curriculo({ states, candidate, interestAreas }: CurriculoProps){
+
     const orientation = useBreakpointValue<"horizontal" | "vertical">({
         base: "vertical",
         md: "horizontal",
@@ -174,13 +175,15 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const states = statesResponse.data.data;
     const interestAreasResponse = await api.get("/interestAreas")
     const interestAreas = interestAreasResponse.data.data
-    
+    const enums = await api.get("/enums");
+    const DegreeLevels = enums.data.data.DegreeLevel;
     return{
         props:{
             states,
             userServer: user,
             candidate: user.candidate,
-            interestAreas
+            interestAreas,
+            DegreeLevels
         }
     }
 });
