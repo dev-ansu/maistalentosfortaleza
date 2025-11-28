@@ -9,17 +9,38 @@ import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { StateProps } from "@/_types/CandidateProfile";
 import { getAPIClient } from "@/_services/apiClient";
 import { USER_TYPES } from "@/_constants";
+import { InterestAreas } from "@/_types/InterestArea";
+import { useAuthContext } from "@/_context/AuthContext";
+import { CompanyProfile } from "@/_types/CompanyProfile";
 
 interface PerfilProps{
     states: StateProps[];
+    interestAreas: InterestAreas[];
+    company: CompanyProfile;
 }
 
-export default function Perfil({ states }: PerfilProps){
-    
+export default function Perfil({ states, interestAreas, company }: PerfilProps){
+    console.log(company);
     const methods = useForm<CompanyProfileFormData>({
         mode:"all",
         criteriaMode:"all",
-        resolver: zodResolver(companyProfileSchema)
+        resolver: zodResolver(companyProfileSchema),
+        defaultValues:{
+            stateId: company?.stateId ? [company.stateId]:[],
+            cityId: company?.cityId ? [company.cityId]:[],
+            cnpj: company?.cnpj,
+            contactEmail: company?.contactEmail,
+            description: company?.description,
+            facebook: company?.facebook,
+            instagram: company?.instagram,
+            companyInterest: company?.companyInterest ? [...company.companyInterest.map( c => c.interest.id)]:[],
+            isActive: company?.isActive,
+            linkedin: company?.linkedin,
+            name: company?.name,
+            phone: company?.phone,
+            website: company?.website,
+
+        }
     });
     
     return(
@@ -31,7 +52,7 @@ export default function Perfil({ states }: PerfilProps){
                 <Flex w="full" direction="column">
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Dados da empresa</Text>
                     <FormProvider {...methods}>
-                        <RegisterFormCompany states={states} />
+                        <RegisterFormCompany states={states} interestAreas={interestAreas}/>
                     </FormProvider>
                 </Flex>
             </Sidebar>
@@ -58,10 +79,14 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
 
     const statesResponse = await api.get("/state");
     const states = statesResponse.data.data;
-
+    const interestAreasResponse = await api.get("/interestAreas")
+    const interestAreas = interestAreasResponse.data.data
+    
     return{
         props:{
-            states: states,        
+            states: states,   
+            interestAreas,
+            company: user.company 
         }
     }
 });

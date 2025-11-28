@@ -24,9 +24,10 @@ export const CandidateInterestsList = ({ interestAreasList, setInterestAreasList
     
     const onDelete = async(id: string)=>{
         setIsLoading(true);
-    
+            
          try {
             const data = deleteInterestSchema.parse({ id });
+            
             try{
                 const response = await getAPIClient().delete(`/candidate/interest/${data.id}`);
                 setInterestAreasList((prev) => prev.filter(item => item.id !== data.id));

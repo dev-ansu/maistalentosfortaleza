@@ -32,6 +32,10 @@ export interface CandidateInterestList{
     interest: InterestAreas;
 }
 
+export interface CompanyInterestList{
+    id: string;
+    interest: InterestAreas;
+}
 
 
 export interface EducationListProps extends Omit<EducationFormData, "degree">{

@@ -24,20 +24,20 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
             <Stack w="full" direction={{ base: "column", md: "row" }}>
                 <Field.Root invalid={!!errors.name || !!serverErrors.name}>
                     <Field.Label>Nome da empresa</Field.Label>
-                    <Input value={company?.name} {...register("name")} placeholder="Nome da empresa"/>
+                    <Input {...register("name")} placeholder="Nome da empresa"/>
                     <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="name"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.cnpj || !!serverErrors.cnpj}>
                     <Field.Label>CNPJ</Field.Label>
-                    <Input value={company?.cnpj} {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
+                    <Input {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
                     <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
                     <Field.ErrorText>{errors.cnpj?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="cnpj"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.website || !!serverErrors.website}>
                     <Field.Label>Website</Field.Label>
-                    <Input value={company?.website} {...register("website")} placeholder="Digite o website da empresa (opcional)"/>
+                    <Input  {...register("website")} placeholder="Digite o website da empresa (opcional)"/>
                     <Field.HelperText>Opcional</Field.HelperText>
                     <Field.ErrorText>{errors.website?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="website"/>
@@ -47,7 +47,6 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                 <Field.Root invalid={!!errors.description || !!serverErrors.description}>
                     <Field.Label>Sobre a empresa</Field.Label>
                     <Textarea
-                        value={company?.description}
                         maxLength={500}
                         placeholder="Somos uma empresa há 10 anos no mercado..."
                         {...register("description")}

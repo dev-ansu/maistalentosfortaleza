@@ -15,13 +15,13 @@ export const DadosContatos = ({ company }: { company: CompanyProfile | undefined
             <Stack w="full" direction={{ base: "column", md: "row" }}>
                 <Field.Root invalid={!!errors.phone || !!serverErrors.phone}>
                     <Field.Label>Telefone</Field.Label>
-                    <Input value={company?.phone} {...register("phone")} placeholder="Digite o telefone da empresa"/>
+                    <Input {...register("phone")} placeholder="Digite o telefone da empresa"/>
                     <Field.ErrorText>{errors.phone?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="phone"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.contactEmail || !!serverErrors.contactEmail}>
                     <Field.Label>E-mail para contato</Field.Label>
-                    <Input value={company?.contactEmail} {...register("contactEmail")} placeholder="Digite um e-mail para contato"/>
+                    <Input {...register("contactEmail")} placeholder="Digite um e-mail para contato"/>
                     <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
                     <Field.ErrorText>{errors.contactEmail?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="contactEmail"/>
@@ -30,21 +30,21 @@ export const DadosContatos = ({ company }: { company: CompanyProfile | undefined
             <Stack w="full" direction={{ base: "column", md: "row" }}>
                 <Field.Root invalid={!!errors.instagram || !!serverErrors.instagram}>
                     <Field.Label>Instagram</Field.Label>
-                    <Input value={company?.instagram} {...register("instagram")} placeholder="Digite o instagram da empresa"/>
+                    <Input {...register("instagram")} placeholder="Digite o instagram da empresa"/>
                     <Field.HelperText>Opcional (https://instagram.com/nome_usuario)</Field.HelperText>
                     <Field.ErrorText>{errors.instagram?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="instagram"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.facebook || !!serverErrors.facebook}>
                     <Field.Label>Facebook</Field.Label>
-                    <Input value={company?.facebook} {...register("facebook")} placeholder="Digite o facebook da empresa"/>
+                    <Input {...register("facebook")} placeholder="Digite o facebook da empresa"/>
                     <Field.HelperText>Opcional</Field.HelperText>
                     <Field.ErrorText>{errors.facebook?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="facebook"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.linkedin || !!serverErrors.linkedin}>
                     <Field.Label>Linkedin</Field.Label>
-                    <Input value={company?.linkedin} {...register("linkedin")} placeholder="Digite o linkedin da empresa"/>
+                    <Input {...register("linkedin")} placeholder="Digite o linkedin da empresa"/>
                     <Field.HelperText>Opcional</Field.HelperText>
                     <Field.ErrorText>{errors.linkedin?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="linkedin"/>

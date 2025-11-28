@@ -42,6 +42,7 @@ export const companyProfileSchema = z.object({
     cityId: z
         .array(z.uuid(), {message: "Id inválido."})
         .length(1, "Selecione uma cidade válida"),
+    companyInterest: z.array(z.uuid({message: "Id inválido."}).nonempty({message:"O campo é obrigatório."}), {message:"Deve ser um conjunto de valores."}).nonempty({message: "O campo é obrigatório."})
 });
 
 
