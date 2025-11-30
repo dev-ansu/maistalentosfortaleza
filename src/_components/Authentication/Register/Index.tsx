@@ -12,8 +12,10 @@ import { useAuthContext } from "@/_context/AuthContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { USER_TYPES } from "@/_constants";
+import { useEnumsContext } from "@/_context/EnumsContext";
 
 export const RegisterForm = ()=>{
+    const { enums } = useEnumsContext();
     const {signUp} = useAuthContext();
     const { register, control, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<RegisterFormType>({
         mode: "all",
@@ -41,10 +43,7 @@ export const RegisterForm = ()=>{
     };
 
     const userTypes = createListCollection({
-        items: [{userType: 'candidate', name: 'Quero trabalhar'}, {userType: 'company', name: 'Quero contratar'}].map((c) => ({
-            label: c.name,
-            value: c.userType
-        }))
+        items: enums ? enums.UserType:[]
     });
 
     return(

@@ -1,5 +1,6 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { LANGUAGE_PROFICIENCY } from "@/_constants";
+import { useEnumsContext } from "@/_context/EnumsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { LanguageFormData } from "@/_validations/language";
 import { createListCollection, Field, Portal, Select } from "@chakra-ui/react";
@@ -7,14 +8,12 @@ import { Controller, useFormContext } from "react-hook-form";
 
 
 export const ProficiencySelect = ()=>{
+    const { enums } = useEnumsContext();
     const { control, watch, formState:{ errors } } = useFormContext<LanguageFormData>();
     const { serverErrors } = useServerErrors(watch);
     
     const languageProficiencies = createListCollection({
-        items: LANGUAGE_PROFICIENCY.length > 0 ? LANGUAGE_PROFICIENCY.map((c) => ({
-            label: c.name,
-            value: c.id
-        })): [ { label: '', value: ''}]
+        items: enums ? enums.LanguageProficiency: [ { label: '', value: ''}]
     });
 
     return (
@@ -35,7 +34,7 @@ export const ProficiencySelect = ()=>{
                         <Select.HiddenSelect />
                         <Select.Control>
                             <Select.Trigger>
-                            <Select.ValueText placeholder="Selecione uma escolaridade" />
+                            <Select.ValueText placeholder="Selecione a proficiência" />
                                 </Select.Trigger>
                             <Select.IndicatorGroup>
                                 <Select.Indicator />

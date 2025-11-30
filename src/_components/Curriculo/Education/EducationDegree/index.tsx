@@ -1,5 +1,6 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { DEGREE_LEVEL } from "@/_constants";
+import { useEnumsContext } from "@/_context/EnumsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { EducationFormData } from "@/_validations/education";
 import { createListCollection, Field, Portal, Select } from "@chakra-ui/react";
@@ -7,14 +8,12 @@ import { Controller, useFormContext } from "react-hook-form";
 
 
 export const EducationDegree = ()=>{
+    const { enums } = useEnumsContext();
     const { control, watch, formState:{ errors } } = useFormContext<EducationFormData>();
     const { serverErrors } = useServerErrors(watch);
     
     const degreeLevels = createListCollection({
-        items: DEGREE_LEVEL.length > 0 ? DEGREE_LEVEL.map((c) => ({
-            label: c.name,
-            value: c.id
-        })): [ { label: '', value: ''}]
+        items: enums ? enums.DegreeLevel: [ { label: '', value: ''}]
     });
 
     return (

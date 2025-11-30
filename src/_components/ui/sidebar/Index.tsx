@@ -1,23 +1,25 @@
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode } from "react"
 import {
   useColorModeValue,
 } from "@/_components/ui/color-mode"
 import {IconButton,CloseButton,Flex,Icon,DrawerContent,Text,useDisclosure,BoxProps,FlexProps,Box} from "@chakra-ui/react"
 import { Drawer } from "@chakra-ui/react"
-import { CiHome } from "react-icons/ci";
-import { IoDocumentTextOutline } from "react-icons/io5";
-import { BsSend } from "react-icons/bs";
 import {FiMenu, FiSettings} from "react-icons/fi"
 import { IconType } from "react-icons"
 import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
-import { AiFillProfile } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { USER_TYPES } from "@/_constants";
+import { useMenu } from "@/_hooks/useMenu";
+import { MenuIcons } from "@/_constants/icons"
 
-interface LinkItemsProps{
-    name: string;
-    icon: IconType;
+export interface MenuItem {
+    label: string;
+    icon: string; // Agora é string com o nome do ícone
+    route: string;
+}
+
+export interface LinkItemsProps {
+    label: string;
+    icon: string; // Mude para string
     route: string;
 }
 
@@ -25,6 +27,7 @@ interface LinkItemsProps{
 
 export function Sidebar({children}: {children: ReactNode}){
     const {open, onOpen, onClose} = useDisclosure();
+
 
     return(
         <Box minH="100vh" bg="talento.900">
@@ -60,20 +63,18 @@ interface SidebarProps extends BoxProps{
 
 const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     
+    const menuItems = useMenu();
+    
     const { logoutUser, haveResume, user } = useAuthContext();
-    let LinkItems: LinkItemsProps[] = [
-        { name: 'Home', icon: CiHome, route: "/dashboard"},
-    ]
-
 
     const handleLogout = async()=>{
         await logoutUser();
     }
 
 
-    if(user?.userType === USER_TYPES.candidate) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
-    if(user?.userType === USER_TYPES.candidate)  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidate/candidaturas"})}
-    if(user?.userType === USER_TYPES.company)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
+    // if(user?.userType === USER_TYPES.candidate && haveResume) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
+    // if(user?.userType === USER_TYPES.candidate && haveResume)  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidate/candidaturas"})}
+    // if(user?.userType === USER_TYPES.company)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
     
     
     return(
@@ -95,11 +96,13 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
                 </Link>
                 <CloseButton display={{ base: "flex", md:"none"}} onClick={onClose}/>
             </Flex>
-            {LinkItems.map( (item: LinkItemsProps) => (
-                <NavItem icon={item.icon} route={item.route} key={item.name}>
-                    {item.name}
+            {menuItems.map( (item: LinkItemsProps) => {
+                const icon = MenuIcons[item.icon];
+                return(
+                <NavItem icon={icon} route={item.route} key={item.label}>
+                    {item.label}
                 </NavItem>
-            ))}
+            )})}
 
             {/* 🔥 BOTÃO DE SAIR */}
             <Box onClick={handleLogout} position="absolute" bottom="4" w="100%" px="4">
