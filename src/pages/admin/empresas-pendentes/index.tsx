@@ -3,6 +3,7 @@ import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
+import PendingCompaniesTable from "./_components/PendingCompaniesTable";
 
 export default function EmpresasPendentes(){
     return (
@@ -11,8 +12,8 @@ export default function EmpresasPendentes(){
                 <title> Mais Talentos Fortaleza - Dashboard</title>
             </Head>
             <Sidebar>
-                <Flex>
-                    <Text>Em breve as empresas que não foram aprovadas aparecerão aqui</Text>
+                <Flex direction="column" gap="8">
+                    <PendingCompaniesTable />
                 </Flex>
             </Sidebar>
         </>
@@ -34,6 +35,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
             },
         };
     }
+    
     
     return{
         props:{
