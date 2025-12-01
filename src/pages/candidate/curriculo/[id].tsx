@@ -20,25 +20,16 @@ export default function( { candidate }:{ candidate: CandidateProfile} ){
 
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
-
+    const { params } = ctx;
+    const id = params?.id as string; // Extrai o id da URL
     const api = getAPIClient(ctx);
-    const response = await api.get("/me");
-    
-    const user = response.data.data;
+    const response = await api.get(`/candidate/${id}/profile`);
 
-    // Se o usuário NÃO tem currículo → redireciona
-    if (!user.candidate) {
-        return {
-            redirect: {
-                destination: "/dashboard",
-                permanent: false,
-            },
-        };
-    }
-        
+    const candidate = response.data.data;
+    
     return{
         props:{
-            candidate: user.candidate,
+            candidate: candidate,
         }
     }
 });

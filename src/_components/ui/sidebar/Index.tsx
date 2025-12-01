@@ -30,12 +30,13 @@ export function Sidebar({children}: {children: ReactNode}){
 
 
     return(
-        <Box minH="100vh" bg="talento.900">
+        <Box id="sidebar" minH="100vh" bg="talento.900">
             <SidebarContent onClose={onClose}
                 display={{ base:"none", md:"block"}}
             >
             </SidebarContent>    
             <Drawer.Root
+             id="sibebar_drawer"
              open={open}
              placement="start"
              size="full"
@@ -47,7 +48,7 @@ export function Sidebar({children}: {children: ReactNode}){
                 </DrawerContent>
                 
             </Drawer.Root>
-            <MobileNav display={{ base:"flex", md: "none"}} onOpen={onOpen} />
+            <MobileNav className="mobile_nav" display={{ base:"flex", md: "none"}} onOpen={onOpen} />
             <Box ml={{ base: 0, md: 60}} p={4}>
                 {children}
             </Box>

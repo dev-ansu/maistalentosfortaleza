@@ -1,8 +1,10 @@
+import { useAuthContext } from "@/_context/AuthContext";
 import { CandidateProfile } from "@/_types/CandidateProfile"
 import { dateFormat } from "@/_utils/dateFormat";
-import { Flex, List, Text } from "@chakra-ui/react";
+import { Button, Flex, List, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { IoDocumentAttachOutline } from "react-icons/io5";
+import { FiPrinter } from "react-icons/fi";
+import { IoDocumentAttachOutline, IoPrintOutline } from "react-icons/io5";
 import { LuCircleCheck, LuCircleDashed } from "react-icons/lu";
 
 interface VerCurriculoProps{
@@ -10,13 +12,101 @@ interface VerCurriculoProps{
 }
 
 export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
+    const { user } = useAuthContext();
     const candidateInterests = candidate.candidateInterests.map( item => item.interest.name).join(", ")
+     // Função para imprimir
+    
+    const handlePrint = () => {
+        window.print();
+    }
+
+    // Função para baixar como PDF (simples)
+    const handleDownloadPDF = () => {
+        // Implementação mais avançada viria aqui
+        // Por enquanto, apenas chama a impressão
+        window.print();
+    }
 
     return(
         <>
-        <Flex alignItems="center" gap="1" w="max-content" mb="12px"  borderWidth={1} px={3} py={2}>
-            <IoDocumentAttachOutline /><Link href={"/curriculo"}>Editar currículo </Link>
+        {user?.candidate?.id === candidate.id &&
+            <Flex id="editar_curriculo" alignItems="center" gap="1" w="max-content" mb="12px"  borderWidth={1} px={3} py={2}>
+                <IoDocumentAttachOutline /><Link href={"/candidate/curriculo"}>Editar currículo </Link>
+            </Flex>
+        }
+        {/* Botões de Ação */}
+        <Flex gap="2">
+            <Button 
+                colorScheme="blue" 
+                variant="outline"
+                onClick={handlePrint}
+            >
+                <FiPrinter />
+                Imprimir
+            </Button>
+            
+            <Button 
+                colorScheme="green"
+                onClick={handleDownloadPDF}
+            >
+                <IoPrintOutline />
+                Salvar como PDF
+            </Button>
         </Flex>
+        <style jsx global>{`
+            @media print {
+                /* Esconde elementos que não devem aparecer na impressão */
+                #editar_curriculo{
+                    display:none !important;
+                }
+                nav, header, footer, button, a {
+                    display: none !important;
+                }
+                #sidebar #sibebar_drawer, #sidebar .mobile_nav{
+                    display:none !important;
+                }
+                
+                /* Estilos específicos para impressão */
+                body {
+                    font-size: 12pt;
+                    line-height: 1.5;
+                    color: #000;
+                    background: #fff;
+                }
+                
+                /* Melhora a aparência impressa */
+                .curriculo-print {
+                    width: 100%;
+                    max-width: 210mm; /* A4 */
+                    margin: 0 auto;
+                    padding: 5mm;
+                    box-shadow: none;
+                }
+                
+                /* Remove bordas e cores desnecessárias */
+                * {
+                    box-shadow: none !important;
+                    text-shadow: none !important;
+                }
+                
+                /* Mantém links como texto normal */
+                a {
+                    text-decoration: none;
+                    color: #000;
+                }
+                
+                /* Quebra de página */
+                .page-break {
+                    page-break-before: always;
+                }
+                
+                /* Evita que seções sejam cortadas */
+                h1, h2, h3, p {
+                    page-break-inside: avoid;
+                }
+            }
+        `}</style>
+        <div className="curriculo-print">
         <Flex direction="column" w="full">
             <Flex direction="column" w="full" justifyContent="center" alignItems="center">
                 <Text fontSize="4xl" >{candidate.user?.name}</Text>
@@ -117,6 +207,7 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
             </Flex>
 
         </Flex>
+        </div>
         </>
     )
 }
