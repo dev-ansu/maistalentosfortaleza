@@ -21,10 +21,9 @@ import { createLanguageSchema, LanguageFormData } from "@/_validations/language"
 import { InterestAreas } from "@/_types/InterestArea";
 import { InterestAreaFormData, interestAreaSchema } from "@/_components/Curriculo/InterestAreas/InterestAreasSelect";
 import { InterestArea } from "@/_components/Curriculo/InterestAreas";
-import { VerCurriculo } from "./_components/VerCurriculo";
 import Link from "next/link";
 import { IoDocumentAttachOutline } from "react-icons/io5";
-import { USER_TYPES } from "@/_constants";
+
 
 export interface CurriculoProps{
     states: StateProps[];
@@ -86,6 +85,15 @@ export default function Curriculo({ states, candidate, interestAreas }: Curricul
             phone: candidate.phone ?? "",
             whatsapp: candidate.whatsapp ?? "",
             summary: candidate.summary,
+            ethnicity: candidate.ethnicity ? [candidate.ethnicity]:[],
+            email: candidate?.email,
+            gender: candidate.gender ? [candidate.gender]:[],
+            isAvailable: candidate?.isAvailable,
+            portfolioUrl: candidate?.portfolioUrl,
+            salaryExpectation: candidate?.salaryExpectation,
+            willingnessToRelocate: candidate?.willingnessToRelocate,
+            willingnessToTravel: candidate?.willingnessToTravel,
+            workModel: candidate?.workModel
         },
         resolver: zodResolver(personalInfoSchema)
     });

@@ -34,6 +34,12 @@ const whatsappSchema = z
     message: "WhatsApp deve conter 11 dígitos (com DDD)",
 });
 
+
+
+export const diversityAndExtraPersonalInformation = z.object({
+  
+});
+
 export const personalInfoSchema = z.object({
     birthdate: birthdateSchema,
     whatsapp: whatsappSchema,
@@ -46,7 +52,26 @@ export const personalInfoSchema = z.object({
     cityId: z
     .array(z.uuid(), {message: "Id inválido."})
     .length(1, "Selecione uma cidade válida"),
-});
-
+    gender: z.array(z.string().nonempty({ message: "Campo obrigatório." }), {message: "Escolha uma opção válida."})
+      .min(1, { message: "Escolha uma opção válida." }),
+    ethnicity: z.array(z.string().nonempty({ message: "Campo obrigatório." }), {message: "Escolha uma opção válida."})
+      .min(1, { message: "Escolha uma opção válida." }),
+    isAvailable: z.boolean(),
+    salaryExpectation: z.string().regex(/^\d+([.,]\d{1,2})?$/, { message: "Digite um valor numérico válido." }),
+    workModel: z.array(z.string().nonempty({ message: "Campo obrigatório." }), )
+      .min(1, { message: "Escolha uma opção válida." }),
+    email: z.email({message:"Digite um e-mail válido."}),
+    portfolioUrl: z
+      .string()
+      .trim()
+      .refine(
+        val =>
+          val === "" ||
+          /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}$/i.test(val),
+        { message: "Informe um endereço válido (ex: https://www.site.com)" }
+      ),
+      willingnessToTravel: z.boolean(),
+      willingnessToRelocate: z.boolean(),
+})
 
 export type PersonalInfoFormData = z.infer<typeof personalInfoSchema>

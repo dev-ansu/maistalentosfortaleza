@@ -23,6 +23,15 @@ export interface CandidateProfile{
     languages: LanguageListProps[];
     candidateInterests: CandidateInterestList[];
     company: CompanyProfile;
+    gender: string;
+    ethnicity: string;
+    isAvailable: boolean;
+    salaryExpectation: string;
+    workModel: string[];
+    email: string;
+    portfolioUrl: string;
+    willingnessToTravel: boolean;
+    willingnessToRelocate: boolean;
 }
 
 export enum UserType{'candidate', 'company'}

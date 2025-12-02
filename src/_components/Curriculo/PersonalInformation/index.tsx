@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { CandidateProfile, StateProps } from "@/_types/CandidateProfile";
 import { ListStatesProps, StateItems } from "@/_components/StateSelect";
 import { CitiesItems } from "@/_components/CitySelect";
+import { ExtraInformation } from "../ExtraInformation";
 
 interface PersonalInformationProps{
     states: StateProps[];
@@ -21,18 +22,16 @@ export const PersonalInformation = ({ states, userName, candidate }: PersonalInf
     
 
     const onSubmit = async (data: PersonalInfoFormData)=>{
-        const stateId = data.stateId[0];
-        const cityId  = data.cityId[0];
+        const {phone, whatsapp,stateId, cityId,birthdate,summary,email,ethnicity,gender,isAvailable,portfolioUrl,salaryExpectation,willingnessToRelocate,willingnessToTravel,workModel} = data;
+        const state = stateId[0];
+        const city  = cityId[0];
         
         try{
 
             const response = await getAPIClient().put("/candidate", {
-                state: stateId,
-                city: cityId,
-                birthdate: data.birthdate,
-                whatsapp: data.whatsapp,
-                phone: data.phone,
-                summary: data.summary
+                state,
+                city,
+                phone, whatsapp, birthdate,summary,email,ethnicity,gender,isAvailable,portfolioUrl,salaryExpectation,willingnessToRelocate,willingnessToTravel,workModel
             });
            
             toast.success(response.data.message);
@@ -86,6 +85,8 @@ export const PersonalInformation = ({ states, userName, candidate }: PersonalInf
                             <Field.ErrorText>{errors.summary?.message}</Field.ErrorText>
                             <ServerErrors serverErrors={serverErrors} field="summary"/>
                     </Field.Root>
+
+                    <ExtraInformation candidate={candidate} />
                     
                     <Button alignSelf="flex-start" type="submit" _hover={{ background: "orange.500"}} background="orange.400" >
                         Salvar Informações pessoais

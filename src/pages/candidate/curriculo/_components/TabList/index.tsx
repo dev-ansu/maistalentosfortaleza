@@ -2,7 +2,7 @@ import { Flex, Tabs, Text } from "@chakra-ui/react"
 import { FaSchool } from "react-icons/fa"
 import { GrDocument } from "react-icons/gr"
 import { LuUser } from "react-icons/lu"
-import { MdInterests, MdLanguage, MdWorkHistory } from "react-icons/md"
+import { MdExtension, MdInterests, MdLanguage, MdWorkHistory } from "react-icons/md"
 import { PiStudentBold } from "react-icons/pi"
 
 export const TabList = ()=>{
