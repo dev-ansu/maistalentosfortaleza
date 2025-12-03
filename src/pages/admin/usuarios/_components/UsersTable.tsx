@@ -95,7 +95,7 @@ export default function UsersTable({ interestAreas }: { interestAreas: InterestA
               <Select.HiddenSelect />
               <Select.Control>
                   <Select.Trigger>
-                  <Select.ValueText placeholder="Selecione uma escolaridade" />
+                  <Select.ValueText placeholder="Selecione uma área de interesse" />
                       </Select.Trigger>
                   <Select.IndicatorGroup>
                       <Select.Indicator />
