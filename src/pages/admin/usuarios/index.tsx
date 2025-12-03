@@ -4,8 +4,9 @@ import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import UsersTable from "./_components/UsersTable";
 import { getAPIClient } from "@/_services/apiClient";
+import { InterestAreas } from "@/_types/InterestArea";
 
-export default function(){
+export default function({ interestAreas }: { interestAreas: InterestAreas[]}){
     return(
         <>
             <Head>
@@ -13,7 +14,7 @@ export default function(){
             </Head>
             <Sidebar>
                 <Flex direction="column" gap="8">
-                    <UsersTable />
+                    <UsersTable interestAreas={interestAreas} />
                 </Flex>
             </Sidebar>
         </>
@@ -34,10 +35,13 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
             },
         };
     }
+
+    const interestAreasResponse = await api.get("/interestAreas")
+    const interestAreas = interestAreasResponse.data.data
     
     return{
         props:{
-            
+            interestAreas,
         }
     }
 });

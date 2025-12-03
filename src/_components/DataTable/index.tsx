@@ -1,3 +1,4 @@
+import { useTableFilters } from "@/_hooks/useTableFilters";
 import { DataTableProps } from "@/_types/DataTableProps";
 import { Button, Flex, Input, Stack, Table } from "@chakra-ui/react";
 import React from "react";
@@ -12,10 +13,12 @@ export function DataTable<T>({
   onSearch,
   searchPlaceholder = "Buscar...",
   renderActions,
+  resetFilters,
   filters,
   loading = false,
 }: DataTableProps<T>) {
   const [search, setSearch] = React.useState("");
+
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -36,19 +39,24 @@ export function DataTable<T>({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 />
-            <Button className="bg-blue-600 text-white px-4 py-2 rounded">
-                Buscar
+            <Button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+                BuscarW
             </Button>
             </Flex>
         </form>
       )}
 
       {/* 🎛️ Filtros dinâmicos */}
+      <Flex direction="column" w="full" gap="3">
       {filters && (
-        <Flex w="full" gap="3">
+          <>
           {filters}
-        </Flex>
-      )}
+          </>
+        )}
+          <Button bg="red.500" alignSelf="flex-start" color="white" onClick={resetFilters}>
+            Limpar filtros
+          </Button>
+      </Flex>
 
       {/* 🧱 Tabela */}
       <Flex className="overflow-auto border rounded">

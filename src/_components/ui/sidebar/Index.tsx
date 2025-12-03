@@ -10,6 +10,7 @@ import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
 import { useMenu } from "@/_hooks/useMenu";
 import { MenuIcons } from "@/_constants/icons"
+import { useMenuContext } from "@/_context/MenuContext"
 
 export interface MenuItem {
     label: string;
@@ -64,19 +65,13 @@ interface SidebarProps extends BoxProps{
 
 const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     
-    const menuItems = useMenu();
+    const { menuItems } = useMenuContext();
     
     const { logoutUser, haveResume, user } = useAuthContext();
 
     const handleLogout = async()=>{
         await logoutUser();
-    }
-
-
-    // if(user?.userType === USER_TYPES.candidate && haveResume) {LinkItems.push({ name: 'Currículo', icon: IoDocumentTextOutline, route: "/candidate/curriculo"})}
-    // if(user?.userType === USER_TYPES.candidate && haveResume)  {LinkItems.push({ name: 'Candidaturas', icon: BsSend, route: "/candidate/candidaturas"})}
-    // if(user?.userType === USER_TYPES.company)  {LinkItems.push({name: 'Perfil', icon: CgProfile, route: "/company/perfil"})}
-    
+    }    
     
     return(
         <Box

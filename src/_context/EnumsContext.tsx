@@ -19,7 +19,7 @@ export interface EnumsProps{
     VerificationStatus: EnumProps[];
 }
 
-interface EnumProps{
+export interface EnumProps{
     value: string;
     label: string;
 }

@@ -1,4 +1,5 @@
 import { useAuthContext } from "@/_context/AuthContext";
+import { EnumProps, EnumsProps, useEnumsContext } from "@/_context/EnumsContext";
 import { CandidateProfile } from "@/_types/CandidateProfile"
 import { dateFormat } from "@/_utils/dateFormat";
 import { Button, Flex, List, Text } from "@chakra-ui/react";
@@ -13,8 +14,16 @@ interface VerCurriculoProps{
 
 export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
     const { user } = useAuthContext();
+    const { enums } = useEnumsContext();
+
     const candidateInterests = candidate.candidateInterests.map( item => item.interest.name).join(", ")
-     // Função para imprimir
+    const candidateLanguages = candidate.languages.map( (language) => {
+        const proficiency = enums?.LanguageProficiency.filter( (prof: EnumProps) => prof.value == language.proficiency)
+        return {
+            language: language.name, proficiency: proficiency && proficiency.length > 0 ? proficiency[0].label:'Sem proficiência',
+        }
+    },[]);
+   
     
     const handlePrint = () => {
         window.print();
@@ -110,21 +119,39 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
         <Flex direction="column" w="full">
             <Flex direction="column" w="full" justifyContent="center" alignItems="center">
                 <Text fontSize="4xl" >{candidate.user?.name}</Text>
-                <Text>{candidate.user?.email}</Text>
-                <Text>{candidate?.whatsapp} | {candidate?.phone}</Text>
-                <Text>{candidate.city?.name}, {candidate.state?.acronym}</Text>
+                <Text fontSize="16px" fontWeight="semibold">Contato</Text>
+                <Text>E-mail: {candidate?.email || candidate.user?.email}</Text>
+                <Text>WhatsApp: {candidate?.whatsapp} | Telefone: {candidate?.phone}</Text>
+                <Text>Localização: {candidate.city?.name}, {`${candidate.state?.acronym} `} {candidate.portfolioUrl && (
+                        <>
+                            | Portfolio: {candidate.portfolioUrl}
+                        </>
+                    )}
+                </Text>
             </Flex>
 
             <Flex w="full" gap="2" direction="column">
 
             <Flex w="full" direction="column">
-                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Objetivos</Text>
+                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Objetivo profissional</Text>
                  <Text>{candidateInterests}</Text>
             </Flex>
 
             <Flex w="full" direction="column">
                  <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Resumo</Text>
                  <Text>{candidate?.summary}</Text>
+            </Flex>
+
+            <Flex w="full" direction="column">
+                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Informações</Text>
+                 <Text><strong>Pretensão salarial:</strong> {Number(candidate?.salaryExpectation).toLocaleString('pt-BR', {
+                    currency:"BRL",
+                    style: "currency"
+                 })}</Text>
+                 <Text><strong>Disponibilidade imediata:</strong> {candidate?.isAvailable ? 'sim':'não'}</Text>
+                 <Text><strong>Modelo de trabalho:</strong> {candidate?.workModel.join(", ")}</Text>
+                 <Text><strong>Disponível para viagens:</strong> {candidate?.willingnessToTravel ? 'sim':'não'}</Text>
+                 <Text><strong>Disponível para mudanças:</strong> {candidate?.willingnessToRelocate ? 'sim':'não'}</Text>
             </Flex>
 
             <Flex w="full" direction="column">
@@ -146,7 +173,7 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
             </Flex>
 
             <Flex w="full" direction="column">
-                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Cursos extracurriculares</Text>
+                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Cursos & Certificações</Text>
                  <List.Root gap="2" variant="plain" align="center">
                  {candidate.courses && candidate.courses.map( item => (
                     <List.Item key={item.id}>
@@ -163,7 +190,7 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
             </Flex>
 
             <Flex w="full" direction="column">
-                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Experiência</Text>
+                 <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Experiência profissional</Text>
                  {candidate.experiences &&
                  <List.Root gap="2" variant="plain" align="center">
                     {candidate.experiences.map( item => (
@@ -188,14 +215,14 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
                  <Text w="full" mb="16px" borderBottomWidth="1px" fontWeight="bold" borderBottomColor="gray.700" fontSize="2xl">Idiomas</Text>
                  {candidate.languages &&
                  <List.Root gap="2" variant="plain" align="center">
-                    {candidate.languages.map( item => (
-                        <List.Item key={item.id}>
+                    {candidateLanguages.map( item => (
+                        <List.Item key={item.language}>
                             <List.Indicator asChild color="green.500">
                                 <LuCircleDashed />
                             </List.Indicator>
                             <Flex direction="column">
                                 <Text>
-                                    {item.name} - {item.proficiency}
+                                    {item.language}: {item.proficiency}
                                 </Text>
                             </Flex>
                         </List.Item>

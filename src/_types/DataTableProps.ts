@@ -29,6 +29,7 @@ export interface DataTableProps<T> {
   loading?: boolean;
   filters?: React.ReactNode;
   renderActions?: (item: T) => React.ReactNode;
+  resetFilters: () => void;
 }
 
 

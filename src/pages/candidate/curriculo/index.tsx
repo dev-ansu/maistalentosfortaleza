@@ -23,6 +23,7 @@ import { InterestAreaFormData, interestAreaSchema } from "@/_components/Curricul
 import { InterestArea } from "@/_components/Curriculo/InterestAreas";
 import Link from "next/link";
 import { IoDocumentAttachOutline } from "react-icons/io5";
+import { USER_TYPES } from "@/_constants";
 
 
 export interface CurriculoProps{
