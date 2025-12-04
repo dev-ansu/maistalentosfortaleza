@@ -12,6 +12,8 @@ import { useMenu } from "@/_hooks/useMenu";
 import { MenuIcons } from "@/_constants/icons"
 import { useMenuContext } from "@/_context/MenuContext"
 import { FaSignOutAlt } from "react-icons/fa"
+import { useEnumsContext } from "@/_context/EnumsContext"
+import { bgStatus, StatusKey } from "@/pages/admin/empresas-pendentes/_components/PendingCompaniesTable"
 
 export interface MenuItem {
     label: string;
@@ -26,6 +28,7 @@ export interface LinkItemsProps {
 }
 
 function Topbar(){
+    const { enums } = useEnumsContext();
     const { user, logoutUser } = useAuthContext();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
@@ -58,7 +61,14 @@ function Topbar(){
     return(
         <>
         <Flex bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
-            <Flex borderWidth="1px" px="4" borderRadius="lg" onClick={handleTopMenu} cursor="pointer" alignItems="center" justifyContent="flex-end">
+            <Flex borderWidth="1px" px="4" borderRadius="lg" onClick={handleTopMenu} cursor="pointer" alignItems="center" justifyContent={`${
+                user?.userType == "company" ? "space-between":"flex-end"
+            }`} w="full">
+                {user?.userType == "company" && 
+                    <Flex bg={bgStatus[user.company.verificationStatus as StatusKey]} px="1.5" rounded="sm" fontSize="12px">
+                        Status: {enums ? enums.VerificationStatus.filter( i  => i.value == user.company.verificationStatus )[0].label:""}
+                    </Flex>
+                }
                 <Flex alignItems="center">
                     <Text fontSize="12px"> 
                         {user?.name} 

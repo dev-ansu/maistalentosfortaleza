@@ -10,4 +10,7 @@ export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | 
     stateId: string;
     cityId: string;
     companyInterest: CompanyInterestList[];
+    verificationStatus: VerificationStatus;
 }
+
+export type VerificationStatus = "pending" | "approved" | "rejected" | "under_review"

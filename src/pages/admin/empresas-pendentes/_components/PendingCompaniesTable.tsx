@@ -33,7 +33,7 @@ export const bgStatus = {
   under_review: "blue.500"
 }
 
-type StatusKey = keyof typeof bgStatus;
+export type StatusKey = keyof typeof bgStatus;
 
 
 export default function PendingCompaniesTable() {
