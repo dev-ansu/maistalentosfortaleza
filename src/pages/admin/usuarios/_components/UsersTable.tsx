@@ -3,10 +3,12 @@ import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
 import { CandidateInterestList, CandidateProfile } from "@/_types/CandidateProfile";
 import { InterestAreas } from "@/_types/InterestArea";
-import { Button, createListCollection, Flex, Portal, Select, Text } from "@chakra-ui/react";
+import { dateFormat } from "@/_utils/dateFormat";
+import { Button,  Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FiCheck, FiEye } from "react-icons/fi";
+import { FiEye } from "react-icons/fi";
+import { ChangeInterestFilter } from "./Filters";
 
 export interface CandidateProps extends CandidateProfile{
   id: string;
@@ -34,13 +36,7 @@ export default function UsersTable({ interestAreas }: { interestAreas: InterestA
       }
     });
 
-    const interestAreasList = createListCollection({
-        items: interestAreas && interestAreas.length > 0 ? interestAreas.map((c) => ({
-            label: c.name,
-            value: c.id
-        })): [ { label: '', value: ''}]
-    });
-    
+  
     async function load() {
       setLoading(true);
   
@@ -87,45 +83,22 @@ export default function UsersTable({ interestAreas }: { interestAreas: InterestA
         resetFilters={resetFilters}
         filters={
           <Flex>
-              <Select.Root 
-                  collection={interestAreasList}  
-                  onValueChange={( { value }) => handleChangeInterest(value[0])}
-                  width="full"
-              >
-              <Select.HiddenSelect />
-              <Select.Control>
-                  <Select.Trigger>
-                  <Select.ValueText placeholder="Selecione uma área de interesse" />
-                      </Select.Trigger>
-                  <Select.IndicatorGroup>
-                      <Select.Indicator />
-                  </Select.IndicatorGroup>
-              </Select.Control>
-              <Portal>
-                  <Select.Positioner>
-                  <Select.Content>
-                      {interestAreasList.items && interestAreasList.items.map((interestArea) => (
-                      <Select.Item item={interestArea} key={interestArea.value}>
-                          {interestArea.label}
-                          <Select.ItemIndicator />
-                      </Select.Item>
-                      ))}
-                  </Select.Content>
-                  </Select.Positioner>
-              </Portal>
-          </Select.Root>
-
+              <ChangeInterestFilter interestAreas={interestAreas} handleChangeInterest={handleChangeInterest} />
           </Flex>
         }
         columns={[
           { key: "user", label: "Nome",  render: (c) => c.user?.name || 'N/A'  },
+          { key: "birthDate", label: "Idade",  render: (c) => {
+            const [,,idade] = dateFormat(c.birthDate).split("/");
+            return (new Date()).getFullYear() - Number(idade);
+          }  },
           { key: "email", label: "E-mail", render: (c) => c.user?.email || 'N/A' },
           { key: "phone", label: "Contato" },
           { key: "whatsapp", label: "WhatsApp" },
           {
             key: "createdAt",
             label: "Criado em",
-            render: (c) => new Date(c.createdAt).toLocaleDateString("pt-BR"),
+            render: (c) => dateFormat(c.createdAt),
           },
         ]}
         data={users}

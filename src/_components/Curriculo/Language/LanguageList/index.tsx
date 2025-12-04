@@ -8,9 +8,9 @@ import { IoClose } from "react-icons/io5";
 import { toast } from "react-toastify";
 import z from "zod";
 
-const deleteLanguageSchema = z.object({
-    id: z.uuid("Id inválido.")
-});
+  const deleteLanguageSchema = z.object({
+      id: z.uuid("Id inválido.")
+  });
 
 interface LanguageListPropsComponent {
   languageList: LanguageListProps[];

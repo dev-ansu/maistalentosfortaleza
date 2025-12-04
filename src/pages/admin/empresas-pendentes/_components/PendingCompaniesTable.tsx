@@ -1,12 +1,16 @@
 import { DataTable } from "@/_components/DataTable";
-import { EnumProps, useEnumsContext } from "@/_context/EnumsContext";
+import { useEnumsContext } from "@/_context/EnumsContext";
+import { useServerErrors } from "@/_hooks/useServerErrors";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
-import { Button, createListCollection, Field, Flex, Portal, Select, Text } from "@chakra-ui/react";
+import { Button, createListCollection, Field, Flex, Portal, Select, Stack, Text } from "@chakra-ui/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiEye } from "react-icons/fi";
 import { MdChangeCircle } from "react-icons/md";
-
+import { toast } from "react-toastify";
+import { z } from "zod";
+import { ChangeVerificationStatus } from "./Filters";
 export interface Company {
   id: string;
   name: string;
@@ -18,6 +22,19 @@ export interface Company {
   createdAt: string;
 }
 
+const companyId = z.object({
+    id: z.uuid("Id inválido.")
+});
+
+export const bgStatus = {
+  pending: "orange.500",
+  approved: "green.500",
+  rejected:"red.500",
+  under_review: "blue.500"
+}
+
+type StatusKey = keyof typeof bgStatus;
+
 
 export default function PendingCompaniesTable() {
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -26,7 +43,8 @@ export default function PendingCompaniesTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { enums } = useEnumsContext();
-  
+  const { handleServerError } = useServerErrors(); 
+
   const { filters, updateFilter, resetFilters } = useTableFilters({
     initialFilters: {
       verificationStatus: "pending",
@@ -72,10 +90,30 @@ export default function PendingCompaniesTable() {
     updateFilter('page', page);
   };
 
-  const verificationStatusList = createListCollection({
-      items: enums ? enums.VerificationStatus: [ { label: '', value: ''}]
-  });
+    
+  const handleChangeVerificationStatus = async( id: string )=>{
+      
+      if(!window.confirm("Deseja alterar o status da empresa?")) return;
 
+      try {
+          const data = companyId.parse({ id });
+      
+          try{
+              const response = await getAPIClient().put(`/admin/${data.id}/change-company-verification-status`)
+              toast.success(response.data.message)
+              load();
+          }catch(err){
+              handleServerError(err);
+          }
+      } catch (error) {
+          if (error instanceof z.ZodError) {
+              const message = JSON.parse(error.message);
+              toast.error(message[0].message);
+          }
+      }
+
+  }
+  
  
   return (
     <Flex className="p-6" direction="column" gap="4">
@@ -87,37 +125,7 @@ export default function PendingCompaniesTable() {
           <Flex w="full" gap="2" direction="column">
             <Text>Filtros</Text>
             <Flex w="full">
-              <Field.Root>
-                <Select.Root 
-                    defaultValue={["pending"]}
-                    onValueChange={({value}) => handleStatusChange(value[0])}
-                    collection={verificationStatusList}  
-                    width="full"
-                >
-                <Select.HiddenSelect />
-                <Select.Control>
-                    <Select.Trigger>
-                    <Select.ValueText placeholder="Selecione um status" />
-                        </Select.Trigger>
-                    <Select.IndicatorGroup>
-                        <Select.Indicator />
-                    </Select.IndicatorGroup>
-                </Select.Control>
-                <Portal>
-                    <Select.Positioner>
-                    <Select.Content>
-                        {verificationStatusList.items && verificationStatusList.items.map((status) => (
-                        <Select.Item item={status} key={status.value}>
-                            {status.label}
-                            <Select.ItemIndicator />
-                        </Select.Item>
-                        ))}
-                    </Select.Content>
-                    </Select.Positioner>
-                </Portal>
-              </Select.Root>
-              <Field.HelperText>Verifique o status de empresa para saber se ela pode ou não publicar vagas.</Field.HelperText>
-            </Field.Root>
+              <ChangeVerificationStatus defaultStatus={filters.verificationStatus} handleStatusChange={handleStatusChange} />
             </Flex>
           </Flex>
         }
@@ -125,7 +133,18 @@ export default function PendingCompaniesTable() {
           { key: "name", label: "Nome" },
           { key: "cnpj", label: "CNPJ" },
           { key: "contactEmail", label: "Contato" },
-          { key: "verificationStatus", label: "Status" },
+          { key: "phone", label: "Telefone" },
+          { key: "verificationStatus", label: "Status", render: (c) =>{
+            let verificationStatus = [{label: c.verificationStatus}];
+            if(enums){
+              verificationStatus = enums.VerificationStatus.filter( item => item.value == c.verificationStatus)
+            }
+            return (
+              <Stack bg={`${bgStatus[c.verificationStatus as StatusKey]}`} textAlign="center" rounded="sm">
+                {verificationStatus[0].label}
+              </Stack>
+            );
+          } },
           {
             key: "createdAt",
             label: "Criado em",
@@ -139,22 +158,22 @@ export default function PendingCompaniesTable() {
         totalPages={totalPages}
         onPageChange={handlePageChange}
         onSearch={handleSearch}
+        searchPlaceholder="Pesquise por uma empresa por nome, e-mail ou CNPJ"
         renderActions={(company) => (
-          <Flex>
-              
+          <Flex gap="0.5" alignItems="center">
               <Button
-              title={`Status atual: ${company.verificationStatus}`}
-              size="sm"
-              bg={`${
-                company.verificationStatus == "pending" ? "orange.500":
-                company.verificationStatus == "approved" ? "green.500":
-                company.verificationStatus == "rejected" ? "red.500":
-                company.verificationStatus == "under_review" ? "blue.500":"white"
-              }`}
-              onClick={() => alert(company.id)}
+                title={`Status atual: ${company.verificationStatus}`}
+                size="xs"
+                bg={`${bgStatus[company.verificationStatus as StatusKey]}`}
+                onClick={() => handleChangeVerificationStatus(company.id)}
             >
               <MdChangeCircle  />
             </Button>
+              <Link title="Ver dados da empresa" href={`/company/${company.id}`}>
+                <Button size="xs" bg="blue.500">
+                  <FiEye />
+                </Button>
+              </Link>
           </Flex>
         )}
       />
