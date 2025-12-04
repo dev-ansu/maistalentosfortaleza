@@ -1,16 +1,17 @@
-import { ReactNode } from "react"
+import { ReactNode, Ref, useEffect, useRef, useState } from "react"
 import {
   useColorModeValue,
 } from "@/_components/ui/color-mode"
 import {IconButton,CloseButton,Flex,Icon,DrawerContent,Text,useDisclosure,BoxProps,FlexProps,Box} from "@chakra-ui/react"
 import { Drawer } from "@chakra-ui/react"
-import {FiMenu, FiSettings} from "react-icons/fi"
+import {FiChevronDown, FiChevronUp, FiMenu, FiSettings, FiUser} from "react-icons/fi"
 import { IconType } from "react-icons"
 import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
 import { useMenu } from "@/_hooks/useMenu";
 import { MenuIcons } from "@/_constants/icons"
 import { useMenuContext } from "@/_context/MenuContext"
+import { FaSignOutAlt } from "react-icons/fa"
 
 export interface MenuItem {
     label: string;
@@ -24,11 +25,82 @@ export interface LinkItemsProps {
     route: string;
 }
 
+function Topbar(){
+    const { user, logoutUser } = useAuthContext();
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement | null>(null);
 
+    const handleTopMenu = (e: React.MouseEvent) => {
+        e.stopPropagation(); // impede o clique de ser capturado pelo listener global
+        setOpen((prev) => !prev);
+    };
+
+    const handleLogout = async()=>{
+        await logoutUser();
+    }    
+    
+    useEffect(() => {
+
+        const handleClickOutside = (e: MouseEvent)=>{
+            if(ref.current && !ref.current.contains(e.target as Node)){
+                setOpen(false);
+            }
+        }
+
+        if(open){
+            document.addEventListener("click", handleClickOutside)
+        }
+
+        return () => document.removeEventListener("click", handleClickOutside)
+    }, [open])
+
+
+    return(
+        <>
+        <Flex bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
+            <Flex borderWidth="1px" px="4" borderRadius="lg" onClick={handleTopMenu} cursor="pointer" alignItems="center" justifyContent="flex-end">
+                <Flex alignItems="center">
+                    <Text fontSize="12px"> 
+                        {user?.name} 
+                    </Text>
+                    { !open &&  <FiChevronDown style={{ marginTop: "4px"}} /> }
+                    { open &&  <FiChevronUp style={{ marginTop: "4px"}} /> }
+                </Flex>
+            </Flex>
+            {open && 
+                <Flex zIndex="1" transition="all" boxShadow="2xl" ref={ref} borderWidth="2px" rounded="xl" direction="column" gap="2" position="absolute" top="8" bg="talento.400" px="6" py="2" w="250px" right="0">
+                    <Link href="">
+                        <Flex gap="1" fontSize="14px" alignItems="center">
+                            <FiUser /> Perfil
+                        </Flex>
+                    </Link>
+                    <Flex borderWidth="1px"></Flex>
+                    <Box onClick={handleLogout}  >
+                    <Flex
+                            px="2" py="1"
+                            align="center"
+                            borderRadius="lg"
+                            bg="red.500"
+                            color="white"
+                            cursor="pointer"
+                            _hover={{ bg: "red.600" }}
+                            gap="1"
+                            w="full"
+                            >
+                            <Icon as={FaSignOutAlt}  />
+                            <Text fontWeight="medium">Sair</Text>
+                        </Flex>
+                    </Box>
+                </Flex>
+            }
+        </Flex>
+        </>
+    )
+}
 
 export function Sidebar({children}: {children: ReactNode}){
     const {open, onOpen, onClose} = useDisclosure();
-
+    const { user } = useAuthContext();
 
     return(
         <Box id="sidebar" minH="100vh" bg="talento.900">
@@ -50,8 +122,11 @@ export function Sidebar({children}: {children: ReactNode}){
                 
             </Drawer.Root>
             <MobileNav className="mobile_nav" display={{ base:"flex", md: "none"}} onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60}} p={4}>
-                {children}
+            <Box ml={{ base: 0, md: 60}}>
+                <Topbar />
+                <Box p="2" px="4">
+                    {children}
+                </Box>
             </Box>
         </Box>
     )
@@ -67,11 +142,9 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     
     const { menuItems } = useMenuContext();
     
-    const { logoutUser, haveResume, user } = useAuthContext();
+    const { haveResume, user } = useAuthContext();
 
-    const handleLogout = async()=>{
-        await logoutUser();
-    }    
+    
     
     return(
         <Box
@@ -98,24 +171,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
                 <NavItem icon={icon} route={item.route} key={item.label}>
                     {item.label}
                 </NavItem>
-            )})}
-
-            {/* 🔥 BOTÃO DE SAIR */}
-            <Box onClick={handleLogout} position="absolute" bottom="4" w="100%" px="4">
-                <Flex
-                align="center"
-                p="3"
-                borderRadius="lg"
-                bg="red.500"
-                color="white"
-                cursor="pointer"
-                _hover={{ bg: "red.600" }}
-                onClick={() => console.log("SAIR")}
-                >
-                <Icon as={FiSettings} mr="3" />
-                <Text fontWeight="medium">Sair</Text>
-                </Flex>
-            </Box>
+            )})}         
             
         </Box>
     )

@@ -14,7 +14,7 @@ export default function Dashboard(){
                 <title> Mais Talentos Fortaleza - Dashboard</title>
             </Head>
             <Sidebar>
-                {user?.userType == 'candidate' && 
+                {user?.userType == 'candidate' && !user.isSuperAdmin && 
                     <SemCurriculo />
                 }
                 <Flex>
