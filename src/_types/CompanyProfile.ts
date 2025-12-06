@@ -9,8 +9,13 @@ export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | 
     city: CityProps;
     stateId: string;
     cityId: string;
+    companySize: CompanySize;
+    isVerified: Boolean;
     companyInterest: CompanyInterestList[];
+    foundedYear: string;
+    createdAt: string;
     verificationStatus: VerificationStatus;
 }
 
 export type VerificationStatus = "pending" | "approved" | "rejected" | "under_review"
+export type CompanySize = "micro" | "small" | "medium" | "large" | "enterprise";
