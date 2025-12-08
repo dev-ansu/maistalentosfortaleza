@@ -46,31 +46,35 @@ export const Company = ({ company }: Props)=>{
                             </a>
                         }
                     </Flex>
-                    <Flex wrap="wrap" maxW="max-content" alignSelf="center" justifyContent="space-between" borderTopWidth="1px">
-                        <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
-                            <Text fontWeight="semibold">Status</Text>
-                            <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm" bg={`${bgStatus[company.verificationStatus] as StatusKey}`}>
-                                {enums && enums.VerificationStatus.filter( item => item.value == company.verificationStatus)[0].label}
-                            </Stack>
-                        </Flex>                        
-                        <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
-                            <Text fontWeight="semibold">Verificada</Text>
-                            <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm" bg={`${company.isVerified ? "blue.500":"red.500"}`}>
-                                {company.isVerified ? "Sim":"Não"}
-                            </Stack>
-                        </Flex>                        
-                        <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
-                            <Text fontWeight="semibold">Tamanho</Text>
-                            <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm">
-                                {company.companySize ?? "N/A"}
-                            </Stack>
-                        </Flex>                        
-                        <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
-                            <Text fontWeight="semibold">Localização</Text>
-                            <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm">
-                                <Text>{company.city.name}, {company.state.acronym}</Text>
-                            </Stack>
-                        </Flex>                        
+                    <Flex alignSelf={{ base:"flex-start", md:"center" }} justifyContent="space-between" borderTopWidth="1px">
+                        <Flex direction={{ base:"column", md:"row "}}>
+                            <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
+                                <Text fontWeight="semibold">Status</Text>
+                                <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm" bg={`${bgStatus[company.verificationStatus] as StatusKey}`}>
+                                    {enums && enums.VerificationStatus.filter( item => item.value == company.verificationStatus)[0].label}
+                                </Stack>
+                            </Flex>                        
+                            <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
+                                <Text fontWeight="semibold">Verificada</Text>
+                                <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm" bg={`${company.isVerified ? "blue.500":"red.500"}`}>
+                                    {company.isVerified ? "Sim":"Não"}
+                                </Stack>
+                            </Flex>
+                        </Flex>
+                        <Flex direction={{ base:"column", md:"row "}}>
+                            <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
+                                <Text fontWeight="semibold">Tamanho</Text>
+                                <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm">
+                                    {company.companySize ?? "N/A"}
+                                </Stack>
+                            </Flex>                        
+                            <Flex p="4" w="full" textAlign="center" direction="column" gap="2" borderRightWidth="1px">
+                                <Text fontWeight="semibold">Localização</Text>
+                                <Stack fontSize="12px" px="0.5" textAlign="center" rounded="sm">
+                                    <Text>{company.city.name}, {company.state.acronym}</Text>
+                                </Stack>
+                            </Flex>                        
+                        </Flex>                      
                     </Flex>
                     <Flex direction="column" alignItems="center" textAlign="center" w="full" justifyContent="center">
                         <a href={`${company.website}`} style={{ textAlign:"center"}} target="_blank">

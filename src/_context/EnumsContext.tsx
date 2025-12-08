@@ -17,6 +17,9 @@ export interface EnumsProps{
     Ethnicity: EnumProps[];
     CompanySize: EnumProps[];
     VerificationStatus: EnumProps[];
+    ContractType:EnumProps[];
+    WorkloadType: EnumProps[];
+    Seniority: EnumProps[];
 }
 
 export interface EnumProps{

@@ -10,8 +10,8 @@ import { StateProps } from "@/_types/CandidateProfile";
 import { getAPIClient } from "@/_services/apiClient";
 import { USER_TYPES } from "@/_constants";
 import { InterestAreas } from "@/_types/InterestArea";
-import { useAuthContext } from "@/_context/AuthContext";
 import { CompanyProfile } from "@/_types/CompanyProfile";
+
 
 interface PerfilProps{
     states: StateProps[];
@@ -38,6 +38,10 @@ export default function Perfil({ states, interestAreas, company }: PerfilProps){
             name: company?.name,
             phone: company?.phone,
             website: company?.website,
+            address: company?.address,
+            zipCode: company?.zipCode,
+            companySize: company?.companySize ? [company.companySize]:[],
+            foundedYear: company?.foundedYear,
 
         }
     });

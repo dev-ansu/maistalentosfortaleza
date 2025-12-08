@@ -42,7 +42,26 @@ export const companyProfileSchema = z.object({
     cityId: z
         .array(z.uuid(), {message: "Id inválido."})
         .length(1, "Selecione uma cidade válida"),
-    companyInterest: z.array(z.uuid({message: "Id inválido."}).nonempty({message:"O campo é obrigatório."}), {message:"Deve ser um conjunto de valores."}).nonempty({message: "O campo é obrigatório."})
+    companyInterest: z.array(z.uuid({message: "Id inválido."}).nonempty({message:"O campo é obrigatório."}), {message:"Deve ser um conjunto de valores."}).nonempty({message: "O campo é obrigatório."}),
+    companySize: z.array(z.string().trim().nonempty({"message":"Campo obrigatório."}), {message:"O campo é obrigatório."}),
+    foundedYear: z.string()
+        .trim()
+        .nonempty({ message: "Campo obrigatório." })
+        .refine(value => /^\d+$/.test(value), {
+            message: "O ano de fundação deve ser um inteiro válido."
+        })
+        .refine(value => {
+            const year = Number(value);
+            return year >= 1800 && year <= new Date().getFullYear();
+        }, {
+            message: "Ano de fundação fora do intervalo permitido."
+        }),
+    address: z.string().trim().nonempty({ message: "Campo obrigatório."}),
+    zipCode: z
+    .string()
+    .trim()
+    .nonempty({ message: "Campo obrigatório." })
+    .regex(/^[0-9]{5}-?[0-9]{3}$/, { message: "CEP inválido." })
 });
 
 

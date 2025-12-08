@@ -7,6 +7,7 @@ import { CompanyProfile } from "@/_types/CompanyProfile"
 import { CompanyProfileFormData } from "@/_validations/company_profile"
 import { Checkbox, Field, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import { Controller, useController, useFormContext } from "react-hook-form"
+import { CompanySizeSelect } from "../_CompanySize"
 
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
     
@@ -43,6 +44,15 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                     <ServerErrors serverErrors={serverErrors} field="website"/>
                 </Field.Root>
             </Stack>
+            <Stack w="full" direction={{ base: "column", md: "row" }}>
+                <Field.Root w="full" invalid={!!errors.foundedYear || !!serverErrors.foundedYear}>
+                    <Field.Label>Ano de fundação</Field.Label>
+                    <Input {...register("foundedYear")} placeholder="Ano de fundação"/>
+                    <Field.ErrorText>{errors.foundedYear?.message}</Field.ErrorText>
+                    <ServerErrors serverErrors={serverErrors} field="foundedYear"/>
+                </Field.Root>
+                <CompanySizeSelect />
+            </Stack>
             <Stack>
                 <Field.Root invalid={!!errors.description || !!serverErrors.description}>
                     <Field.Label>Sobre a empresa</Field.Label>
@@ -56,9 +66,26 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                     <ServerErrors serverErrors={serverErrors} field="description"/>
                 </Field.Root>
             </Stack>
-            <Field.Root flexDir="row" w="full">
-                <StateItems states={states}  />
-                <CitiesItems city={company?.city} />
+            <Field.Root flexDir="column" w="full">
+                <Flex w="full">
+                    <StateItems states={states}  />
+                    <CitiesItems city={company?.city} />
+                </Flex>
+                <Flex w="full">
+                <Field.Root invalid={!!errors.address || !!serverErrors.address}>
+                    <Field.Label>Endereço completo</Field.Label>
+                    <Input {...register("address")} placeholder="Endereço completo"/>
+                    <Field.ErrorText>{errors.address?.message}</Field.ErrorText>
+                    <ServerErrors serverErrors={serverErrors} field="address"/>
+                </Field.Root>
+                <Field.Root invalid={!!errors.zipCode || !!serverErrors.zipCode}>
+                    <Field.Label>CEP</Field.Label>
+                    <Input {...register("zipCode")} placeholder="CEP"/>
+                    <Field.ErrorText>{errors.zipCode?.message}</Field.ErrorText>
+                    <ServerErrors serverErrors={serverErrors} field="zipCode"/>
+                </Field.Root>
+                </Flex>
+
             </Field.Root>
             <Field.Root>
                 <Controller

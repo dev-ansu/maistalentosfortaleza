@@ -1,7 +1,7 @@
 import { CompanyProfileFormData } from "@/_validations/company_profile";
 import { CityProps, CompanyInterestList, StateProps } from "./CandidateProfile";
 
-export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | "cityId" | "companyInterest">{
+export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | "cityId" | "companyInterest" | "companySize">{
     id: string;
     name: string;
     jobs: any;
@@ -12,7 +12,6 @@ export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | 
     companySize: CompanySize;
     isVerified: Boolean;
     companyInterest: CompanyInterestList[];
-    foundedYear: string;
     createdAt: string;
     verificationStatus: VerificationStatus;
 }
