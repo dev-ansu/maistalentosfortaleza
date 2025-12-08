@@ -43,7 +43,7 @@ export const InterestAreasSelect = ({ interestAreas }: { interestAreas: Interest
                         <Select.HiddenSelect />
                         <Select.Control>
                             <Select.Trigger>
-                            <Select.ValueText placeholder="Selecione uma escolaridade" />
+                            <Select.ValueText placeholder="Selecione suas áreas de interesse" />
                                 </Select.Trigger>
                             <Select.IndicatorGroup>
                                 <Select.Indicator />

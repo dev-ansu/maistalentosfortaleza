@@ -1,7 +1,7 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { getAPIClient } from "@/_services/apiClient";
-import { CandidateProfile, CityProps } from "@/_types/CandidateProfile";
+import { CityProps } from "@/_types/CandidateProfile";
 import { PersonalInfoFormData } from "@/_validations/curriculo";
 import { createListCollection, Field, Portal, Select } from "@chakra-ui/react"
 import { useEffect, useState } from "react";

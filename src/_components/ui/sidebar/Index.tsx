@@ -61,7 +61,7 @@ function Topbar(){
     return(
         <>
         <Flex bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
-            <Flex borderWidth="1px" px="4" borderRadius="lg" onClick={handleTopMenu} cursor="pointer" alignItems="center" justifyContent={`${
+            <Flex  px="4" borderRadius="lg"   alignItems="center" justifyContent={`${
                 user?.userType == "company" ? "space-between":"flex-end"
             }`} w="full">
                 {user?.userType == "company" && 
@@ -69,7 +69,7 @@ function Topbar(){
                         Status: {enums ? enums.VerificationStatus.filter( i  => i.value == user.company.verificationStatus )[0].label:""}
                     </Flex>
                 }
-                <Flex alignItems="center">
+                <Flex borderWidth="1px" cursor="pointer" onClick={handleTopMenu} alignItems="center">
                     <Text fontSize="12px"> 
                         {user?.name} 
                     </Text>
