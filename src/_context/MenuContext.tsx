@@ -2,7 +2,17 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { getAPIClient } from "@/_services/apiClient";
 import { useAuthContext } from "./AuthContext";
 
-const MenuContext = createContext<any>(null);
+interface MenuProps{
+  menuItems: MenuItem[];
+}
+
+export interface MenuItem {
+  label: string;
+  icon: string; // Componente do ícone já importado
+  route: string;
+}
+
+const MenuContext = createContext<MenuProps>({} as MenuProps);
 
 export function MenuProvider({ children }: { children: ReactNode}) {
   const { user } = useAuthContext();

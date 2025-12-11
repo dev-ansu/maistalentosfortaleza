@@ -43,7 +43,7 @@ export default function UsersTable({ interestAreas }: { interestAreas: InterestA
       const queryString = buildQueryParams(filters);
       
       const res = await getAPIClient().get(
-        `/admin/users?${queryString}`
+        `/admin/list/users?${queryString}`
       );
   
       const items = res.data.data.data;

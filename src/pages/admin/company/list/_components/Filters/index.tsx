@@ -14,7 +14,7 @@ export const ChangeVerificationStatus = ({ handleStatusChange, defaultStatus }: 
         items: enums ? enums.VerificationStatus: [ { label: '', value: ''}]
     });
     
-    console.log(defaultStatus);
+   
     return(
         <Field.Root>
             <Select.Root 

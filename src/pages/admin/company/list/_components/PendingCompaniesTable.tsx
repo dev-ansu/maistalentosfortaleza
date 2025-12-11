@@ -54,12 +54,13 @@ export default function PendingCompaniesTable() {
   });
   
   async function load() {
+    
     setLoading(true);
 
     const queryString = buildQueryParams(filters);
     
     const res = await getAPIClient().get(
-      `/admin/companies/pending?${queryString}`
+      `/admin/list/companies?${queryString}`
     );
 
     const items = res.data.data.data;
@@ -99,7 +100,7 @@ export default function PendingCompaniesTable() {
           const data = companyId.parse({ id });
       
           try{
-              const response = await getAPIClient().put(`/admin/${data.id}/change-company-verification-status`)
+              const response = await getAPIClient().patch(`/admin/company/${data.id}/verify`)
               toast.success(response.data.message)
               load();
           }catch(err){

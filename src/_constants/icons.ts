@@ -4,6 +4,10 @@ import { BsSend } from "react-icons/bs";
 import { FiBriefcase, FiUsers, FiSettings } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { FaBuilding } from "react-icons/fa";
+import { MdOutlinePendingActions } from "react-icons/md";
+import { LiaExchangeAltSolid } from "react-icons/lia";
+import { FaThList } from "react-icons/fa";
+
 
 export const MenuIcons: { [key: string]: any } = {
   CiHome: CiHome,
@@ -14,4 +18,7 @@ export const MenuIcons: { [key: string]: any } = {
   FaBuilding: FaBuilding,
   FiSettings: FiSettings,
   CgProfile: CgProfile,
+  MdOutlinePendingActions: MdOutlinePendingActions,
+  LiaExchangeAltSolid: LiaExchangeAltSolid,
+  FaThList: FaThList
 }

@@ -13,12 +13,14 @@ import { MenuIcons } from "@/_constants/icons"
 import { useMenuContext } from "@/_context/MenuContext"
 import { FaSignOutAlt } from "react-icons/fa"
 import { useEnumsContext } from "@/_context/EnumsContext"
-import { bgStatus, StatusKey } from "@/pages/admin/empresas-pendentes/_components/PendingCompaniesTable"
+import { bgStatus, StatusKey } from "@/pages/admin/company/list/_components/PendingCompaniesTable"
+
 
 export interface MenuItem {
-    label: string;
-    icon: string; // Agora é string com o nome do ícone
-    route: string;
+  label: string;
+  icon: string;
+  route?: string; // Agora é opcional, pois itens com submenu não têm rota direta
+  children?: MenuItem[]; // Para submenus
 }
 
 export interface LinkItemsProps {
@@ -150,13 +152,9 @@ interface SidebarProps extends BoxProps{
 
 const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
     
-    const { menuItems } = useMenuContext();
+    const { menuItems } = useMenuContext();   
     
-    const { haveResume, user } = useAuthContext();
-
-    
-    
-    return(
+    return (
         <Box
             bg="talento.400"
             borderRight="1px"
@@ -175,18 +173,67 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) =>{
                 </Link>
                 <CloseButton display={{ base: "flex", md:"none"}} onClick={onClose}/>
             </Flex>
-            {menuItems.map( (item: LinkItemsProps) => {
-                const icon = MenuIcons[item.icon];
-                return(
-                <NavItem icon={icon} route={item.route} key={item.label}>
-                    {item.label}
-                </NavItem>
-            )})}         
+
+            {menuItems.map(item => (
+              <SidebarItem key={item.label} item={item} />
+            ))}        
             
         </Box>
     )
-
 }
+
+const SidebarItem = ({ item }: { item: MenuItem }) => {
+  const [open, setOpen] = useState(false);
+
+  const IconComp = MenuIcons[item.icon];
+
+  // Se NÃO tiver submenu → renderiza normal
+  if (!item.children) {
+    return (
+      <NavItem icon={IconComp} route={item.route!}>
+        {item.label}
+      </NavItem>
+    );
+  }
+
+  // Se tiver children → é submenu
+  return (
+    <Box>
+      <Flex
+        align="center"
+        p="4"
+        mx="4"
+        cursor="pointer"
+        _hover={{ bg: "talento.900", color: "white" }}
+        onClick={() => setOpen(prev => !prev)}
+      >
+        <Icon as={IconComp} mr="4" fontSize="16" />
+        <Text flex="1">{item.label}</Text>
+        {open ? <FiChevronUp /> : <FiChevronDown />}
+      </Flex>
+
+      {open && (
+        <Box ml="6" borderLeftWidth="1px" pl="3">
+          {item.children.map(child => {
+            const CIcon = MenuIcons[child.icon];
+            return (
+              <NavItem
+                key={child.label}
+                icon={CIcon}
+                route={child.route!}
+                p="3"
+                fontSize="14px"
+              >
+                {child.label}
+              </NavItem>
+            );
+          })}
+        </Box>
+      )}
+    </Box>
+  );
+};
+
 
 interface NavItemProps extends FlexProps
 {icon: IconType; children: ReactNode; route: string}
