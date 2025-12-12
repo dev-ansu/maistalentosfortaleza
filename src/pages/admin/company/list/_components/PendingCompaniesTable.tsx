@@ -11,6 +11,8 @@ import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { ChangeVerificationStatus } from "./Filters";
+import { Can } from "@/_components/ui/Can/Can";
+import { useHasPermission } from "@/_hooks/useHasPermission";
 export interface Company {
   id: string;
   name: string;
@@ -37,6 +39,7 @@ export type StatusKey = keyof typeof bgStatus;
 
 
 export default function PendingCompaniesTable() {
+  const { hasPermission } = useHasPermission();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -52,6 +55,7 @@ export default function PendingCompaniesTable() {
       page: 1
     }
   });
+  let handleChangeVerificationStatus: (id: string)=> Promise<void>;
   
   async function load() {
     
@@ -91,28 +95,32 @@ export default function PendingCompaniesTable() {
     updateFilter('page', page);
   };
 
-    
-  const handleChangeVerificationStatus = async( id: string )=>{
-      
-      if(!window.confirm("Deseja alterar o status da empresa?")) return;
+  
 
-      try {
-          const data = companyId.parse({ id });
-      
-          try{
-              const response = await getAPIClient().patch(`/admin/company/${data.id}/verify`)
-              toast.success(response.data.message)
-              load();
-          }catch(err){
-              handleServerError(err);
+  if(hasPermission(["company.approve", "company.verify"])){
+
+      handleChangeVerificationStatus = async( id: string )=>{
+          
+          if(!window.confirm("Deseja alterar o status da empresa?")) return;
+
+          try {
+              const data = companyId.parse({ id });
+          
+              try{
+                  const response = await getAPIClient().patch(`/admin/company/${data.id}/verify`)
+                  toast.success(response.data.message)
+                  load();
+              }catch(err){
+                  handleServerError(err);
+              }
+          } catch (error) {
+              if (error instanceof z.ZodError) {
+                  const message = JSON.parse(error.message);
+                  toast.error(message[0].message);
+              }
           }
-      } catch (error) {
-          if (error instanceof z.ZodError) {
-              const message = JSON.parse(error.message);
-              toast.error(message[0].message);
-          }
+
       }
-
   }
   
  
@@ -162,14 +170,16 @@ export default function PendingCompaniesTable() {
         searchPlaceholder="Pesquise por uma empresa por nome, e-mail ou CNPJ"
         renderActions={(company) => (
           <Flex gap="0.5" alignItems="center">
-              <Button
-                title={`Status atual: ${company.verificationStatus}`}
-                size="xs"
-                bg={`${bgStatus[company.verificationStatus as StatusKey]}`}
-                onClick={() => handleChangeVerificationStatus(company.id)}
-            >
-              <MdChangeCircle  />
-            </Button>
+              <Can permission={['company.approve', 'company.verify']}>
+                <Button
+                    title={`Status atual: ${company.verificationStatus}`}
+                    size="xs"
+                    bg={`${bgStatus[company.verificationStatus as StatusKey]}`}
+                    onClick={() => handleChangeVerificationStatus(company.id)}
+                >
+                  <MdChangeCircle  />
+                </Button>
+              </Can>
               <Link title="Ver dados da empresa" href={`/company/${company.id}`}>
                 <Button size="xs" bg="blue.500">
                   <FiEye />

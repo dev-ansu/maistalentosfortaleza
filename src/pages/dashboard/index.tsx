@@ -8,6 +8,8 @@ import Head from "next/head";
 export default function Dashboard(){
     const { user } = useAuthContext();
 
+    console.log(user);
+
     return(
         <>
             <Head>

@@ -7,6 +7,9 @@ import { FaBuilding } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { FaThList } from "react-icons/fa";
+import { FaUserGroup } from "react-icons/fa6";
+import { FaLock } from "react-icons/fa6";
+
 
 
 export const MenuIcons: { [key: string]: any } = {
@@ -20,5 +23,7 @@ export const MenuIcons: { [key: string]: any } = {
   CgProfile: CgProfile,
   MdOutlinePendingActions: MdOutlinePendingActions,
   LiaExchangeAltSolid: LiaExchangeAltSolid,
-  FaThList: FaThList
+  FaThList: FaThList,
+  FaLock: FaLock,
+  FaUserGroup: FaUserGroup
 }

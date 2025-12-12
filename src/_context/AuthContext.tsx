@@ -28,7 +28,16 @@ interface UserProps{
     candidate?: CandidateProps;
     company: CompanyProfile;
     userType: 'candidate' | 'company' | undefined;
+    role: string;
+    permissions: { permission: PermissionProps}[] ;
+};
+
+export interface PermissionProps{
+    id: string;
+    name: string;
+    module: string;
 }
+
 
 interface CandidateProps{
     id: string;
@@ -96,7 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
         if(token){
             getAPIClient().get("/me").then( (response) => {
                 const { data } = response.data;
-       
+                
                 setUser({
                     id: data.id,
                     name: data.name,
@@ -106,6 +115,8 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                     company: data.company,
                     token,
                     userType: data.userType,
+                    role: data.role,
+                    permissions: data.permissions
                 });
     
             }).catch(()=>{
@@ -120,7 +131,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 email, password
             });
      
-            const {id, name, isSuperAdmin, token, candidate, userType, company} = response.data.data;
+            const {id, name, isSuperAdmin, token, candidate, userType, company, role, permissions} = response.data.data;
             
             setCookie(undefined, COOKIE_NAME, token, {
                 maxAge: TOKEN_MAX_AGE, // expira em 1 mês
@@ -130,7 +141,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             
 
             setUser({
-                id, name, email, isSuperAdmin, token, candidate, userType, company
+                id, name, email, isSuperAdmin, token, candidate, userType, company, role, permissions
             });
 
             getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`
