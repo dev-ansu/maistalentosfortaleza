@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { z } from "zod";
 import { CreateRoleModal } from "./CreateRoleModal";
 import { IoClose } from "react-icons/io5";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 // import { ChangeVerificationStatus } from "./Filters";
 
 export interface RolePermission{
@@ -40,7 +42,7 @@ export default function RolesTable() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, serverErrors } = useServerErrors();
-
+  const router = useRouter();
 
   const { filters, updateFilter, resetFilters } = useTableFilters({
     initialFilters: {
@@ -55,18 +57,31 @@ export default function RolesTable() {
 
     const queryString = buildQueryParams(filters);
     
-    const res = await getAPIClient().get(
-      `/admin/list/roles?${queryString}`
-    );
+    try{
+      const res = await getAPIClient().get(
+        `/admin/list/roles?${queryString}`
+      );
 
-    const items = res.data.data.data;
+      const items = res.data.data.data;
 
 
-    setRoles(items);
-    setTotal(res.data.data.total);
-    setTotalPages(res.data.data.totalPages);
-    setCurrentPage(res.data.data.currentPage);
-    setLoading(false);
+      setRoles(items);
+      setTotal(res.data.data.total);
+      setTotalPages(res.data.data.totalPages);
+      setCurrentPage(res.data.data.currentPage);
+      setLoading(false);
+    }catch(error: any){
+
+      if(error instanceof AxiosError){
+        if( error.status == 401 || error.status == 403){
+            toast.error(error.response?.data.message)            
+            
+            router.push("/dashboard")
+          }          
+        }
+        toast.error(error.response?.data.message ?? "Houve um erro ao tentar carregar a página.")            
+        router.push("/dashboard")
+    }
 
   }
 

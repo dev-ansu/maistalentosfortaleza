@@ -27,21 +27,21 @@ export default function(){
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const api = getAPIClient(ctx);
         
-    const can = await canAccess(ctx,
-        [
-            'roles.list',
-            'roles.view'
-        ]        
-    );
+    // const can = await canAccess(ctx,
+    //     [
+    //         'roles.list',
+    //         'roles.view'
+    //     ]        
+    // );
 
-    if(!can){
-        return {
-            redirect: {
-                destination: "/dashboard",
-                permanent: false,
-            },
-        };
-    }
+    // if(!can){
+    //     return {
+    //         redirect: {
+    //             destination: "/dashboard",
+    //             permanent: false,
+    //         },
+    //     };
+    // }
 
     const interestAreasResponse = await api.get("/interestAreas")
     const interestAreas = interestAreasResponse.data.data
