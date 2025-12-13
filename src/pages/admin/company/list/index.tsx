@@ -5,6 +5,8 @@ import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import PendingCompaniesTable from "./_components/PendingCompaniesTable";
 import { canAccess } from "@/_utils/canAccess";
+import { PermissionProps } from "@/_context/AuthContext";
+
 
 export default function EmpresasPendentes(){
     return (
@@ -41,15 +43,14 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
         };
     }
     
-    const api = getAPIClient(ctx);
-
-    const response = await api.get("/me");
-    const user = response.data.data;
+    // const api = getAPIClient(ctx);
+    
+    
 
     
     return{
         props:{
-            
+    
         }
     }
 });

@@ -1,29 +1,29 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { getAPIClient } from "@/_services/apiClient";
-import { createRoleValidation, RoleFormData } from "@/_validations/role.validation";
+import { createPermissionValidation, PermissionFormData } from "@/_validations/permission.validation";
 import { Button, CloseButton, Dialog, Field, Flex, Input, Portal, Text, Textarea, useDisclosure } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form"
 import { FiPlus } from "react-icons/fi"
 import { toast } from "react-toastify";
 
 
-export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
+export const CreatePermissionModal = ({ load }: { load: ()=> Promise<void> })=>{
   const [open, setOpen] = useState(false)
-  const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm<RoleFormData>({
+  const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm<PermissionFormData>({
     mode: "onBlur",
     criteriaMode:"firstError",
-    resolver: zodResolver(createRoleValidation)
+    resolver: zodResolver(createPermissionValidation)
   });
   const { serverErrors, handleServerError } = useServerErrors();
 
-  const onSubmit = async({name, description}: RoleFormData)=>{
+  const onSubmit = async({name, description, module}: PermissionFormData)=>{
       
       try{
-          const response = await getAPIClient().post("/admin/roles", {
-              name, description
+          const response = await getAPIClient().post("/admin/permission", {
+              name, description, module
           });
           toast.success(response.data.message);
           reset();
@@ -39,7 +39,7 @@ export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
       <Dialog.Root lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
         <Dialog.Trigger asChild>
           <Button alignSelf="flex-start" variant="outline" size="sm">
-            <FiPlus /> Função/papel
+            <FiPlus /> Permissão
           </Button>
         </Dialog.Trigger>
         <Portal>
@@ -47,15 +47,23 @@ export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
           <Dialog.Positioner>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>Nova função/papel</Dialog.Title>
+                <Dialog.Title>Nova permissão</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
                 <form onSubmit={handleSubmit(onSubmit)}>
 
                   <Flex direction="column" gap="2" w="full">
+                    <Field.Root invalid={!!errors?.module || !!serverErrors?.module}>
+                      <Field.Label>Módulo</Field.Label>
+                      <Input autoFocus {...register("module")} placeholder="Digite o nome do módulo da permissão, ex.: company, user"/>
+                      <Field.ErrorText>{errors.module?.message}</Field.ErrorText>
+                      <ServerErrors serverErrors={serverErrors} field="module"/>
+                      <Field.HelperText>Limite de 50 caracteres.</Field.HelperText>
+                    </Field.Root>
+
                     <Field.Root invalid={!!errors?.name || !!serverErrors?.name}>
-                      <Field.Label>Função/papel</Field.Label>
-                      <Input autoFocus {...register("name")} placeholder="Digite o nome da função/papel"/>
+                      <Field.Label>Permissão</Field.Label>
+                      <Input autoFocus {...register("name")} placeholder="Digite o nome da permissão, ex.: list, create, delete, list.pending"/>
                       <Field.ErrorText>{errors.name?.message}</Field.ErrorText>
                       <ServerErrors serverErrors={serverErrors} field="name"/>
                       <Field.HelperText>Limite de 50 caracteres.</Field.HelperText>
@@ -64,7 +72,7 @@ export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
                     <Field.Root invalid={!!errors.description || !!serverErrors?.description}>
                         <Field.Label>Descrição</Field.Label>
                         <Textarea
-                            placeholder="Escreva descrição sobre a função/papel..."
+                            placeholder="Escreva descrição sobre a permissão..."
                             {...register("description")}
                         />
                         <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
@@ -73,7 +81,7 @@ export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
                     </Field.Root>
                   </Flex>
 
-                  <Button mt="6" type="submit">Cadastrar</Button>
+                  <Button loading={isSubmitting} mt="6" type="submit">Cadastrar</Button>
                 </form>
               </Dialog.Body>
               <Dialog.Footer>

@@ -1,16 +1,12 @@
 import { DataTable } from "@/_components/DataTable";
-import { useEnumsContext } from "@/_context/EnumsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
 import { Button, Flex, Stack, Text } from "@chakra-ui/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FiEye } from "react-icons/fi";
-import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { CreateRoleModal } from "./CreateRoleModal";
+import { CreatePermissionModal } from "./CreatePermissionModal";
 import { IoClose } from "react-icons/io5";
 // import { ChangeVerificationStatus } from "./Filters";
 
@@ -18,22 +14,21 @@ export interface RolePermission{
 
 }
 
-export interface Role{
+export interface Permission{
   id: string;
   name: string;
+  module: string;
   description: string;
-  permissions: RolePermission[];
-  createdAt: Date;
 }
 
-const roleId = z.object({
+const permissionId = z.object({
     id: z.uuid("Id inválido.")
 });
 
 
 
-export default function RolesTable() {
-  const [roles, setRoles] = useState<Role[]>([]);
+export default function PermissionsTable() {
+  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,13 +51,13 @@ export default function RolesTable() {
     const queryString = buildQueryParams(filters);
     
     const res = await getAPIClient().get(
-      `/admin/list/roles?${queryString}`
+      `/admin/list/permission?${queryString}`
     );
 
     const items = res.data.data.data;
 
 
-    setRoles(items);
+    setPermissions(items);
     setTotal(res.data.data.total);
     setTotalPages(res.data.data.totalPages);
     setCurrentPage(res.data.data.currentPage);
@@ -86,13 +81,13 @@ export default function RolesTable() {
   
   
   const onDelete = async(id: string)=>{
-      if(!window.confirm("Deseja realmente apagar esta função/papel?")) return;
+      if(!window.confirm("Deseja realmente apagar esta permissão?")) return;
       setIsLoading(true);
        try {
-          const data = roleId.parse({ id });
+          const data = permissionId.parse({ id });
           try{
-              const response = await getAPIClient().delete(`/admin/roles/${data.id}`);
-              setRoles((prev) => prev.filter(item => item.id !== data.id));
+              const response = await getAPIClient().delete(`/admin/permission/${data.id}`);
+              setPermissions((prev) => prev.filter(item => item.id !== data.id));
               toast.success(response.data.message)
           }catch(err){
               handleServerError(err);
@@ -113,34 +108,32 @@ export default function RolesTable() {
 
   return (
     <Flex className="p-6" direction="column" gap="4">
-      <Text fontSize="2xl" fontWeight="semibold">Funções/papéis</Text>
+      <Text fontSize="2xl" fontWeight="semibold">Permissões</Text>
 
-      <CreateRoleModal load={load} />
+      <CreatePermissionModal load={load} />
 
       <DataTable
         resetFilters={resetFilters}
 
         columns={[
-          { key: "name", label: "Nome" },
+          { key: "module", label: "Módulo" },
+          { key: "name", label: "Nome", render: (permission)=>{
+            return `${permission.module}.${permission.name}`
+          } },
           { key: "description", label: "Descrição" },
-          {
-            key: "createdAt",
-            label: "Criado em",
-            render: (c) => new Date(c.createdAt).toLocaleDateString("pt-BR"),
-          },
         ]}
-        data={roles}
+        data={permissions}
         loading={loading}
         total={total}
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
         onSearch={handleSearch}
-        searchPlaceholder="Pesquise por uma função/papel por nome"
-        renderActions={(role) => (
+        searchPlaceholder="Pesquise por uma permissão pelo nome"
+        renderActions={(permission) => (
           <Flex gap="0.5" alignItems="center">
 
-            <Button disabled={isLoading} onClick={() => onDelete(role.id)} title="Excluir função/papel" size="xs" bg="red.500">
+            <Button disabled={isLoading} onClick={() => onDelete(permission.id)} title="Excluir permissão" size="xs" bg="red.500">
               <IoClose />
             </Button>
           

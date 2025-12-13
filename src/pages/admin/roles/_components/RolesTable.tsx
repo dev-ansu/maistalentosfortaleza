@@ -11,10 +11,12 @@ import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { CreateRoleModal } from "./CreateRoleModal";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoLockOpen } from "react-icons/io5";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-// import { ChangeVerificationStatus } from "./Filters";
+import { PermissionProps } from "@/_context/AuthContext";
+import { PermissionsByModule, RolePermissionDrawer } from "./RolePermissionDrawer";
+
 
 export interface RolePermission{
 
@@ -34,7 +36,7 @@ const roleId = z.object({
 
 
 
-export default function RolesTable() {
+export default function RolesTable({ permissions }:{ permissions: PermissionsByModule }) {
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -43,6 +45,8 @@ export default function RolesTable() {
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, serverErrors } = useServerErrors();
   const router = useRouter();
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [role, setRole] = useState<Role>();
 
   const { filters, updateFilter, resetFilters } = useTableFilters({
     initialFilters: {
@@ -124,13 +128,20 @@ export default function RolesTable() {
       setIsLoading(false);
     }
   }
- 
+
+  const handleOpenDrawer = (role: Role)=>{
+      setRole(role);
+      setOpenDrawer(true);
+  }
 
   return (
     <Flex className="p-6" direction="column" gap="4">
       <Text fontSize="2xl" fontWeight="semibold">Funções/papéis</Text>
 
       <CreateRoleModal load={load} />
+      {role &&
+        <RolePermissionDrawer role={role} permissions={permissions} open={openDrawer} setOpen={setOpenDrawer} />
+      }
 
       <DataTable
         resetFilters={resetFilters}
@@ -144,6 +155,7 @@ export default function RolesTable() {
             render: (c) => new Date(c.createdAt).toLocaleDateString("pt-BR"),
           },
         ]}
+
         data={roles}
         loading={loading}
         total={total}
@@ -157,6 +169,10 @@ export default function RolesTable() {
 
             <Button disabled={isLoading} onClick={() => onDelete(role.id)} title="Excluir função/papel" size="xs" bg="red.500">
               <IoClose />
+            </Button>
+            
+            <Button onClick={() => handleOpenDrawer(role)} title="Adicionar permissões" size="xs" bg="green.500">
+              <IoLockOpen />
             </Button>
           
           </Flex>

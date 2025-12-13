@@ -13,6 +13,7 @@ import { z } from "zod";
 import { ChangeVerificationStatus } from "./Filters";
 import { Can } from "@/_components/ui/Can/Can";
 import { useHasPermission } from "@/_hooks/useHasPermission";
+
 export interface Company {
   id: string;
   name: string;

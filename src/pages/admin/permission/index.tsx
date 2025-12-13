@@ -1,8 +1,8 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import RolesTable from "./_components/RolesTable";
-import { CreateRoleModal } from "./_components/CreateRoleModal";
+import { CreateRoleModal } from "./_components/CreatePermissionModal";
+import PermissionsTable from "./_components/PermissionsTable";
 
 export default function(){
     return(
@@ -12,7 +12,7 @@ export default function(){
             </Head>
             <Sidebar>
                 <Flex direction="column" gap="8">
-                    <RolesTable />
+                    <PermissionsTable />
                 </Flex>
             </Sidebar>
         </>
