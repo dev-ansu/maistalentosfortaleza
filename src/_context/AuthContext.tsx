@@ -17,6 +17,7 @@ interface AuthContenxtData{
     logoutUser: () => Promise<void>;
     haveResume: boolean;
     handleHaveResume: ()=> void;
+    reloadUserData: ()=> Promise<void>;
 }
 
 interface UserProps{
@@ -99,6 +100,31 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const handleHaveResume = () => {
         setHaveResume(prev => !prev);
     };
+
+    const reloadUserData = async()=>{
+        const { [COOKIE_NAME]: token} = parseCookies();
+        if(token){
+            getAPIClient().get("/me").then( (response) => {
+                const { data } = response.data;
+                
+                setUser({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    isSuperAdmin: data.isSuperAdmin,
+                    candidate: data.candidate,
+                    company: data.company,
+                    token,
+                    userType: data.userType,
+                    role: data.role,
+                    permissions: data.permissions
+                });
+    
+            }).catch(()=>{
+                signOut();
+            });
+        }
+    }
 
     useEffect(() => {
         const { [COOKIE_NAME]: token} = parseCookies();
@@ -196,7 +222,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     }
 
     return (
-        <AuthContext.Provider value={{ user, haveResume, handleHaveResume, isAuthenticated, signIn, signUp, logoutUser}}>
+        <AuthContext.Provider value={{ user,reloadUserData, haveResume, handleHaveResume, isAuthenticated, signIn, signUp, logoutUser}}>
             {children}
         </AuthContext.Provider>
     )

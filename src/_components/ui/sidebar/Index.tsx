@@ -64,11 +64,11 @@ function Topbar(){
         <>
         <Flex bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
             <Flex  px="4" borderRadius="lg"   alignItems="center" justifyContent={`${
-                user?.userType == "company" ? "space-between":"flex-end"
+                user?.userType && "company" && user?.company ? "space-between":"flex-end"
             }`} w="full">
-                {user?.userType == "company" && 
-                    <Flex bg={bgStatus[user.company.verificationStatus as StatusKey]} px="1.5" rounded="sm" fontSize="12px">
-                        Status: {enums ? enums.VerificationStatus.filter( i  => i.value == user.company.verificationStatus )[0].label:""}
+                {user?.userType == "company" && user?.company && 
+                    <Flex bg={bgStatus[user.company?.verificationStatus as StatusKey]} px="1.5" rounded="sm" fontSize="12px">
+                        Status: {enums ? enums.VerificationStatus.filter( i  => i.value == user.company?.verificationStatus )[0].label:""}
                     </Flex>
                 }
                 <Flex borderWidth="1px" cursor="pointer" onClick={handleTopMenu} alignItems="center">

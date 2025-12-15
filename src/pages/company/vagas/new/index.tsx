@@ -18,6 +18,7 @@ export default function({ states, city }: { states: StateProps[], city: CityProp
         defaultValues:{
             benefits: [],
             requirements: [],
+            isRemoteFriendly: false,
         }
     });
     

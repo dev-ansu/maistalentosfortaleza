@@ -48,7 +48,7 @@ export const CitiesItems = ({ city }: {city: CityProps | undefined})=>{
     loadCities();
 }, [stateId, setValue]);
     return (
-        <Field.Root invalid={!!errors.cityId}>
+        <Field.Root invalid={!!errors.cityId || !!serverErrors.city}>
             <Field.Label>Cidade</Field.Label>
             <Controller 
                 control={control}

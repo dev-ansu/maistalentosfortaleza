@@ -1,28 +1,37 @@
 import { z } from "zod";
 
-export const SalarySchema = z.string().nonempty("Salário é obrigatório.").transform( value => {
-    const parsed = Number(value.replace(/\./g, "").replace(",","."))
-    if(parsed === 0) return "a combinar";
-    if(isNaN(parsed) || parsed < 0) return undefined;
-    return parsed;
-}).pipe(
-    z.union([
-        z.number().positive(), 
-    ])
-);
+export const SalarySchema = z
+  .string()
+  .trim()
+  .nonempty("Salário é obrigatório.")
+  .transform((value) => {
+    if (value === "0") return "A combinar";
+    return value;
+  });
+export const WorkloadSchema = z
+  .string()
+  .trim()
+  .nonempty("Carga horária obrigatória.")
+  .transform((value) => {
+    if (value === "0") return "A combinar";
+    return value;
+  });
 
-export const WorkloadSchema = z.string()
-.nonempty("Carga horária obrigatória.")
-.transform( value => {
-    const parsed = Number(value);
-    if(parsed === 0) return "a combinar";
-    if(isNaN(parsed) || parsed < 0) return undefined;
-    return parsed;
-}).pipe(
-    z.union([
-    z.number().positive(),
-    ])
-)
+  const ExpiresAtSchema = z
+  .preprocess((value) => {
+    if (!value) return undefined;
+    if (typeof value === "string" || value instanceof Date) {
+      const date = new Date(value);
+      return isNaN(date.getTime()) ? undefined : date;
+    }
+    return undefined;
+  }, z.date({ message: "Data de expiração obrigatória." }))
+  .refine(
+    (date) => date >= new Date(new Date().setHours(0, 0, 0, 0)),
+    { message: "A data de expiração não pode ser no passado." }
+  );
+
+
 
 export const createVagaValidation = z.object({
     title: z.string().trim().nonempty({ message: "Campo obrigatório."}),
@@ -38,11 +47,16 @@ export const createVagaValidation = z.object({
     salary: SalarySchema,
     
     workload: WorkloadSchema,
+
+    expiresAt: ExpiresAtSchema,
+
+    isRemoteFriendly: z.boolean(),
     
-    isRemoteFriendly: z.boolean().default(false),
-    
-    location: z.string().transform( value => value.trim())
-    .transform( value => value === "" ? undefined: value).optional(),
+    location: z
+      .string()
+      .trim()
+      .optional()
+      .transform((value) => (value === "" ? undefined : value)),
     
     contractType: z
         .array(z.string().nonempty("Campo obrigatório."), {message:"Selecione um tipo de contrato."})
@@ -50,6 +64,7 @@ export const createVagaValidation = z.object({
     
     seniority: z
         .array(z.string().nonempty("Campo obrigatório."), {message:"Selecione uma senhoridade."}).optional(),
+        
     workloadType: z
         .array(z.string().nonempty("Campo obrigatório."), {message:"Selecione um tipo de carga horária."})
         .length(1, "Selecione um tipo de carga horária."),

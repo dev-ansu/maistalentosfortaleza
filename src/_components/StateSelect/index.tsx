@@ -29,7 +29,7 @@ export const StateItems = ({ states }: StateItems)=>{
     });
         
     return(
-        <Field.Root  invalid={!!errors.stateId}>
+        <Field.Root invalid={!!errors.stateId || !!serverErrors.state}>
             <Field.Label>Estado</Field.Label>
             <Controller 
                 control={control}

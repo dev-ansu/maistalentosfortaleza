@@ -10,7 +10,6 @@ import { AreasAtuacao } from "./_AreasAtuacao";
 import { getAPIClient } from "@/_services/apiClient";
 import { toast } from "react-toastify";
 import { useServerErrors } from "@/_hooks/useServerErrors";
-import { CompanyProfile } from "@/_types/CompanyProfile";
 import Link from "next/link";
 
 interface RegisterFormCompanyProps{
@@ -19,7 +18,7 @@ interface RegisterFormCompanyProps{
 }
 
 export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompanyProps)=>{
-    const { user } = useAuthContext();
+    const { user, reloadUserData } = useAuthContext();
     const { handleSubmit, formState:{ isSubmitting } } = useFormContext<CompanyProfileFormData>();
     const { handleServerError } = useServerErrors();
 
@@ -33,6 +32,7 @@ export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompa
             });
 
             toast.success(response.data.message);
+            await reloadUserData();
         }catch(error: any){
             handleServerError(error)
         }
@@ -49,12 +49,14 @@ export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompa
                     <Button loading={isSubmitting} type="submit" _hover={ {bg:"orange.500"} } bg="orange.400" justifySelf="flex-start" >
                         Salvar                    
                     </Button>
-                    <Button colorScheme="blue" 
-                variant="outline" borderWidth="1" w="max-content" size="xs">
-                        <Link href={`/company/${user?.company.id}`} >
-                            Ver como candidato
-                        </Link>
-                    </Button>
+                    {user?.company && 
+                        <Button colorScheme="blue" 
+                        variant="outline" borderWidth="1" w="max-content" size="xs">
+                            <Link href={`/company/${user?.company.id}`} >
+                                Ver como candidato
+                            </Link>
+                        </Button>
+                    }
                 </Flex>
             </form>
         </>
