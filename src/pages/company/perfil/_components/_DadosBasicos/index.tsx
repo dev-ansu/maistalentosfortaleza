@@ -1,19 +1,18 @@
 import { CitiesItems } from "@/_components/CitySelect"
 import { StateItems } from "@/_components/StateSelect"
 import { ServerErrors } from "@/_components/ui/ServerErrors"
-import { useServerErrors } from "@/_hooks/useServerErrors"
 import { StateProps } from "@/_types/CandidateProfile"
 import { CompanyProfile } from "@/_types/CompanyProfile"
 import { CompanyProfileFormData } from "@/_validations/company_profile"
 import { Checkbox, Field, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import { Controller, useController, useFormContext } from "react-hook-form"
 import { CompanySizeSelect } from "../_CompanySize"
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext"
 
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
-    
-    const { register, control, formState:{ errors }} = useFormContext<CompanyProfileFormData>();
-    const { serverErrors } = useServerErrors();
-
+    const { serverErrors } = useServerErrorsContext();
+    const { register, control, formState:{ errors }, watch} = useFormContext<CompanyProfileFormData>();
+   
     const enabled = useController({
         control: control,
         name: "isActive",

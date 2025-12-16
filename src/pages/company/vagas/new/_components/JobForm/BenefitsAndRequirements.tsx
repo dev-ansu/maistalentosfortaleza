@@ -5,8 +5,8 @@ import { Flex, Field, TagsInput } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 
 export const BenefitsAndRequirements = ()=>{
-    const { serverErrors } = useServerErrors();
-    const {control, formState:{ errors }} = useFormContext<VagaFormData>();
+    const {control, formState:{ errors }, watch} = useFormContext<VagaFormData>();
+    const { serverErrors } = useServerErrors(watch);
 
     return(
         <Flex direction={{ base: "column", md: "row" }} w="full" gap="2">
@@ -22,7 +22,7 @@ export const BenefitsAndRequirements = ()=>{
                                 value={field.value}
                                 onValueChange={({ value }) => field.onChange(value)}
                                 onInteractOutside={() => field.onBlur()}
-                                invalid={!!errors.requirements}
+                                invalid={!!errors.requirements || !!serverErrors.requirements}
                             >
                             <TagsInput.Label>Requisitos</TagsInput.Label>
                             <TagsInput.Control>
@@ -48,7 +48,7 @@ export const BenefitsAndRequirements = ()=>{
                                 value={field.value}
                                 onValueChange={({ value }) => field.onChange(value)}
                                 onInteractOutside={() => field.onBlur()}
-                                invalid={!!errors.benefits}
+                                invalid={!!errors.benefits || !!serverErrors.benefits}
                             >
                             <TagsInput.Label>Benefícios</TagsInput.Label>
                             <TagsInput.Control>
@@ -74,7 +74,7 @@ export const BenefitsAndRequirements = ()=>{
                                 value={field.value}
                                 onValueChange={({ value }) => field.onChange(value)}
                                 onInteractOutside={() => field.onBlur()}
-                                invalid={!!errors.tags}
+                                invalid={!!errors.tags || !!serverErrors.tags}
                             >
                             <TagsInput.Label>Tags</TagsInput.Label>
                             <TagsInput.Control>

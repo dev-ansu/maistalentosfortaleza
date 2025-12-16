@@ -4,6 +4,7 @@ import { useAuthContext } from "./AuthContext";
 
 interface MenuProps{
   menuItems: MenuItem[];
+  reloadMenu: ()=> Promise<void>;
 }
 
 export interface MenuItem {
@@ -32,8 +33,15 @@ export function MenuProvider({ children }: { children: ReactNode}) {
       .catch(() => setMenuItems([]));
   }, [user]);
 
+  const reloadMenu = async()=>{
+    getAPIClient()
+      .get("/sidebar")
+      .then((r) => setMenuItems(r.data.data))
+      .catch(() => setMenuItems([]));
+  }
+
   return (
-    <MenuContext.Provider value={{ menuItems }}>
+    <MenuContext.Provider value={{ menuItems, reloadMenu }}>
       {children}
     </MenuContext.Provider>
   );

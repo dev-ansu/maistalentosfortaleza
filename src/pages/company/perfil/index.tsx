@@ -11,6 +11,7 @@ import { getAPIClient } from "@/_services/apiClient";
 import { USER_TYPES } from "@/_constants";
 import { InterestAreas } from "@/_types/InterestArea";
 import { CompanyProfile } from "@/_types/CompanyProfile";
+import { ServerErrorsProvider } from "@/_context/ServerErrors/ServerErrorsProvider";
 
 
 interface PerfilProps{
@@ -41,7 +42,7 @@ export default function Perfil({ states, interestAreas, company }: PerfilProps){
             address: company?.address,
             zipCode: company?.zipCode,
             companySize: company?.companySize ? [company.companySize]:[],
-            foundedYear: company?.foundedYear,
+            foundedYear: String(company?.foundedYear),
 
         }
     });
@@ -55,7 +56,9 @@ export default function Perfil({ states, interestAreas, company }: PerfilProps){
                 <Flex w="full" direction="column">
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Dados da empresa</Text>
                     <FormProvider {...methods}>
-                        <RegisterFormCompany states={states} interestAreas={interestAreas}/>
+                        <ServerErrorsProvider<CompanyProfileFormData> watch={methods.watch}>
+                            <RegisterFormCompany states={states} interestAreas={interestAreas}/>
+                        </ServerErrorsProvider>
                     </FormProvider>
                 </Flex>
             </Sidebar>

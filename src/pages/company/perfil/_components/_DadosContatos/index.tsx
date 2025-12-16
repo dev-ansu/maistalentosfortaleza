@@ -1,4 +1,5 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { CompanyProfile } from "@/_types/CompanyProfile";
 import { CompanyProfileFormData } from "@/_validations/company_profile";
@@ -7,7 +8,7 @@ import { useFormContext } from "react-hook-form";
 
 export const DadosContatos = ({ company }: { company: CompanyProfile | undefined})=>{
     const { register, formState:{ errors }} = useFormContext<CompanyProfileFormData>();
-    const { serverErrors } = useServerErrors();
+    const { serverErrors } = useServerErrorsContext();
 
     return(
         <Flex w="full" direction="column" mt="4" gap="4">

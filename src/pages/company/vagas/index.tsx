@@ -5,6 +5,7 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
+import VagasTable from "./_components/VagasTable";
 
 export default function(){
     return(
@@ -14,12 +15,12 @@ export default function(){
             </Head>
             <Sidebar>
                 <Flex w="full" direction="column">
-                    <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Minhas vagas</Text>
                     <Link href="/company/vagas/new">
-                        <Button direction="row" alignItems="center" justifyContent="center" gap="1" bg="green.500" >
+                        <Button direction="row" alignItems="center" justifyContent="center" gap="1"  variant="outline" size="sm">
                             <FiPlus /> Nova vaga
                         </Button>
                     </Link>
+                    <VagasTable />
                 </Flex>
             </Sidebar>
         </>
@@ -29,6 +30,18 @@ export default function(){
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
 
+    const api = getAPIClient(ctx);
+
+    const response = await api.get("/me");
+
+    if(!response.data.data.company){
+        return {
+            redirect: {
+                destination: "/dashboard",
+                permanent: false,
+            },
+        };
+    }
     
     return{
         props:{

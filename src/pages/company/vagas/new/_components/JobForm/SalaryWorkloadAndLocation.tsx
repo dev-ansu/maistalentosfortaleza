@@ -1,12 +1,12 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
-import { useServerErrors } from "@/_hooks/useServerErrors";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 import { VagaFormData } from "@/_validations/vagas";
 import { Flex, Field, Input, Checkbox } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 
 export const SalaryWorkloadAndLocation = ()=>{
-    const {serverErrors} = useServerErrors();
     const { control, register, formState:{ errors }} = useFormContext<VagaFormData>();
+    const { serverErrors } = useServerErrorsContext();
     
     return(
         <Flex direction="column" w="full" gap="2">

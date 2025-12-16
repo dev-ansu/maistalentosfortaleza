@@ -7,7 +7,7 @@ export const SalarySchema = z
   .transform((value) => {
     if (value === "0") return "A combinar";
     return value;
-  });
+});
 export const WorkloadSchema = z
   .string()
   .trim()
@@ -17,19 +17,17 @@ export const WorkloadSchema = z
     return value;
   });
 
-  const ExpiresAtSchema = z
-  .preprocess((value) => {
-    if (!value) return undefined;
-    if (typeof value === "string" || value instanceof Date) {
+
+export const ExpiresAtSchema = z
+    .string()
+    .refine((value) => !isNaN(Date.parse(value)), {
+      message: "Data inválida",
+    })
+    .refine((value) => {
       const date = new Date(value);
-      return isNaN(date.getTime()) ? undefined : date;
-    }
-    return undefined;
-  }, z.date({ message: "Data de expiração obrigatória." }))
-  .refine(
-    (date) => date >= new Date(new Date().setHours(0, 0, 0, 0)),
-    { message: "A data de expiração não pode ser no passado." }
-  );
+      const today = new Date();
+      return date >= today;
+    }, { message: "A data de início não pode estar no passado" });
 
 
 
@@ -54,9 +52,7 @@ export const createVagaValidation = z.object({
     
     location: z
       .string()
-      .trim()
-      .optional()
-      .transform((value) => (value === "" ? undefined : value)),
+      .trim().max(100, { message: "Apenas 100 caracteres"}).optional(),
     
     contractType: z
         .array(z.string().nonempty("Campo obrigatório."), {message:"Selecione um tipo de contrato."})

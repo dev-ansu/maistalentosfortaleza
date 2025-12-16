@@ -11,6 +11,9 @@ import { getAPIClient } from "@/_services/apiClient";
 import { toast } from "react-toastify";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import Link from "next/link";
+import { ServerErrorsProvider } from "@/_context/ServerErrors/ServerErrorsProvider";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
+import { useMenuContext } from "@/_context/MenuContext";
 
 interface RegisterFormCompanyProps{
     states: StateProps[];
@@ -19,20 +22,28 @@ interface RegisterFormCompanyProps{
 
 export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompanyProps)=>{
     const { user, reloadUserData } = useAuthContext();
-    const { handleSubmit, formState:{ isSubmitting } } = useFormContext<CompanyProfileFormData>();
-    const { handleServerError } = useServerErrors();
+    const { reloadMenu } = useMenuContext();
+    const { handleSubmit, formState:{ isSubmitting }, watch } = useFormContext<CompanyProfileFormData>();
+    const { handleServerError } = useServerErrorsContext();
 
 
     const onSubmit = async (data: CompanyProfileFormData)=>{
-        const { cityId,address,cnpj,companySize,foundedYear,zipCode,contactEmail,description, companyInterest,isActive,name,phone,stateId,facebook,instagram,linkedin,website } = data;
+        const { cityId,address,cnpj,companySize,
+            foundedYear,zipCode,contactEmail,
+            description, companyInterest,isActive,
+            name,phone,stateId,facebook,instagram,linkedin,website } = data;
         try{
 
             const response = await getAPIClient().post("/company", {
-               address,cnpj,companySize,foundedYear,zipCode,cityId,contactEmail,description,companyInterest,isActive,name,phone,stateId,facebook,instagram,linkedin,website
+                cityId,address,cnpj,companySize,
+                foundedYear,zipCode,contactEmail,
+                description, companyInterest,isActive,
+                name,phone,stateId,facebook,instagram,linkedin,website
             });
 
             toast.success(response.data.message);
             await reloadUserData();
+            await reloadMenu();
         }catch(error: any){
             handleServerError(error)
         }
@@ -42,7 +53,7 @@ export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompa
     return(
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <DadosBasicos company={user?.company} states={states}/>
+                <DadosBasicos company={user?.company} states={states} />
                 <DadosContatos company={user?.company}/>
                 <AreasAtuacao interestAreas={interestAreas}/>
                 <Flex gap="4" alignItems="center" mt="4">

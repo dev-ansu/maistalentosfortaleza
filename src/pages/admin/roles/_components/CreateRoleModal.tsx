@@ -12,12 +12,12 @@ import { toast } from "react-toastify";
 
 export const CreateRoleModal = ({ load }: { load: ()=> Promise<void> })=>{
   const [open, setOpen] = useState(false)
-  const { handleSubmit, register, formState: { errors, isSubmitting }, reset } = useForm<RoleFormData>({
+  const { handleSubmit, register, formState: { errors, isSubmitting }, reset, watch } = useForm<RoleFormData>({
     mode: "onBlur",
     criteriaMode:"firstError",
     resolver: zodResolver(createRoleValidation)
   });
-  const { serverErrors, handleServerError } = useServerErrors();
+  const { serverErrors, handleServerError } = useServerErrors(watch);
 
   const onSubmit = async({name, description}: RoleFormData)=>{
       

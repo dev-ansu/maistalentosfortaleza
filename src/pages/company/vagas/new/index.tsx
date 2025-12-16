@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createVagaValidation, VagaFormData } from "@/_validations/vagas";
 import { getAPIClient } from "@/_services/apiClient";
 import { CityProps, StateProps } from "@/_types/CandidateProfile";
+import { ServerErrorsProvider } from "@/_context/ServerErrors/ServerErrorsProvider";
 
 export default function({ states, city }: { states: StateProps[], city: CityProps}){
 
@@ -19,6 +20,7 @@ export default function({ states, city }: { states: StateProps[], city: CityProp
             benefits: [],
             requirements: [],
             isRemoteFriendly: false,
+            location: "",
         }
     });
     
@@ -31,7 +33,9 @@ export default function({ states, city }: { states: StateProps[], city: CityProp
                 <Flex w="full" direction="column">
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Nova vaga</Text>
                     <FormProvider {...methods}>
-                        <JobForm states={states} city={city} />
+                        <ServerErrorsProvider<VagaFormData> watch={methods.watch} >
+                            <JobForm states={states} city={city} />
+                        </ServerErrorsProvider>
                     </FormProvider>
                 </Flex>
             </Sidebar>
@@ -41,7 +45,21 @@ export default function({ states, city }: { states: StateProps[], city: CityProp
 
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
+
     const api = getAPIClient(ctx);
+    
+    const response = await api.get("/me");
+
+    if(!response.data.data.company){
+        return {
+            redirect: {
+                destination: "/dashboard",
+                permanent: false,
+            },
+        };
+    }
+        
+
     const statesResponse = await api.get("/state");
     const states = statesResponse.data.data;
     const city = {id: '123', name: 'Fortaleza', stateId:'123'}

@@ -7,6 +7,7 @@ import { Flex, Field, Input, Textarea } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { BenefitsAndRequirements } from "./BenefitsAndRequirements";
 import { CityProps, StateProps } from "@/_types/CandidateProfile";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 
 interface Props{
     states: StateProps[];
@@ -14,9 +15,9 @@ interface Props{
 }
 
 export const BasicData = ({states, city}: Props)=>{
-    const {serverErrors} = useServerErrors();
     const { register, formState:{ errors }} = useFormContext<VagaFormData>();
-
+    const { serverErrors } = useServerErrorsContext();
+    
     return(
         <Flex direction="column" gap="2" w="full">
             <Flex gap="2" w="full">

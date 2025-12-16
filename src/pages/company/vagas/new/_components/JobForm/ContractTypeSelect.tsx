@@ -1,14 +1,15 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
 import { useEnumsContext } from "@/_context/EnumsContext";
-import { useServerErrors } from "@/_hooks/useServerErrors";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 import { VagaFormData } from "@/_validations/vagas";
 import { createListCollection, Flex, Field, Select, Portal } from "@chakra-ui/react";
 import { useFormContext, Controller } from "react-hook-form";
 
 export const ContractTypeSelect = ()=>{
     const { enums } = useEnumsContext();
-    const {control, formState:{errors}, watch } = useFormContext<VagaFormData>();
-    const { serverErrors } = useServerErrors(watch);
+    const {control, formState:{errors}} = useFormContext<VagaFormData>();
+    const { serverErrors } = useServerErrorsContext();
+
 
     const contractTypes = createListCollection({
         items: enums ? enums.ContractType:[],

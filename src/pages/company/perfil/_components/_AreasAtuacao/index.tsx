@@ -1,12 +1,13 @@
-import { useServerErrors } from "@/_hooks/useServerErrors";
+import { ServerErrors } from "@/_components/ui/ServerErrors";
+import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 import { InterestAreas } from "@/_types/InterestArea";
 import { CompanyProfileFormData } from "@/_validations/company_profile";
 import { createListCollection, Field, Flex, Portal, Select, Stack } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
 
 export const AreasAtuacao = ({ interestAreas }: { interestAreas: InterestAreas[]})=>{
-    const { control, formState: { errors }, watch } = useFormContext<CompanyProfileFormData>();
-    const { serverErrors } = useServerErrors(watch);
+    const { control, formState: { errors } } = useFormContext<CompanyProfileFormData>();
+    const { serverErrors } = useServerErrorsContext();
     
     const interestAreasList = createListCollection({
         items: interestAreas && interestAreas.length > 0 ? interestAreas.map((c) => ({
@@ -17,7 +18,7 @@ export const AreasAtuacao = ({ interestAreas }: { interestAreas: InterestAreas[]
 
     return(
         <Stack mt="4" gap="4">
-            <Field.Root w="full" invalid={!!errors.companyInterest}>
+            <Field.Root w="full" invalid={!!errors.companyInterest || !!serverErrors.companyInterest}>
             <Field.Label>Áreas de atuação da empresa</Field.Label>
             <Controller
                 control={control}
@@ -57,6 +58,7 @@ export const AreasAtuacao = ({ interestAreas }: { interestAreas: InterestAreas[]
                 )}
             />
             <Field.ErrorText>{errors.companyInterest?.message}</Field.ErrorText>
+            <ServerErrors serverErrors={serverErrors} field="companyInterest" />
             </Field.Root>
         </Stack>
     )
