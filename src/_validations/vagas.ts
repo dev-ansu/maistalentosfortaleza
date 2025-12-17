@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const validateVagaId = z.object({
+  id: z.uuid(),
+})
+
 export const SalarySchema = z
   .string()
   .trim()
