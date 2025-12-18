@@ -7,7 +7,7 @@ import { createListCollection, Field, Portal, Select } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-export const CitiesItems = ({ city }: {city: CityProps | undefined})=>{
+export const CitiesItems = ({ city }: {city?: CityProps | undefined})=>{
     const {watch, setValue, control, formState:{errors}} = useFormContext<PersonalInfoFormData>();
     const stateId = watch("stateId"); // <- observa o estado selecionado
     const [cities, setCities] = useState<CityProps[]>([]);

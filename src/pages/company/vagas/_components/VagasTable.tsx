@@ -15,16 +15,23 @@ import { FaPencil } from "react-icons/fa6";
 import { DropdownButton } from "@/_components/ui/DropdownButton";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { usePublishVaga } from "@/_hooks/usePublishVaga";
+import { JobStatusChangeForm } from "./StatusFromChange";
+import { JobStatus } from "@/_types/Job";
 
-export interface VagasProps extends VagaFormData{
+export interface VagasProps extends Omit<VagaFormData, "workloadType">{
   id: string;
   companyId: string;
   status: string; 
   state: StateProps;
   city: CityProps;
+  workloadType: string;
   company: CompanyProfile;
   isDraft: boolean;
   createdAt: string;
+  totalApplications: number;
+  _count: {
+      applications: number;
+  }
 }
 
 
@@ -60,8 +67,7 @@ export default function VagasTable() {
     );
 
     const items = res.data.data.data;
-
-
+ 
     setVagas(items);
     setTotal(res.data.data.total);
     setTotalPages(res.data.data.totalPages);
@@ -93,7 +99,15 @@ export default function VagasTable() {
         resetFilters={resetFilters}
         columns={[
           { key: "title", label: "Título da vaga"},
-          { key: "workloadType", label: "Tipo de carga horária"},
+          { key: "workloadType", label: "Tipo de carga horária", render: (c) => 
+            enums ? enums?.WorkloadType.filter( item => item.value == c.workloadType)[0].label: c.workloadType},
+          {key: "totalApplications", label: "Candidaturas", render: ( c ) => {
+            return(
+              <Box alignSelf="center" justifySelf="center" textAlign="center">
+                {c._count.applications}
+              </Box>
+            )
+          } },
           { key: "expiresAt", label: "Expira em", render: (c) => {
             return(
               <Box alignSelf="center" justifySelf="center" rounded="sm" px="2" py="0.5" w="max-content" textAlign="center" bg={
@@ -102,7 +116,11 @@ export default function VagasTable() {
               </Box>
             )
           }},
-          { key: "status", label: "Status", render: (c) => enums?.JobStatus.filter( item => item.value == c.status)[0].label ?? c.status},
+          { key: "status", label: "Status", render: (c) => {
+            return(
+              <JobStatusChangeForm id={c.id} actualStatus={c.status as JobStatus} />
+            )
+          }},
           { key: "isDraft", label: "Publicada", render: (c) => {
             return (
               <Box alignSelf="center" justifySelf="center" rounded="sm" px="2" py="0.5" w="max-content" textAlign="center" bg={c.isDraft ? "red.500":"green.500"}>
@@ -124,13 +142,12 @@ export default function VagasTable() {
         onPageChange={handlePageChange}
         onSearch={handleSearch}
         renderActions={(vaga) => (
-          <DropdownButton buttonText="Opções">
             <Flex gap="1">
               
               <Link href={`/company/vagas/${vaga.id}`}>
                 <Button
                   title="Ver vaga"
-                  size="sm"
+                  size="xs"
                   bg="blue.500"
                 >
                   
@@ -138,15 +155,11 @@ export default function VagasTable() {
                 </Button>
               </Link>
 
-              <Button loading={isLoading} onClick={async() => await handlePublishVaga(vaga.id) } size="sm" bg="green.500" title="Publicar vaga"><FiSend /></Button>
-              <Button loading={isLoading} size="sm" title="Abrir vaga"><MdOpenWith /></Button>
-              <Button loading={isLoading} size="sm" bg="orange.500" title="Pausar vaga"><FiStopCircle /></Button>
-              <Button loading={isLoading} size="sm" bg="red.500" title="Fechar vaga"><MdClose /></Button>
-
+              <Button loading={isLoading} onClick={async() => await handlePublishVaga(vaga.id) } size="xs" bg="green.500" title="Publicar vaga"><FiSend /></Button>
               <Link href={`/vagas/edit/${vaga.id}`}>
                 <Button
                   title="Editar vaga"
-                  size="sm"
+                  size="xs"
                   bg="yellow.500"
                 >
                   
@@ -155,7 +168,6 @@ export default function VagasTable() {
               </Link>
               
             </Flex>
-          </DropdownButton>
         )}
       />
     </Flex>

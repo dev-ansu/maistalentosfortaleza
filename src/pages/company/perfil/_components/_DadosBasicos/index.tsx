@@ -11,7 +11,7 @@ import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsCont
 
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
     const { serverErrors } = useServerErrorsContext();
-    const { register, control, formState:{ errors }, watch} = useFormContext<CompanyProfileFormData>();
+    const { register, control, getValues, formState:{ errors }, watch} = useFormContext<CompanyProfileFormData>();
    
     const enabled = useController({
         control: control,
@@ -30,9 +30,13 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                 </Field.Root>
                 <Field.Root invalid={!!errors.cnpj || !!serverErrors.cnpj}>
                     <Field.Label>CNPJ</Field.Label>
-                    <Input {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
-                    <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
+                    <Input disabled={getValues("cnpj") ? true:false} {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
+                    {!getValues("cnpj") &&
+                        <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
+                    }
                     <Field.ErrorText>{errors.cnpj?.message}</Field.ErrorText>
+                    <Field.HelperText>O CNPJ não poderá ser mudado. {getValues("cnpj") ? "":"Confira antes de salvar."}
+                    </Field.HelperText>
                     <ServerErrors serverErrors={serverErrors} field="cnpj"/>
                 </Field.Root>
                 <Field.Root invalid={!!errors.website || !!serverErrors.website}>
