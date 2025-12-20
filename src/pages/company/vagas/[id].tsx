@@ -1,8 +1,15 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
+import { getAPIClient } from "@/_services/apiClient";
+import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
+import { VagasProps } from "./_components/VagasTable";
 
-export default function(){
+export default function({ vaga }: { vaga: VagasProps}){
+
+    console.log(vaga);
+
+    
     return(
         <>
             <Head>
@@ -16,3 +23,29 @@ export default function(){
         </>
     )
 }
+
+
+
+export const getServerSideProps = canSSRAuth(async (ctx)=>{
+    const { params } = ctx;
+    const id = params?.id as string; // Extrai o id da URL
+    const api = getAPIClient(ctx);
+    const response = await api.get(`/vagas/${id}`); 
+    const vaga = response.data.data;
+    
+    if(!vaga){
+        return {
+            redirect: {
+                destination: "/dashboard",
+                permanent: false,
+            }
+        }
+    }
+
+
+    return{
+        props:{
+            vaga,            
+        }
+    }
+});
