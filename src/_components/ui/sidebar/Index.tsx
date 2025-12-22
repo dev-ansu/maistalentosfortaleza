@@ -62,7 +62,7 @@ function Topbar(){
 
     return(
         <>
-        <Flex bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
+        <Flex id="topbar" bg="talento.400" position="relative" w="full" h="10" p="2" justifyContent="flex-end">
             <Flex  px="4" borderRadius="lg"   alignItems="center" justifyContent={`${
                 user?.userType && "company" && user?.company ? "space-between":"flex-end"
             }`} w="full">

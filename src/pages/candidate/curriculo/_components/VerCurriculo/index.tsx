@@ -71,6 +71,9 @@ export const VerCurriculo = ({ candidate }: VerCurriculoProps)=>{
                 nav, header, footer, button, a {
                     display: none !important;
                 }
+                #topbar{
+                    display: none !important;
+                }
                 #sidebar #sibebar_drawer, #sidebar .mobile_nav{
                     display:none !important;
                 }
