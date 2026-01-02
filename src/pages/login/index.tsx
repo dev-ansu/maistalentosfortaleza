@@ -1,4 +1,5 @@
 import { LoginForm } from "@/_components/Authentication/Login/Index";
+import { ResendVerificationButton } from "@/_components/ui/ResendVerificationButton";
 import { canSSRGuest } from "@/_utils/canSSRGuest";
 import { Flex } from "@chakra-ui/react"
 import Head from "next/head";
@@ -13,6 +14,7 @@ export default function Login(){
             <Flex background="talento.900" height="100vh" alignItems="center" justifyContent="center">
                 <Flex width={640} direction="column" p={14} rounded={8}>
                     <LoginForm />
+                    <ResendVerificationButton />
                 </Flex>
             </Flex>
         </>

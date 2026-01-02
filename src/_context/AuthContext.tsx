@@ -18,6 +18,17 @@ interface AuthContenxtData{
     haveResume: boolean;
     handleHaveResume: ()=> void;
     reloadUserData: ()=> Promise<void>;
+    showResendButton: boolean;
+    resendVerification: (userId?: string) => Promise<void>;
+    pendingVerificationUser: PendingVerificationUser | null;
+}
+
+interface PendingVerificationUser {
+    id: string;
+    email: string;
+    name: string;
+    canResend: boolean;
+    hasValidToken: boolean;
 }
 
 interface UserProps{
@@ -86,7 +97,10 @@ export const signOut = ()=>{
 
 export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const [user, setUser] = useState<UserProps | null>(null);
-    const [haveResume, setHaveResume] = useState(!!user?.candidate)
+    const [haveResume, setHaveResume] = useState(!!user?.candidate);
+    const [showResendButton, setShowResendButton] = useState(false);
+    const [pendingVerificationUser, setPendingVerificationUser] = useState<PendingVerificationUser | null>(null);
+    
     const isAuthenticated = !!user;
     
     useEffect(() => {
@@ -99,6 +113,36 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
 
     const handleHaveResume = () => {
         setHaveResume(prev => !prev);
+    };
+
+        // Função para reenviar verificação
+    const resendVerification = async (userId?: string) => {
+        const targetUserId = userId || pendingVerificationUser?.id;
+        
+        if (!targetUserId) {
+            toast.error("ID do usuário não encontrado");
+            return;
+        }
+
+        try {
+            const response = await getAPIClient().post("/resend-verification", {
+                userId: targetUserId
+            });
+
+            toast.success(response.data.message || "Novo link de verificação enviado!");
+            
+            // Resetar estado
+            setShowResendButton(false);
+            setPendingVerificationUser(null);
+
+            
+        } catch (error: any) {
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Erro ao reenviar verificação");
+            }
+        }
     };
 
     const reloadUserData = async()=>{
@@ -151,34 +195,68 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
         }
     }, []);
 
-    const signIn = async({ email, password }: SignInProps)=>{
-        try{
+    const signIn = async ({ email, password }: SignInProps) => {
+        try {
             const response = await getAPIClient().post("/session", {
                 email, password
             });
      
-            const {id, name, isSuperAdmin, token, candidate, userType, company, role, permissions} = response.data.data;
+            const { id, name, isSuperAdmin, token, candidate, userType, company, role, permissions } = response.data.data;
             
             setCookie(undefined, COOKIE_NAME, token, {
-                maxAge: TOKEN_MAX_AGE, // expira em 1 mês
+                maxAge: TOKEN_MAX_AGE,
                 path: "/"            
             });
-
-            
 
             setUser({
                 id, name, email, isSuperAdmin, token, candidate, userType, company, role, permissions
             });
 
-            getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`
+            getAPIClient().defaults.headers.common['Authorization'] = `Bearer ${token}`;
             
             refreshAPIClient();
 
+            // Resetar estados de verificação pendente
+            setShowResendButton(false);
+            setPendingVerificationUser(null);
+
             Router.push(DEFAULT_REDIRECT);
 
-        }catch(error: any){
+        } catch (error: any) {
+            // Verificar se é erro de e-mail não verificado
+            console.log(error)
+            if (error.response?.status === 403 && error.response?.data?.errors) {
+                const verificationData = error.response.data.errors;
+                
+                if (verificationData.canResend || verificationData.hasValidToken === false) {
+                    // Armazenar informações do usuário para reenvio
+                    setPendingVerificationUser({
+                        id: verificationData.userId,
+                        email: verificationData.email || email,
+                        name: verificationData.name || "",
+                        canResend: verificationData.canResend || false,
+                        hasValidToken: verificationData.hasValidToken || false
+                    });
+                    
+                    setShowResendButton(true);
+                    
+                    // Lançar erro específico para o formulário
+                    if (verificationData.hasValidToken) {
+                        throw [{ 
+                            path: "global", 
+                            msg: "E-mail não verificado. Verifique sua caixa de entrada (incluindo spam)." 
+                        }];
+                    } else {
+                        throw [{ 
+                            path: "global", 
+                            msg: "Link de verificação expirado. Clique em 'Reenviar verificação' abaixo." 
+                        }];
+                    }
+                }
+            }
+            
+            // Erros normais
             if (error.response && error.response.data.errors) {
-                // express-validator retorna normalmente um array de erros
                 throw error.response.data.errors;
             } else if (error.response?.data?.message) {
                 throw [{ path: "global", msg: error.response.data.message }];
@@ -186,7 +264,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 throw [{ path: "global", msg: "Erro inesperado. Tente novamente." }];
             }
         }
-    }
+    };
 
     const signUp = async( {name, email, password, userType}: SignUpProps)=>{
         try{
@@ -195,7 +273,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
                 name, email, password, userType: userType[0]
             });
 
-            toast.success("Cadastro feito com sucesso!");
+            toast.success(response.data.message);
             Router.push("/login");
 
         }catch(error: any){
@@ -222,7 +300,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     }
 
     return (
-        <AuthContext.Provider value={{ user,reloadUserData, haveResume, handleHaveResume, isAuthenticated, signIn, signUp, logoutUser}}>
+        <AuthContext.Provider value={{ user,reloadUserData,pendingVerificationUser,resendVerification,showResendButton, haveResume, handleHaveResume, isAuthenticated, signIn, signUp, logoutUser}}>
             {children}
         </AuthContext.Provider>
     )
