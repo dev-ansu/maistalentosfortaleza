@@ -224,7 +224,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
 
         } catch (error: any) {
             // Verificar se é erro de e-mail não verificado
-            console.log(error)
+      
             if (error.response?.status === 403 && error.response?.data?.errors) {
                 const verificationData = error.response.data.errors;
                 
@@ -279,7 +279,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
         }catch(error: any){
             if (error.response && error.response.data.errors) {
                 // express-validator retorna normalmente um array de erros
-                throw error.response.data.errors;
+                throw error;
             } else if (error.response?.data?.message) {
                 throw [{ path: "global", msg: error.response.data.message }];
             } else {
