@@ -256,8 +256,8 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
             }
             
             // Erros normais
-            if (error.response && error.response.data.errors) {
-                throw error.response.data.errors;
+            if (error.response && error.response.data.data) {
+                throw error;
             } else if (error.response?.data?.message) {
                 throw [{ path: "global", msg: error.response.data.message }];
             } else {
