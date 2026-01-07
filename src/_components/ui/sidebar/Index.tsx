@@ -1,14 +1,13 @@
-import { ReactNode, Ref, useEffect, useRef, useState } from "react"
+import { ReactNode, useEffect, useRef, useState } from "react"
 import {
   useColorModeValue,
 } from "@/_components/ui/color-mode"
 import {IconButton,CloseButton,Flex,Icon,DrawerContent,Text,useDisclosure,BoxProps,FlexProps,Box} from "@chakra-ui/react"
 import { Drawer } from "@chakra-ui/react"
-import {FiChevronDown, FiChevronUp, FiMenu, FiSettings, FiUser} from "react-icons/fi"
+import {FiChevronDown, FiChevronUp, FiMenu, FiUser} from "react-icons/fi"
 import { IconType } from "react-icons"
 import Link from "next/link"
 import { useAuthContext } from "@/_context/AuthContext";
-import { useMenu } from "@/_hooks/useMenu";
 import { MenuIcons } from "@/_constants/icons"
 import { useMenuContext } from "@/_context/MenuContext"
 import { FaSignOutAlt } from "react-icons/fa"
@@ -81,7 +80,7 @@ function Topbar(){
             </Flex>
             {open && 
                 <Flex zIndex="1" transition="all" boxShadow="2xl" ref={ref} borderWidth="2px" rounded="xl" direction="column" gap="2" position="absolute" top="8" bg="talento.400" px="6" py="2" w="250px" right="0">
-                    <Link href="">
+                    <Link href="/candidate/perfil">
                         <Flex gap="1" fontSize="14px" alignItems="center">
                             <FiUser /> Perfil
                         </Flex>

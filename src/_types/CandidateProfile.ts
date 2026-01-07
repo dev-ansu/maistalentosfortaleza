@@ -87,4 +87,5 @@ export interface UserProps{
     email: string;
     role: Role;
     permissions: any;
+    isActive: boolean;
 }
