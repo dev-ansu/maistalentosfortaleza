@@ -1,6 +1,6 @@
 import { ChakraProvider, MenuContext } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
-import { system } from "./theme";
+import { system } from "../theme/theme";
 import { ThemeProvider } from "next-themes"
 import { AuthProvider } from "@/_context/AuthContext";
 import { ToastContainer } from "react-toastify";
