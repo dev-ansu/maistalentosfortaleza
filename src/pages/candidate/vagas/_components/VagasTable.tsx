@@ -35,7 +35,7 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
 
 
 
-export default function VagasTable({states}: { states: StateProps[]}) {
+export function VagasTable({states}: { states: StateProps[]}) {
   const { resetField, handleSubmit, formState:{ isSubmitting} } = useFormContext<SearchFormData>();
   const [vagas, setVagas] = useState<VagasProps[]>([]);
   const [loading, setLoading] = useState(false);

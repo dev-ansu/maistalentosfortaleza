@@ -3,7 +3,7 @@ import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
-import VagasTable from "./_components/VagasTable";
+import {VagasTable} from "./_components/VagasTable";
 import { StateProps } from "@/_types/CandidateProfile";
 import { useForm, FormProvider} from "react-hook-form";
 import { z } from "zod";

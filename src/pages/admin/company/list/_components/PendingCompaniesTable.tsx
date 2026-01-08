@@ -39,7 +39,7 @@ export const bgStatus = {
 export type StatusKey = keyof typeof bgStatus;
 
 
-export default function PendingCompaniesTable() {
+export function PendingCompaniesTable() {
   const { hasPermission } = useHasPermission();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);

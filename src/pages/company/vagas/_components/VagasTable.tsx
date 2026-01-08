@@ -37,7 +37,7 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType">{
 
 
 
-export default function VagasTable() {
+export function VagasTable() {
   const { isLoading, ConfirmationDialog, handlePublish } = usePublishVaga();
   const [vagas, setVagas] = useState<VagasProps[]>([]);
   const [loading, setLoading] = useState(false);

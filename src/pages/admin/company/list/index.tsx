@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
-import PendingCompaniesTable from "./_components/PendingCompaniesTable";
+import { PendingCompaniesTable } from "./_components/PendingCompaniesTable";
 import { canAccess } from "@/_utils/canAccess";
 
 

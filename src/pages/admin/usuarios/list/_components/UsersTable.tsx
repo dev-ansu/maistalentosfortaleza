@@ -22,7 +22,7 @@ export interface CandidateProps extends CandidateProfile{
 }
 
 
-export default function UsersTable({ interestAreas }: { interestAreas: InterestAreas[] }) {
+export function UsersTable({ interestAreas }: { interestAreas: InterestAreas[] }) {
   const [users, setUsers] = useState<CandidateProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);

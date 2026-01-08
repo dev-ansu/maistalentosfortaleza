@@ -5,7 +5,7 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
-import VagasTable from "./_components/VagasTable";
+import {VagasTable} from "./_components/VagasTable";
 
 export default function(){
     return(
