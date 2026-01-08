@@ -4,6 +4,7 @@ import { ExperienceFormData } from "@/_validations/experience";
 import { LanguageFormData } from "@/_validations/language";
 import { InterestAreas } from "./InterestArea";
 import { CompanyProfile } from "./CompanyProfile";
+import { Role } from "@/_components/Admin/Roles/RolesTable";
 
 export interface CandidateProfile{
     id: string;
