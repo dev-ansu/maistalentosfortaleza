@@ -3,14 +3,14 @@ import { useEnumsContext } from "@/_context/EnumsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
-import { Button, createListCollection, Field, Flex, Portal, Select, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiEye } from "react-icons/fi";
 import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { ChangeVerificationStatus } from "./Filters";
+import { ChangeVerificationStatus } from "./_filters";
 import { Can } from "@/_components/ui/Can/Can";
 import { useHasPermission } from "@/_hooks/useHasPermission";
 
