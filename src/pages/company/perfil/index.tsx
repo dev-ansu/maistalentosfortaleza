@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import { FormProvider, useForm } from "react-hook-form";
-import { RegisterFormCompany } from "./_components";
+import { RegisterFormCompany } from "./_components/RegisterFormCompany";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CompanyProfileFormData, companyProfileSchema } from "@/_validations/company_profile";
 import { canSSRAuth } from "@/_utils/canSSRAuth";

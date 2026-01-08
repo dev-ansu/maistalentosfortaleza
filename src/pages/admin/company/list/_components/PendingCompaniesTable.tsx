@@ -10,7 +10,7 @@ import { FiEye } from "react-icons/fi";
 import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { ChangeVerificationStatus } from "./_filters";
+import { ChangeVerificationStatus } from "./_filters/Filters";
 import { Can } from "@/_components/ui/Can/Can";
 import { useHasPermission } from "@/_hooks/useHasPermission";
 

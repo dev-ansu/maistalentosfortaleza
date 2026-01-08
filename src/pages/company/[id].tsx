@@ -6,7 +6,7 @@ import { Flex, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
 import Head from "next/head";
 import { FaBuilding } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
-import { Company } from "./_components/_company";
+import { Company } from "./_components/_company/Company";
 
 interface Props{
     company: CompanyProfile;

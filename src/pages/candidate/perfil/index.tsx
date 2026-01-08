@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import Head from "next/head";
-import { PasswordChange, Perfil } from "./_components";
+import { PasswordChange, Perfil } from "./_components/Perfil";
 import { CityProps, StateProps, UserProps } from "@/_types/CandidateProfile";
 import { CandidateProps } from "@/pages/admin/usuarios/list/_components/UsersTable";
 import { Flex, Text } from "@chakra-ui/react";

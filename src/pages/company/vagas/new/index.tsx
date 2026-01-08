@@ -1,7 +1,7 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { JobForm } from "./_components/JobForm";
+import { JobForm } from "./_components/JobForm/JobForm";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

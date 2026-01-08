@@ -8,7 +8,7 @@ import { Button,  Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiEye } from "react-icons/fi";
-import { ChangeInterestFilter } from "./_filters";
+import { ChangeInterestFilter } from "./_filters/Filters";
 
 export interface CandidateProps extends CandidateProfile{
   id: string;

@@ -6,7 +6,7 @@ import { CompanyProfile } from "@/_types/CompanyProfile"
 import { CompanyProfileFormData } from "@/_validations/company_profile"
 import { Checkbox, Field, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import { Controller, useController, useFormContext } from "react-hook-form"
-import { CompanySizeSelect } from "../_CompanySize"
+import { CompanySizeSelect } from "../_CompanySize/CompanySizeSelect"
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext"
 
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{

@@ -1,6 +1,6 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import Head from "next/head";
-import { VerCurriculo } from "./_components/VerCurriculo";
+import { VerCurriculo } from "./_components/VerCurriculo/VerCurriculo";
 import { CandidateProfile } from "@/_types/CandidateProfile";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";

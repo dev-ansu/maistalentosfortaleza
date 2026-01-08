@@ -1,12 +1,12 @@
 import { useFormContext } from "react-hook-form";
-import { DadosBasicos } from "./_DadosBasicos"
+import { DadosBasicos } from "./_DadosBasicos/DadosBasicos"
 import { Button, Flex } from "@chakra-ui/react";
 import { CompanyProfileFormData } from "@/_validations/company_profile";
 import { useAuthContext } from "@/_context/AuthContext";
-import { DadosContatos } from "./_DadosContatos";
+import { DadosContatos } from "./_DadosContatos/DadosContatos";
 import { StateProps } from "@/_types/CandidateProfile";
 import { InterestAreas } from "@/_types/InterestArea";
-import { AreasAtuacao } from "./_AreasAtuacao";
+import { AreasAtuacao } from "./_AreasAtuacao/AreasAtuacao";
 import { getAPIClient } from "@/_services/apiClient";
 import { toast } from "react-toastify";
 import { useServerErrors } from "@/_hooks/useServerErrors";
