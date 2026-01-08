@@ -1,12 +1,11 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import RolesTable from "./_components/RolesTable";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { getAPIClient } from "@/_services/apiClient";
 import { canAccess } from "@/_utils/canAccess";
-import { PermissionProps } from "@/_context/AuthContext";
-import { PermissionsByModule } from "./_components/RolePermissionDrawer";
+import RolesTable from "@/_components/Admin/Roles/RolesTable";
+import { PermissionsByModule } from "@/_components/Admin/Roles/RolePermissionDrawer";
 
 
 export default function({ permissions }:{ permissions:PermissionsByModule }){

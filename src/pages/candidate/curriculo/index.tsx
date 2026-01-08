@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { useAuthContext } from "@/_context/AuthContext";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
-import { Flex, Stack, Tabs, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Flex, Tabs, useBreakpointValue } from "@chakra-ui/react";
 import Head from "next/head";
 import { PersonalInformation } from "../../../_components/Curriculo/PersonalInformation";
 import { FormProvider, useForm } from "react-hook-form";
