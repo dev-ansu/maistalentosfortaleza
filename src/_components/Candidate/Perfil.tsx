@@ -4,7 +4,7 @@ import { PasswordChangeFormData, passwordChangeValidation, perfilCandidateValida
 import { Button, Checkbox, Field, Flex, Input, Text } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { UserProfile } from ".."
+import { UserProfile } from "../../pages/candidate/perfil"
 import { getAPIClient } from "@/_services/apiClient";
 import { toast } from "react-toastify";
 import { useAuthContext } from "@/_context/AuthContext";
