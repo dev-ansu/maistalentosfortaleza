@@ -20,7 +20,7 @@ import Link from "next/link";
 
 export default function(){
   const router = useRouter();
-  const params: {userId: string, token: string} = router.query // params será um objeto {userId, token}; 
+  const params = router.query // params será um objeto {userId, token}; 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -30,8 +30,7 @@ export default function(){
 
     if (params && Object.values(params).length === 2) {
       const {userId, token} = params;
-      verifyEmail(userId, token);
-      
+      verifyEmail(userId as string, token as string);
     } else if (router.isReady) {
       // Se não tiver parâmetros corretos, mostrar erro
       setStatus('error');

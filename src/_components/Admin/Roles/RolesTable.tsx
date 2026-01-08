@@ -1,20 +1,15 @@
 import { DataTable } from "@/_components/DataTable";
-import { useEnumsContext } from "@/_context/EnumsContext";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
 import { Button, Flex, Stack, Text } from "@chakra-ui/react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FiEye } from "react-icons/fi";
-import { MdChangeCircle } from "react-icons/md";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { CreateRoleModal } from "./CreateRoleModal";
 import { IoClose, IoLockOpen } from "react-icons/io5";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { PermissionProps } from "@/_context/AuthContext";
 import { PermissionsByModule, RolePermissionDrawer } from "./RolePermissionDrawer";
 
 
