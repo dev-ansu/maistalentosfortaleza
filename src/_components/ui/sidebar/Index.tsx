@@ -12,7 +12,7 @@ import { MenuIcons } from "@/_constants/icons"
 import { useMenuContext } from "@/_context/MenuContext"
 import { FaSignOutAlt } from "react-icons/fa"
 import { useEnumsContext } from "@/_context/EnumsContext"
-import { bgStatus, StatusKey } from "@/pages/admin/company/list/_components/PendingCompaniesTable"
+import { bgStatus, StatusKey } from "@/_components/Admin/List/components/PendingCompaniesTable"
 
 
 export interface MenuItem {

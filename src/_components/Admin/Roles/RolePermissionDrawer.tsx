@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { Role } from "./RolesTable";
-import { Permission } from "../../permission/_components/PermissionsTable";
+import { Permission } from "../../../../_components/Admin/Permission/PermissionsTable";
 import { toast } from "react-toastify";
 import { getAPIClient } from "@/_services/apiClient";
 

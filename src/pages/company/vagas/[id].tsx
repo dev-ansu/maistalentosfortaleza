@@ -1,9 +1,9 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
+import { VagasProps } from "@/_components/Vagas/VagasTableCompany";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex } from "@chakra-ui/react";
 import Head from "next/head";
-import { VagasProps } from "./_components/VagasTable";
 
 export default function({ vaga }: { vaga: VagasProps}){
 

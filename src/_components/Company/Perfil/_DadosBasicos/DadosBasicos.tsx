@@ -9,10 +9,12 @@ import { Controller, useController, useFormContext } from "react-hook-form"
 import { CompanySizeSelect } from "../_CompanySize/CompanySizeSelect"
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext"
 
+
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
     const { serverErrors } = useServerErrorsContext();
-    const { register, control, getValues, formState:{ errors }, watch} = useFormContext<CompanyProfileFormData>();
-   
+    const { register, control, getValues, formState:{ errors,dirtyFields  }, watch} = useFormContext<CompanyProfileFormData>();
+    const cnpjCameFromDefault = !!company?.cnpj && !dirtyFields.cnpj;
+
     const enabled = useController({
         control: control,
         name: "isActive",
@@ -30,8 +32,8 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                 </Field.Root>
                 <Field.Root invalid={!!errors.cnpj || !!serverErrors.cnpj}>
                     <Field.Label>CNPJ</Field.Label>
-                    <Input disabled={getValues("cnpj") ? true:false} {...register("cnpj")} placeholder="Digite o CNPJ da empresa"/>
-                    {!getValues("cnpj") &&
+                    <Input {...register("cnpj")} disabled={cnpjCameFromDefault} placeholder="Digite o CNPJ da empresa"/>
+                    {!dirtyFields.cnpj &&
                         <Field.HelperText>Apenas números, ex: 12345678910111</Field.HelperText>
                     }
                     <Field.ErrorText>{errors.cnpj?.message}</Field.ErrorText>

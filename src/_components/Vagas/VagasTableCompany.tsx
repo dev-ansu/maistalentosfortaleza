@@ -5,15 +5,12 @@ import { CityProps, StateProps } from "@/_types/CandidateProfile";
 import { dateFormat } from "@/_utils/dateFormat";
 import { Box, Button,  Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useImperativeHandle, useState } from "react";
-import { FiEye, FiSend, FiStopCircle } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiEye, FiSend } from "react-icons/fi";
 import { VagaFormData } from "@/_validations/vagas";
 import { CompanyProfile } from "@/_types/CompanyProfile";
 import { useEnumsContext } from "@/_context/EnumsContext";
-import { MdClose, MdOpenWith } from "react-icons/md";
 import { FaPencil } from "react-icons/fa6";
-import { DropdownButton } from "@/_components/ui/DropdownButton";
-import { useServerErrors } from "@/_hooks/useServerErrors";
 import { usePublishVaga } from "@/_hooks/usePublishVaga";
 import { JobStatusChangeForm } from "./StatusFromChange";
 import { JobStatus } from "@/_types/Job";
@@ -37,7 +34,7 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType">{
 
 
 
-export function VagasTable() {
+export function VagasTableCompany() {
   const { isLoading, ConfirmationDialog, handlePublish } = usePublishVaga();
   const [vagas, setVagas] = useState<VagasProps[]>([]);
   const [loading, setLoading] = useState(false);

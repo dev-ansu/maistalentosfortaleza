@@ -32,8 +32,9 @@ export const RegisterFormCompany = ({ states, interestAreas }: RegisterFormCompa
             foundedYear,zipCode,contactEmail,
             description, companyInterest,isActive,
             name,phone,stateId,facebook,instagram,linkedin,website } = data;
+   
         try{
-
+            
             const response = await getAPIClient().post("/company", {
                 cityId,address,cnpj,companySize,
                 foundedYear,zipCode,contactEmail,

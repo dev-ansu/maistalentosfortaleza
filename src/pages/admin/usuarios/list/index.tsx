@@ -2,7 +2,7 @@ import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { UsersTable } from "./_components/UsersTable";
+import { UsersTable } from "../../../../_components/Admin/Usuarios/List/UsersTable";
 import { getAPIClient } from "@/_services/apiClient";
 import { InterestAreas } from "@/_types/InterestArea";
 import { canAccess } from "@/_utils/canAccess";

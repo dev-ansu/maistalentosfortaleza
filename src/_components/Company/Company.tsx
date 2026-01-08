@@ -1,7 +1,7 @@
 import { useEnumsContext } from "@/_context/EnumsContext";
 import { CompanyProfile } from "@/_types/CompanyProfile"
 import { dateFormat } from "@/_utils/dateFormat";
-import { bgStatus, StatusKey } from "@/pages/admin/company/list/_components/PendingCompaniesTable";
+import { bgStatus, StatusKey } from "@/_components/Admin/List/components/PendingCompaniesTable";
 import { Flex, Stack, Text } from "@chakra-ui/react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 

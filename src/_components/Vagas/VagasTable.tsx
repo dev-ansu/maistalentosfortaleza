@@ -13,7 +13,7 @@ import { FaBuilding, FaCheckCircle } from "react-icons/fa";
 import { StateItems } from "@/_components/StateSelect";
 import { CitiesItems } from "@/_components/CitySelect";
 import { useFormContext } from "react-hook-form";
-import { SearchFormData } from "..";
+import { SearchFormData } from "../../pages/candidate/vagas";
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   id: string;

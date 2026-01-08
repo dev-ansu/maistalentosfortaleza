@@ -4,7 +4,7 @@ import { canSSRAuth } from "@/_utils/canSSRAuth";
 import Head from "next/head";
 import { PasswordChange, Perfil } from "./_components/Perfil";
 import { CityProps, StateProps, UserProps } from "@/_types/CandidateProfile";
-import { CandidateProps } from "@/pages/admin/usuarios/list/_components/UsersTable";
+import { CandidateProps } from "@/_components/Admin/Usuarios/List/UsersTable";
 import { Flex, Text } from "@chakra-ui/react";
 
 export interface UserProfile extends UserProps{

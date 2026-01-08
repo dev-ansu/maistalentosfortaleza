@@ -14,7 +14,7 @@ import { Education } from "../../../_components/Curriculo/Education";
 import { Experience } from "@/_components/Curriculo/Experience";
 import { Course } from "@/_components/Curriculo/Course";
 import { Language } from "@/_components/Curriculo/Language";
-import { TabList } from "./_components/TabList/TabList";
+import { TabList } from "../../../_components/Curriculo/TabList/TabList";
 import { CourseFormData, createCourseSchema } from "@/_validations/course";
 import { createExperienceSchema, ExperienceFormData } from "@/_validations/experience";
 import { createLanguageSchema, LanguageFormData } from "@/_validations/language";

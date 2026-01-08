@@ -1,11 +1,12 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
+import { VagasTableCompany } from "@/_components/Vagas/VagasTableCompany";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Link from "next/link";
 import { FiPlus } from "react-icons/fi";
-import {VagasTable} from "./_components/VagasTable";
+
 
 export default function(){
     return(
@@ -20,7 +21,7 @@ export default function(){
                             <FiPlus /> Nova vaga
                         </Button>
                     </Link>
-                    <VagasTable />
+                    <VagasTableCompany />
                 </Flex>
             </Sidebar>
         </>
