@@ -1,5 +1,6 @@
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { VagasProps } from "@/_components/Vagas/VagasTableCompany";
+import { VisualizacaoVaga } from "@/_components/Vagas/VisualizacaoVaga";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Flex } from "@chakra-ui/react";
@@ -17,7 +18,7 @@ export default function({ vaga }: { vaga: VagasProps}){
             </Head>
             <Sidebar>
                 <Flex w="full" direction="column">
-                    
+                    <VisualizacaoVaga vaga={vaga} />
                 </Flex>
             </Sidebar>
         </>

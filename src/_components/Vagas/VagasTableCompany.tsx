@@ -15,10 +15,11 @@ import { usePublishVaga } from "@/_hooks/usePublishVaga";
 import { JobStatusChangeForm } from "./StatusFromChange";
 import { JobStatus } from "@/_types/Job";
 
-export interface VagasProps extends Omit<VagaFormData, "workloadType">{
+export interface VagasProps extends Omit<VagaFormData, "workloadType" | 'type'>{
   id: string;
   companyId: string;
   status: string; 
+  type: string;
   state: StateProps;
   city: CityProps;
   workloadType: string;

@@ -14,6 +14,7 @@ import { StateItems } from "@/_components/StateSelect";
 import { CitiesItems } from "@/_components/CitySelect";
 import { useFormContext } from "react-hook-form";
 import { SearchFormData } from "../../pages/candidate/vagas";
+import Link from "next/link";
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   id: string;
@@ -141,6 +142,16 @@ export function VagasTable({states}: { states: StateProps[]}) {
                   <FaBuilding /> {type}
                 </Text>
                 <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                <Flex gap="4" justifyContent="space-between" alignItems="flex-end">
+                    <Link href={`/company/vagas/${c.id}`}>
+                      <Button bg="button.cta">
+                        Detalhes
+                      </Button>
+                    </Link>
+                    <Link style={{ color:"darkgray", fontSize:"12px" }} href="/dashboard">
+                      Denunciar vaga
+                    </Link>
+                </Flex>
               </Flex>
             )
           }},
