@@ -4,12 +4,15 @@ import { MdLocationPin, MdMoney, MdCheck } from "react-icons/md"
 import { useEnumsContext } from "@/_context/EnumsContext"
 import { FaBuilding } from "react-icons/fa"
 import { dateFormat } from "@/_utils/dateFormat"
+import { useAuthContext } from "@/_context/AuthContext"
+import { ApplyJob } from "./Apply/ApplyJob"
 
 export const VisualizacaoVaga = ({ vaga }: { vaga: VagasProps})=>{
     const { enums } = useEnumsContext();
     const workModel = enums ? enums?.WorkModel.filter( item => item.value == vaga.type)[0].label:vaga.type;
     const companySize = enums ? enums?.CompanySize.filter(item => item.value === vaga.company.companySize)[0].label:vaga.company.companySize;
     const areasAtuacao = vaga.company.companyInterest.map( item => item.interest.name).join(", ");
+    const { user } = useAuthContext();
     return(
         <>
         <Flex w="full" gap="10" mt="4" direction="column">
@@ -77,6 +80,11 @@ export const VisualizacaoVaga = ({ vaga }: { vaga: VagasProps})=>{
                         <Text>{areasAtuacao}</Text>
                     </Flex>
                 </Flex>
+                {user?.candidate && user.userType == "candidate" && 
+                <Stack my="4" display="flex" justifyContent="flex-start" alignItems="flex-start">
+                    <ApplyJob jobId={vaga.id} />
+                </Stack>
+                }
 
             </Flex>
         </Flex>
