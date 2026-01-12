@@ -15,6 +15,7 @@ import { CitiesItems } from "@/_components/CitySelect";
 import { useFormContext } from "react-hook-form";
 import { SearchFormData } from "../../pages/candidate/vagas";
 import Link from "next/link";
+import { ApplyJob } from "./Apply/ApplyJob";
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   id: string;
@@ -133,26 +134,32 @@ export function VagasTable({states}: { states: StateProps[]}) {
             const type = enums ? enums.WorkModel.filter( item => item.value === c.type)[0].label:c.type;
             return(
               <Flex direction="column" gap="2">
-                <Text fontSize="2xl" fontWeight="bold">{c.title}</Text>
-                <Text color="gray.300" display="flex" gap="1" alignItems="center">
-                  <FaCheckCircle /> {c.company.name}
-                </Text>
-                <Text color="gray.400">{c.city.name}, {c.state.acronym}</Text>
-                <Text color="gray.400" display="flex" gap="1" alignItems="center">
-                  <FaBuilding /> {type}
-                </Text>
-                <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
-                <Flex gap="4" justifyContent="space-between" alignItems="flex-end">
-                    <Link href={`/company/vagas/${c.id}`}>
-                      <Button bg="button.cta">
-                        Detalhes
-                      </Button>
-                    </Link>
-                    <Link style={{ color:"darkgray", fontSize:"12px" }} href="/dashboard">
-                      Denunciar vaga
-                    </Link>
+                  <Link href={`/company/vagas/${c.id}`}>
+                    <Text fontSize="2xl" fontWeight="bold">{c.title}</Text>
+                    <Text color="gray.300" display="flex" gap="1" alignItems="center">
+                      <FaCheckCircle /> {c.company.name}
+                    </Text>
+                    <Text color="gray.400">{c.city.name}, {c.state.acronym}</Text>
+                    <Text color="gray.400" display="flex" gap="1" alignItems="center">
+                      <FaBuilding /> {type}
+                    </Text>
+                    <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                  </Link>
+
+                  <Flex gap="4" justifyContent="space-between" alignItems="flex-end">
+                        
+                      <ApplyJob jobId={c.id} />
+
+                
+                      <Link style={{ color:"darkgray", fontSize:"12px" }} href="/dashboard">
+                        Denunciar vaga
+                      </Link>
+
+                  </Flex>
+
                 </Flex>
-              </Flex>
+
+              
             )
           }},
         ]}
