@@ -5,7 +5,7 @@ import {
   Button,
   HStack,
 } from "@chakra-ui/react";
-import { FiX } from "react-icons/fi";
+
 
 interface ConfirmationScreenProps {
   title?: string;
@@ -28,6 +28,9 @@ export const ConfirmationScreen = ({
 }: ConfirmationScreenProps) => {
   if (!isOpen) return null;
 
+  
+
+  
   return (
     <Flex
       position="fixed"
@@ -37,6 +40,8 @@ export const ConfirmationScreen = ({
       align="center"
       backdropFilter="blur(6px)"
       bg="rgba(0, 0, 0, 0.4)"
+      id="confirmation-dialog"
+      onClick={onCancel}
     >
       
       <Box
@@ -46,6 +51,7 @@ export const ConfirmationScreen = ({
         w="90%"
         maxW="420px"
         boxShadow="xl"
+        onClick={(e) => e.stopPropagation()}
       >
         <Text color="black" fontSize="lg" fontWeight="bold" mb={2}>
           {title}

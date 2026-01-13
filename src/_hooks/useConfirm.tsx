@@ -1,5 +1,5 @@
 import { ConfirmationScreen } from "@/_components/ui/ConfirmationScreen";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface ConfirmOptions {
@@ -30,6 +30,24 @@ export function useConfirm() {
     resolver?.(false);
     setOptions(null);
   };
+
+  useEffect(()=>{
+    if(!options) return;
+    
+    const handleKeydown = (e: KeyboardEvent)=>{
+      
+      if(e.key.trim().toLowerCase() === "escape"){
+        resolver?.(false);
+        setOptions(null);
+      }
+
+    }
+
+    window.addEventListener("keydown", handleKeydown)
+
+    return () => window.removeEventListener("keydown", handleKeydown)
+    
+  }, [options, resolver])
 
   const ConfirmationDialog = options ? (
     <ConfirmationScreen

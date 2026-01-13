@@ -34,3 +34,15 @@ export type Seniority = "estagio" | "junior" | "pleno" | "senior" | "especialist
 export type WorkloadType = "parcial" | "integral" | "turno" | "flexivel";
 
 export type JobStatus =  "open" | "paused" | "closed"; 
+
+export type ApplicationStatus = "pending" | "accepted" | "rejected"
+
+
+export interface ApplicationsProps{
+  id: string;
+  jobId: string;
+  candidateId: string;
+  appliedAt: Date;
+  status: ApplicationStatus;
+  rejectionReason: string;
+}

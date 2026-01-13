@@ -16,6 +16,9 @@ import { useFormContext } from "react-hook-form";
 import { SearchFormData } from "../../pages/candidate/vagas";
 import Link from "next/link";
 import { ApplyJob } from "./Apply/ApplyJob";
+import { ApplicationsProps } from "@/_types/Job";
+import { RemoveApplication } from "./Apply/RemoveApplication";
+
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   id: string;
@@ -26,6 +29,7 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   city: CityProps;
   workloadType: string;
   company: CompanyProfile;
+  applications: ApplicationsProps[];
   isDraft: boolean;
   createdAt: string;
   totalApplications: number;
@@ -33,7 +37,6 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
       applications: number;
   }
 }
-
 
 
 
@@ -45,7 +48,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
   const [currentPage, setCurrentPage] = useState(1);
   const { enums } = useEnumsContext();
   const [totalPages, setTotalPages] = useState(1);
-
+  
   const { filters, updateFilter, resetFilters } = useTableFilters({
       initialFilters: {
         stateId: [],
@@ -55,7 +58,6 @@ export function VagasTable({states}: { states: StateProps[]}) {
       }
     });
 
-    
   async function load() {
     setLoading(true);
 
@@ -109,6 +111,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
       resetFilters()
   }
 
+
   return (
     <Flex className="p-6" direction="column" gap="4">
 
@@ -133,23 +136,27 @@ export function VagasTable({states}: { states: StateProps[]}) {
           { key: "title", label: "Vagas", render: (c)=>{
             const type = enums ? enums.WorkModel.filter( item => item.value === c.type)[0].label:c.type;
             return(
-              <Flex direction="column" gap="2">
+              <Flex key={c.id} direction="column" gap="2">
                   <Link href={`/company/vagas/${c.id}`}>
-                    <Text fontSize="2xl" fontWeight="bold">{c.title}</Text>
-                    <Text color="gray.300" display="flex" gap="1" alignItems="center">
-                      <FaCheckCircle /> {c.company.name}
-                    </Text>
-                    <Text color="gray.400">{c.city.name}, {c.state.acronym}</Text>
-                    <Text color="gray.400" display="flex" gap="1" alignItems="center">
-                      <FaBuilding /> {type}
-                    </Text>
-                    <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                    <Flex gap="1.5" direction="column">
+                      <Text fontSize="2xl" fontWeight="bold">{c.title}</Text>
+                      <Text color="gray.300" display="flex" gap="1" alignItems="center">
+                        <FaCheckCircle /> {c.company.name}
+                      </Text>
+                      <Text color="gray.400">{c.city.name}, {c.state.acronym}</Text>
+                      <Text color="gray.400" display="flex" gap="1" alignItems="center">
+                        <FaBuilding /> {type}
+                      </Text>
+                      <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                    </Flex>
                   </Link>
 
                   <Flex gap="4" justifyContent="space-between" alignItems="flex-end">
-                        
-                      <ApplyJob jobId={c.id} />
-
+                      
+                      {c.applications.length <= 0 ? 
+                        <ApplyJob jobId={c.id}  load={load} />:
+                        <RemoveApplication jobId={c.id} load={load} />
+                      }
                 
                       <Link style={{ color:"darkgray", fontSize:"12px" }} href="/dashboard">
                         Denunciar vaga
