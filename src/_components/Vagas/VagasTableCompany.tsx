@@ -101,9 +101,22 @@ export function VagasTableCompany() {
             enums ? enums?.WorkloadType.filter( item => item.value == c.workloadType)[0].label: c.workloadType},
           {key: "totalApplications", label: "Candidaturas", render: ( c ) => {
             return(
-              <Box alignSelf="center" justifySelf="center" textAlign="center">
-                {c._count.applications}
-              </Box>
+              <>
+                {c._count.applications > 0 ? 
+                <Link href={`/company/candidaturas/${c.id}`} title="Candidaturas desta vaga">
+                  <Box alignSelf="center" justifySelf="center" borderBottomWidth="1px" color="blue.500" 
+                  _hover={{ borderBottomWidth:"1px", borderBottomColor:"blue.500", transition:"all"}} 
+                  borderBottomColor="transparent" textAlign="center">
+                  {c._count.applications}
+                  </Box>
+                </Link>
+                :<Box alignSelf="center" justifySelf="center" borderBottomWidth="1px" color="blue.500" 
+                  _hover={{ borderBottomWidth:"1px", borderBottomColor:"blue.500", transition:"all"}} 
+                  borderBottomColor="transparent" textAlign="center">
+                  {c._count.applications}
+                  </Box>
+                }
+              </>
             )
           } },
           { key: "expiresAt", label: "Expira em", render: (c) => {

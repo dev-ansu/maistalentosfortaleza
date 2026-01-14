@@ -49,7 +49,7 @@ export default function Perfil({ states, interestAreas, company }: PerfilProps){
     
     return(
         <>
-          <Head>
+            <Head>
                 <title> Mais Talentos Fortaleza - Perfil</title>
             </Head>
             <Sidebar>
