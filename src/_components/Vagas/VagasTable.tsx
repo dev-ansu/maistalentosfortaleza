@@ -18,6 +18,7 @@ import Link from "next/link";
 import { ApplyJob } from "./Apply/ApplyJob";
 import { ApplicationsProps } from "@/_types/Job";
 import { RemoveApplication } from "./Apply/RemoveApplication";
+import { FiLoader, FiX } from "react-icons/fi";
 
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
@@ -48,6 +49,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
   const [currentPage, setCurrentPage] = useState(1);
   const { enums } = useEnumsContext();
   const [totalPages, setTotalPages] = useState(1);
+  const ApplicationStatus = enums?.ApplicationStatus;
   
   const { filters, updateFilter, resetFilters } = useTableFilters({
       initialFilters: {
@@ -148,6 +150,26 @@ export function VagasTable({states}: { states: StateProps[]}) {
                         <FaBuilding /> {type}
                       </Text>
                       <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                   
+                      {c.applications.length > 0 && 
+                        <Flex 
+                        alignSelf="flex-start"
+                        py="0.5"
+                        px="2"
+                        rounded="sm"
+                        bg={
+                          c.applications[0].status == "rejected" ? "red.500":
+                          c.applications[0].status == "accepted" ? "green.500":"orange.500"
+                        }
+                        alignItems="center">
+                        {c.applications[0].status == "rejected" && <FiX />}
+                        {c.applications[0].status == "accepted" && <FaCheckCircle />}
+                        {c.applications[0].status == "pending" && <FiLoader />}
+                        {
+                            ApplicationStatus?.filter( item => item.value == c.applications[0].status)[0].label ?? c.applications[0].status
+                        }
+                        </Flex>
+                      }
                     </Flex>
                   </Link>
 
