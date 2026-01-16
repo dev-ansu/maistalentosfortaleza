@@ -88,7 +88,7 @@ export const PersonalInformation = ({ states, userName, candidate }: PersonalInf
 
                     <ExtraInformation candidate={candidate} />
                     
-                    <Button alignSelf="flex-start" type="submit" _hover={{ background: "orange.500"}} background="orange.400" >
+                    <Button loading={isSubmitting} alignSelf="flex-start" type="submit" _hover={{ background: "orange.500"}} background="orange.400" >
                         Salvar Informações pessoais
                     </Button>
                 </Flex>

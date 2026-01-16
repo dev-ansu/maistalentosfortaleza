@@ -5,8 +5,9 @@ import { getAPIClient } from "@/_services/apiClient";
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { isAsyncFunction } from "util/types";
 
-export const RemoveApplication = ({ jobId, load }: { jobId: string, load: () => Promise<void>})=>{
+export const RemoveApplication = ({ jobId, load }: { jobId: string, load?: () => Promise<void>})=>{
     const [loading, setIsLoading] = useState(false);
     const { handleServerError } = useServerErrors();
     const {ConfirmationDialog, confirm} = useConfirm();
@@ -28,7 +29,10 @@ export const RemoveApplication = ({ jobId, load }: { jobId: string, load: () => 
             const response = await getAPIClient().delete(`/application/${jobIdValue}`);
 
             toast.success(response.data.message);
-            await load();
+            
+            if(load){
+                await load();
+            }
 
         }catch(error){
             handleServerError(error);

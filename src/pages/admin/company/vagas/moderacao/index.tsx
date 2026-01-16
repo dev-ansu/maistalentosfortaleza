@@ -23,7 +23,7 @@ export default function ModeracaoVagas(){
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const api = getAPIClient(ctx);
     
-    const response = await api.get("/me");
+    const response = await api.get("/candidate/me");
     const user = response.data.data;
 
     if (!user.isSuperAdmin) {

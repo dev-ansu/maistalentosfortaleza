@@ -33,7 +33,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
 
     const api = getAPIClient(ctx);
 
-    const response = await api.get("/me");
+    const response = await api.get("/candidate/me");
 
     if(!response.data.data.company){
         return {

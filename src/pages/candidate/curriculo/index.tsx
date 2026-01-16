@@ -34,7 +34,7 @@ export interface CurriculoProps{
 }
 
 
-export default function Curriculo({ states, candidate, interestAreas }: CurriculoProps){
+export default function Curriculo({ states, candidate, interestAreas }: CurriculoProps){      
 
     const orientation = useBreakpointValue<"horizontal" | "vertical">({
         base: "vertical",
@@ -158,7 +158,7 @@ export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const api = getAPIClient(ctx);
 
 
-    const response = await api.get("/me");
+    const response = await api.get("/candidate/me");
     
     const user = response.data.data;
     if (user.userType != USER_TYPES.candidate){
