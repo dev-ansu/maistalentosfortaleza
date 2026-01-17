@@ -1,4 +1,3 @@
-import { maxLettersDescriptionJob } from "@/_components/Vagas/JobForm/BasicData";
 import { maxLetters } from "@/_hooks/useCountLetters";
 import { z } from "zod";
 

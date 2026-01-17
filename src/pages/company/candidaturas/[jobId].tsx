@@ -33,7 +33,7 @@ interface JobApplication{
 
 const rejectionValidation = z.object({
     applicationIds: z.array(z.string()),
-    rejectionReason: z.string().trim().nonempty({message: "Campo obrigatório"}).max(maxLetters, { message: "Máximo de 2048 caracteres."})
+    rejectionReason: z.string().trim().nonempty({message: "Campo obrigatório"}).max(maxLetters, { message: `Máximo de ${maxLetters} caracteres.`})
 });
 
 export type RejectionReasonFormData = z.infer<typeof rejectionValidation>;
