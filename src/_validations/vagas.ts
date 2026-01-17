@@ -1,3 +1,5 @@
+import { maxLettersDescriptionJob } from "@/_components/Vagas/JobForm/BasicData";
+import { maxLetters } from "@/_hooks/useCountLetters";
 import { z } from "zod";
 
 export const validateVagaId = z.object({
@@ -38,13 +40,13 @@ export const ExpiresAtSchema = z
 export const createVagaValidation = z.object({
     title: z.string().trim().nonempty({ message: "Campo obrigatório."}),
     
-    description: z.string().trim().nonempty({ message: "Campo obrigatório."}),
+    description: z.string().trim().nonempty({ message: "Campo obrigatório."}).max(maxLetters, {message:`Máximo de ${maxLetters} caracteres.`}),
     
-    requirements: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos um requisito."}).min(1, {message:"Digite pelo menos um requisito."}),
+    requirements: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos um requisito."}).min(1, {message:"Digite pelo menos um requisito."}).max(100, { message: "Máximo de 100."}),
     
-    benefits: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos um benefício."}).min(1, {message:"Digite pelo menos um benefício."}),
+    benefits: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos um benefício."}).min(1, {message:"Digite pelo menos um benefício."}).max(100, { message: "Máximo de 100."}),
     
-    tags: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos uma tag."}).min(1, {message:"Digite pelo menos uma tag."}),
+    tags: z.array(z.string().trim().nonempty({ message:"Campo obrigatório"}), { message: "Digite pelo menos uma tag."}).min(1, {message:"Digite pelo menos uma tag."}).max(100, { message: "Máximo de 100."}),
     
     salary: SalarySchema,
     

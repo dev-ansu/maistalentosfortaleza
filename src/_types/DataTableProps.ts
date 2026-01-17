@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface ApiPaginatedResponse<T> {
   success: boolean;
   message: string;
@@ -29,13 +31,13 @@ export interface DataTableProps<T> {
   loading?: boolean;
   filters?: React.ReactNode;
   renderActions?: (item: T) => React.ReactNode;
-  resetFilters: () => void;
+  resetFilters?: () => void;
 }
 
 
 export interface Column<T> {
   key: keyof T;                 // 🔥 garante que a coluna é uma chave real do item
-  label: string;
+  label: string | ReactNode;
   width?: string | number;
   render?: (item: T) => React.ReactNode;
 }

@@ -8,6 +8,8 @@ import { useFormContext } from "react-hook-form";
 import { BenefitsAndRequirements } from "./BenefitsAndRequirements";
 import { CityProps, StateProps } from "@/_types/CandidateProfile";
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
+import { useEffect, useState } from "react";
+import { maxLetters, useCountLetters } from "@/_hooks/useCountLetters";
 
 interface Props{
     states: StateProps[];
@@ -17,7 +19,8 @@ interface Props{
 export const BasicData = ({states, city}: Props)=>{
     const { register, formState:{ errors }} = useFormContext<VagaFormData>();
     const { serverErrors } = useServerErrorsContext();
-    
+    const {countLetters, setCountLetters} = useCountLetters();
+
     return(
         <Flex direction="column" gap="2" w="full">
             <Flex gap="2" w="full">
@@ -39,10 +42,13 @@ export const BasicData = ({states, city}: Props)=>{
                 <Textarea
                     maxLength={500}
                     placeholder="Somos uma empresa há 10 anos no mercado..."
-                    {...register("description")}
+                    {...register("description", {
+                        onChange: (e) => setCountLetters(e.target.value.length)
+                    })}
                 />
                 <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
                 <ServerErrors serverErrors={serverErrors} field="description"/>
+                <Field.HelperText color={countLetters >= maxLetters ? "red":""}>{countLetters}/{maxLetters}</Field.HelperText>
             </Field.Root>
             <Flex w="full" gap="2">
                 <StateItems states={states}  />

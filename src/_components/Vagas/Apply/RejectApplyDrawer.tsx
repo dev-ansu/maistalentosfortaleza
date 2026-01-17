@@ -1,7 +1,8 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
+import { maxLetters, useCountLetters } from "@/_hooks/useCountLetters";
 import { useServerErrors } from "@/_hooks/useServerErrors";
 import { getAPIClient } from "@/_services/apiClient";
-import { maxLettersRejectionReason, RejectionReasonFormData } from "@/pages/company/candidaturas/[jobId]";
+import { RejectionReasonFormData } from "@/pages/company/candidaturas/[jobId]";
 import { Button, CloseButton, Drawer, Field, Portal, Textarea } from "@chakra-ui/react"
 import { useFormContext } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,8 +14,9 @@ export const RejectApplyDrawer = ({
 }: { open: boolean, setOpen: (e: boolean) => void;}) => {
   const {handleSubmit, clearErrors, watch, reset, register,formState: { errors, isSubmitting}} = useFormContext<RejectionReasonFormData>();
   const rejectionReason = watch("rejectionReason");
-  const countLetters = rejectionReason?.length ?? 0;
+  const {countLetters, setCountLetters} = useCountLetters();
   const { handleServerError, serverErrors } = useServerErrors();
+  
   const handleClose = (close: boolean)=>{
     if(rejectionReason?.trim() !== ""){
         if(window.confirm("Deseja realmente fechar a janela?")){
@@ -52,11 +54,13 @@ export const RejectApplyDrawer = ({
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Field.Root invalid={!!errors.rejectionReason || !!serverErrors.rejectionReason || !!serverErrors.applicationIds}>
                         <Field.Label>Digite um feedback para o candidato:</Field.Label>
-                        <Textarea rows={10} size="lg" {...register("rejectionReason")} />
+                        <Textarea rows={10} size="lg" {...register("rejectionReason", {
+                          onChange: (e) => setCountLetters(e.target.value.length)
+                        })} />
                         <Field.ErrorText>{errors.rejectionReason?.message}</Field.ErrorText>
                         <ServerErrors serverErrors={serverErrors} field="rejectionReason" />
                         <ServerErrors serverErrors={serverErrors} field="applicationIds" />
-                        <Field.HelperText color={countLetters >= maxLettersRejectionReason ? "red":""}>{countLetters}/{maxLettersRejectionReason}</Field.HelperText>
+                        <Field.HelperText color={countLetters >= maxLetters ? "red":""}>{countLetters}/{maxLetters}</Field.HelperText>
                     </Field.Root>
                     <Button loading={isSubmitting} type="submit" bg="button.cta" mt="4">Salvar</Button>
                 </form>

@@ -19,6 +19,7 @@ import { ApplyJob } from "./Apply/ApplyJob";
 import { ApplicationsProps } from "@/_types/Job";
 import { RemoveApplication } from "./Apply/RemoveApplication";
 import { FiLoader, FiX } from "react-icons/fi";
+import { useShowFeedback } from "@/_hooks/useShowFeedback";
 
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
@@ -50,7 +51,8 @@ export function VagasTable({states}: { states: StateProps[]}) {
   const { enums } = useEnumsContext();
   const [totalPages, setTotalPages] = useState(1);
   const ApplicationStatus = enums?.ApplicationStatus;
-  
+  const {ShowFeedbackDialog, handleOpen} = useShowFeedback();
+
   const { filters, updateFilter, resetFilters } = useTableFilters({
       initialFilters: {
         stateId: [],
@@ -116,7 +118,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
 
   return (
     <Flex className="p-6" direction="column" gap="4">
-
+      {ShowFeedbackDialog}
       <Text fontSize="2xl" fontWeight="semibold">Vagas abertas</Text>
 
       <DataTable
@@ -150,6 +152,12 @@ export function VagasTable({states}: { states: StateProps[]}) {
                         <FaBuilding /> {type}
                       </Text>
                       <Text fontSize="sm" color="gray.400">Publicada em: {dateFormat(c.createdAt)}</Text>
+                      {c.applications[0]?.appliedAt &&
+                        <Text fontSize="sm" color="gray.400">Candidatou-se em: {dateFormat(c.applications[0].appliedAt)}</Text>
+                      }
+                      {c.applications[0]?.updatedAt&&
+                        <Text fontSize="sm" color="gray.400">Última atualização: {dateFormat(c.applications[0].updatedAt)}</Text>
+                      }
                    
                       {c.applications.length > 0 && 
                         <Flex 
@@ -177,6 +185,11 @@ export function VagasTable({states}: { states: StateProps[]}) {
                       
                       {c.applications.length <= 0 ? 
                         <ApplyJob jobId={c.id}  load={load} />:
+                        c.applications[0].status == "rejected" ? 
+                        <Button onClick={() => handleOpen(c.applications[0].rejectionReason)} size="xs" variant="ghost">
+                          Ver feedback
+                        </Button>
+                        :
                         <RemoveApplication jobId={c.id} load={load} />
                       }
                 

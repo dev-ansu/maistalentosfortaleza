@@ -2,6 +2,8 @@ import { CandidateProps } from "@/_components/Admin/Usuarios/List/UsersTable";
 import { Sidebar } from "@/_components/ui/sidebar/Index";
 import { RejectApplyDrawer } from "@/_components/Vagas/Apply/RejectApplyDrawer";
 import { useEnumsContext } from "@/_context/EnumsContext";
+import { maxLetters } from "@/_hooks/useCountLetters";
+import { useShowFeedback } from "@/_hooks/useShowFeedback";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { dateFormat } from "@/_utils/dateFormat";
@@ -19,6 +21,7 @@ interface Application{
     id: string;
     status: string;
     appliedAt: Date;
+    rejectionReason: string;
     candidate: CandidateProps;
 }
 interface JobApplication{
@@ -27,18 +30,17 @@ interface JobApplication{
     applications: Application[];
 }
 
-export const maxLettersRejectionReason = 2048;
 
 const rejectionValidation = z.object({
     applicationIds: z.array(z.string()),
-    rejectionReason: z.string().trim().nonempty({message: "Campo obrigatório"}).max(maxLettersRejectionReason, { message: "Máximo de 2048 caracteres."})
+    rejectionReason: z.string().trim().nonempty({message: "Campo obrigatório"}).max(maxLetters, { message: "Máximo de 2048 caracteres."})
 });
 
 export type RejectionReasonFormData = z.infer<typeof rejectionValidation>;
 
 export default function({ applications }: { applications: JobApplication}){
     const [open, setOpen] = useState(false);
-    
+    const { ShowFeedbackDialog, handleOpen } = useShowFeedback();
     const methods = useForm<RejectionReasonFormData>({
         criteriaMode: "all",
         mode: "all",
@@ -143,7 +145,7 @@ export default function({ applications }: { applications: JobApplication}){
                 <title> Mais Talentos Fortaleza - Candidaturas</title>
             </Head>
             <Sidebar>
-               
+               {ShowFeedbackDialog}
                 <FormProvider {...methods}>
                     <RejectApplyDrawer open={open} setOpen={setOpen} />         
                 </FormProvider>
@@ -152,21 +154,23 @@ export default function({ applications }: { applications: JobApplication}){
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Candidaturas</Text>
                     <Text fontSize="3xl">Vaga: {applications.title}</Text>
                      <Flex mt="2" alignItems="center" mb="4">
+                        {applications.applications.some( item => item.status != "rejected") && 
                         <Button
-                            onClick={handleSelectAll}
-                            size="xs"
-                            bg="transparent"
-                            outline="none"
-                            _hover={{ bg: "gray.100", color: "gray.800" }}
-                            color="gray.600"
-                            display="flex"
-                            alignItems="center"
-                            gap="2"
-                            mr="4"
+                        onClick={handleSelectAll}
+                        size="xs"
+                        bg="transparent"
+                        outline="none"
+                        _hover={{ bg: "gray.100", color: "gray.800" }}
+                        color="gray.600"
+                        display="flex"
+                        alignItems="center"
+                        gap="2"
+                        mr="4"
                         >
                             {selectAll ? <FiCheckSquare /> : <FiSquare />}
                             {selectAll ? "Deselecionar todos" : "Selecionar todos"}
                         </Button>
+                        }
                         
                         {countApplicationIds.length > 0 && (
                             <Text fontSize="sm" color="gray.500">
@@ -225,6 +229,17 @@ export default function({ applications }: { applications: JobApplication}){
                                         <FiX /> Rejeitar candidatura
                                     </Button>              
                                 }            
+                                {application.status === "rejected" && (
+                                <Button
+                                    onClick={() =>
+                                        handleOpen(application.rejectionReason)
+                                    }
+                                    size="xs"
+                                    variant="ghost"
+                                    >
+                                    Ver feedback
+                                </Button>
+                            )}
                         
                             </Flex>
         

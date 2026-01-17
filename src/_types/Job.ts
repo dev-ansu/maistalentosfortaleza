@@ -45,4 +45,6 @@ export interface ApplicationsProps{
   appliedAt: Date;
   status: ApplicationStatus;
   rejectionReason: string;
+  updatedAt: Date;
+  createdAt: Date;
 }

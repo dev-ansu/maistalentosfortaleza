@@ -10,8 +10,10 @@ import { getAPIClient } from "@/_services/apiClient";
 import { CityProps, StateProps } from "@/_types/CandidateProfile";
 import { ServerErrorsProvider } from "@/_context/ServerErrors/ServerErrorsProvider";
 
-export default function({ states, city }: { states: StateProps[], city: CityProps}){
 
+
+export default function({ states, city }: { states: StateProps[], city: CityProps}){
+    
     const methods = useForm<VagaFormData>({
         mode: "all",
         criteriaMode: "all",

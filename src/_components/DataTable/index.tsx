@@ -27,7 +27,9 @@ export function DataTable<T>({
 
   const reset = ()=>{
     setSearch("");
-    resetFilters();
+    if(resetFilters){
+      resetFilters();
+    }
   }
 
   return (
@@ -58,9 +60,11 @@ export function DataTable<T>({
           {filters}
           </>
         )}
-          <Button bg="red.500" alignSelf="flex-start" color="white" onClick={reset}>
-            Limpar filtros
-          </Button>
+        {resetFilters && 
+            <Button bg="red.500" alignSelf="flex-start" color="white" onClick={reset}>
+              Limpar filtros
+            </Button>
+          }
       </Flex>
 
       {/* 🧱 Tabela */}
