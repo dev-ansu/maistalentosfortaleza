@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { phoneSchema } from "./curriculo";
+import { maxLetters } from "@/_hooks/useCountLetters";
 
 export const companyProfileSchema = z.object({
     name: z.string().trim().nonempty({message:"Campo obrigatório."}).max(100, {message: "Limite de 100 caracteres."}),
@@ -11,7 +12,7 @@ export const companyProfileSchema = z.object({
         { message: "Informe um endereço válido (ex: https://www.site.com)" }
     )
     .optional(),
-    description: z.string().trim().nonempty({message:"Campo obrigatório."}).max(500, {message: "Limite de 500 caracteres."}),
+    description: z.string().trim().nonempty({message:"Campo obrigatório."}).max(maxLetters, {message: `Limite de ${maxLetters} caracteres.`}),
     isActive: z.boolean(),
     phone: phoneSchema,
     contactEmail: z.email({message:"Digite um e-mail válido."}).trim().toLowerCase(),

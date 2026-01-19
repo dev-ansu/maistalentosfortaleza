@@ -10,8 +10,9 @@ import { toast } from "react-toastify";
 
 export const RejectApplyDrawer = ({
     open,
-    setOpen
-}: { open: boolean, setOpen: (e: boolean) => void;}) => {
+    setOpen,
+    Load
+}: { Load: () => Promise<void>, open: boolean, setOpen: (e: boolean) => void;}) => {
   const {handleSubmit, clearErrors, watch, reset, register,formState: { errors, isSubmitting}} = useFormContext<RejectionReasonFormData>();
   const rejectionReason = watch("rejectionReason");
   const {countLetters, setCountLetters} = useCountLetters();
@@ -37,6 +38,7 @@ export const RejectApplyDrawer = ({
         toast.success(message);
         reset();
         setOpen(false);
+        await Load();
     }catch(error: any){
         handleServerError(error);
     }

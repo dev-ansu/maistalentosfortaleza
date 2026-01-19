@@ -8,6 +8,7 @@ import { Checkbox, Field, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import { Controller, useController, useFormContext } from "react-hook-form"
 import { CompanySizeSelect } from "../_CompanySize/CompanySizeSelect"
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext"
+import { maxLetters } from "@/_hooks/useCountLetters"
 
 
 export const DadosBasicos = ({ company, states }: { company: CompanyProfile | undefined, states: StateProps[]})=>{
@@ -62,11 +63,11 @@ export const DadosBasicos = ({ company, states }: { company: CompanyProfile | un
                 <Field.Root invalid={!!errors.description || !!serverErrors.description}>
                     <Field.Label>Sobre a empresa</Field.Label>
                     <Textarea
-                        maxLength={500}
+                        maxLength={maxLetters}
                         placeholder="Somos uma empresa há 10 anos no mercado..."
                         {...register("description")}
                     />
-                    <Field.HelperText>Limite de 500 caracteres.</Field.HelperText>
+                    <Field.HelperText>Limite de {maxLetters} caracteres.</Field.HelperText>
                     <Field.ErrorText>{errors.description?.message}</Field.ErrorText>
                     <ServerErrors serverErrors={serverErrors} field="description"/>
                 </Field.Root>

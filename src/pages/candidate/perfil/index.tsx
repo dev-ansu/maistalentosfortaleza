@@ -35,7 +35,7 @@ export default function({ candidate }: { candidate: UserProfile}){
 
 export const getServerSideProps = canSSRAuth(async (ctx)=>{
     const api = getAPIClient(ctx);
-    const response = await api.get(`/candidate/me`);
+    const response = await api.get(`/me`);
 
     const candidate = response.data.data;
     

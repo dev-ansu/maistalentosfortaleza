@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     const reloadUserData = async()=>{
         const { [COOKIE_NAME]: token} = parseCookies();
         if(token){
-            getAPIClient().get("/candidate/me").then( (response) => {
+            getAPIClient().get("/me").then( (response) => {
                 const { data } = response.data;
                 
                 setUser({
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }: AuthProviderProps)=>{
     useEffect(() => {
         const { [COOKIE_NAME]: token} = parseCookies();
         if(token){
-            getAPIClient().get("/candidate/me").then( (response) => {
+            getAPIClient().get("/me").then( (response) => {
                 const { data } = response.data;
                 
                 setUser({

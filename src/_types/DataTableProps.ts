@@ -39,5 +39,5 @@ export interface Column<T> {
   key: keyof T;                 // 🔥 garante que a coluna é uma chave real do item
   label: string | ReactNode;
   width?: string | number;
-  render?: (item: T) => React.ReactNode;
+  render?: (item: T, index?: any) => React.ReactNode;
 }

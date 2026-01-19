@@ -30,7 +30,7 @@ export default function Candidaturas() {
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
   const api = getAPIClient(ctx);
-  const meRequest = await api.get("/candidate/me");
+  const meRequest = await api.get("/me");
   const candidate = meRequest.data.data;
 
   if(candidate.userType !== "candidate"){
