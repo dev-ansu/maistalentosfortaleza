@@ -1,13 +1,13 @@
 import { CandidateProps } from "@/_components/Admin/Usuarios/List/UsersTable";
 import { Sidebar } from "@/_components/ui/sidebar/Index";
-import { RejectApplyDrawer } from "@/_components/Vagas/Apply/RejectApplyDrawer";
+import { ApplicationAction, ApplicationActionDrawer } from "@/_components/Vagas/Apply/ApplicationActionDrawer";
 import { useEnumsContext } from "@/_context/EnumsContext";
 import { maxLetters } from "@/_hooks/useCountLetters";
 import { useShowFeedback } from "@/_hooks/useShowFeedback";
 import { getAPIClient } from "@/_services/apiClient";
 import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { dateFormat } from "@/_utils/dateFormat";
-import { Button, Flex, Text, Checkbox, Box } from "@chakra-ui/react";
+import { Button, Flex, Text, Box } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Head from "next/head";
 import Link from "next/link";
@@ -45,23 +45,39 @@ interface JobApplicationsResponse {
   };
 }
 
-const rejectionValidation = z.object({
-  applicationIds: z.array(z.string()),
-  rejectionReason: z.string().trim().nonempty({ message: "Campo obrigatório" }).max(maxLetters, { message: `Máximo de ${maxLetters} caracteres.` })
+const applicationActionValidation = z.object({
+  applicationIds: z.array(z.string()).min(1),
+  action: z.enum(["reject", "accept"]),
+  rejectionReason: z
+    .string()
+    .trim()
+    .max(maxLetters)
+    .optional(),
+}).superRefine((data, ctx) => {
+  if (data.action === "reject" && !data.rejectionReason) {
+    ctx.addIssue({
+      path: ["rejectionReason"],
+      message: "Campo obrigatório",
+      code: z.ZodIssueCode.custom,
+    });
+  }
 });
 
-export type RejectionReasonFormData = z.infer<typeof rejectionValidation>;
+export type ApplicationActionFormData =
+  z.infer<typeof applicationActionValidation>;
 
 export default function ViewVagaApplications({ initialData }: { initialData: JobApplicationsResponse }) {
   const [open, setOpen] = useState(false);
   const { ShowFeedbackDialog, handleOpen } = useShowFeedback();
-  const methods = useForm<RejectionReasonFormData>({
+  const methods = useForm<ApplicationActionFormData>({
     criteriaMode: "all",
     mode: "all",
     defaultValues: {
       applicationIds: [],
+      action: "reject",
+
     },
-    resolver: zodResolver(rejectionValidation)
+    resolver: zodResolver(applicationActionValidation)
   });
   const [selectAll, setSelectAll] = useState(false);
   const checkboxesRef = useRef<HTMLInputElement[]>([]);
@@ -76,7 +92,7 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
   const [total, setTotal] = useState(initialData.applications.total);
   const [currentPage, setCurrentPage] = useState(initialData.applications.currentPage);
   const [totalPages, setTotalPages] = useState(initialData.applications.totalPages);
-
+  const [action, setAction] = useState<ApplicationAction>("reject");
   const { filters, updateFilter } = useTableFilters({
     initialFilters: {
       page: 1,
@@ -84,7 +100,7 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
   });
 
   // Filtrar aplicações não rejeitadas para seleção
-  const validApplications = applications.filter(app => app.status !== "rejected");
+  const validApplications = applications.filter(app => app.status !== "rejected" && app.status !== "accepted");
 
   async function loadApplications() {
     setLoading(true);
@@ -136,7 +152,6 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
   }, [countApplicationIds, validApplications.length]);
 
   const handleDrawer = (applicationId: string) => {
-    setOpen(true);
     methods.setValue("applicationIds", [applicationId]);
     // Desmarcar todos os checkboxes do DOM
     checkboxesRef.current.forEach(checkbox => {
@@ -144,9 +159,12 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
         checkbox.checked = false;
       }
     });
+    setOpen(true);
   };
 
-  const handleDrawerSelect = () => {
+  const handleDrawerSelect = (action: ApplicationAction) => {
+    setAction(action);
+    methods.setValue("action", action);
     setOpen(true);
   };
 
@@ -196,6 +214,18 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
     updateFilter("page", page);
   };
 
+  const handleReject = (id: string) => {
+    setAction("reject");
+    methods.setValue("action", "reject");
+    handleDrawer(id);
+  };
+
+  const handleAccept = (id: string) => {
+    setAction("accept");
+    methods.setValue("action", "accept");
+    handleDrawer(id)
+  };
+
   return (
     <>
       <Head>
@@ -204,7 +234,7 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
       <Sidebar>
         {ShowFeedbackDialog}
         <FormProvider {...methods}>
-          <RejectApplyDrawer open={open} setOpen={setOpen} Load={loadApplications} />
+          <ApplicationActionDrawer action={action} open={open} setOpen={setOpen} Load={loadApplications} />
         </FormProvider>
 
         <Flex w="full" direction="column">
@@ -241,18 +271,32 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
           </Flex>
 
           {countApplicationIds.length > 0 && (
-            <Button
-              my="1"
-              alignSelf="flex-start"
-              onClick={() => handleDrawerSelect()}
-              size="xs"
-              bg="transparent"
-              outline="none"
-              _hover={{ bg: "red.500", color: "white" }}
-              color="red.500"
-            >
-              <FiX /> Rejeitar selecionados ({countApplicationIds.length})
-            </Button>
+            <Flex>
+              <Button
+                my="1"
+                alignSelf="flex-start"
+                onClick={() => handleDrawerSelect("reject")}
+                size="xs"
+                bg="transparent"
+                outline="none"
+                _hover={{ bg: "red.500", color: "white" }}
+                color="red.500"
+              >
+                <FiX /> Rejeitar selecionados ({countApplicationIds.length})
+              </Button>
+              <Button
+                my="1"
+                alignSelf="flex-start"
+                onClick={() => handleDrawerSelect("accept")}
+                size="xs"
+                bg="green.700"
+                outline="none"
+                _hover={{ bg: "green.600", color: "white" }}
+                color="white"
+              >
+                <FiX /> Aceitar selecionados ({countApplicationIds.length})
+              </Button>
+            </Flex>
           )}
 
           {/* DataTable com custom rendering para manter checkboxes */}
@@ -265,7 +309,7 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
                   render: (application: Application, index: number) => (
                     <Flex direction="column" gap="2">
                       <Flex gap="2" w="full" justifyContent="flex-start" alignItems="center">
-                        {application.status !== "rejected" && (
+                        {application.status !== "rejected" && application.status !== "accepted"  && (
                           <input
                             ref={(el) => registerCheckboxRef(el, index)}
                             onClick={(e) => handleSelectApplications(e, application.id)}
@@ -306,17 +350,29 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
                       </Flex>
 
                       <Flex gap="4" justifyContent="space-between" alignItems="flex-end">
-                        {application.status !== "rejected" && (
-                          <Button
-                            onClick={() => handleDrawer(application.id)}
-                            size="xs"
-                            bg="transparent"
-                            outline="none"
-                            _hover={{ bg: "red.500", color: "white" }}
-                            color="red.500"
-                          >
-                            <FiX /> Rejeitar candidatura
-                          </Button>
+                        {application.status !== "rejected" && application.status !== "accepted" && (
+                          <Flex>
+                            <Button
+                              onClick={() => handleReject(application.id)}
+                              size="xs"
+                              bg="transparent"
+                              outline="none"
+                              _hover={{ bg: "red.500", color: "white" }}
+                              color="red.500"
+                            >
+                              <FiX /> Rejeitar candidatura
+                            </Button>
+                            <Button
+                              onClick={() => handleAccept(application.id)}
+                              size="xs"
+                              bg="green.700"
+                              outline="none"
+                              _hover={{ bg: "green.600", color: "gray.100" }}
+                              color="white"
+                            >
+                              <FiX /> Aceitar candidatura
+                            </Button>
+                          </Flex>
                         )}
                         {application.status === "rejected" && (
                           <Button

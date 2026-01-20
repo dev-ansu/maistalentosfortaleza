@@ -1,6 +1,6 @@
 import { DataTable } from "@/_components/DataTable";
 import { Sidebar } from "@/_components/ui/sidebar/Index";
-import { RejectApplyDrawer } from "@/_components/Vagas/Apply/RejectApplyDrawer";
+import { RejectApplyDrawer } from "@/_components/Vagas/Apply/ApplicationActionDrawer";
 import { useEnumsContext } from "@/_context/EnumsContext";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
