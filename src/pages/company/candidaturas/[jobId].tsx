@@ -19,6 +19,8 @@ import z from "zod";
 import { DataTable } from "@/_components/DataTable";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { ApplicationStatus } from "@/_types/Job";
+import { ApplicationStatusComponent } from "@/_components/ui/ApplicationStatus/ApplicationStatus";
+import { ChangeApplicationStatusFilter } from "@/_components/ui/ApplicationStatus/ChangeApplicationStatusFilter";
 
 interface Application {
   id: string;
@@ -93,9 +95,10 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
   const [currentPage, setCurrentPage] = useState(initialData.applications.currentPage);
   const [totalPages, setTotalPages] = useState(initialData.applications.totalPages);
   const [action, setAction] = useState<ApplicationAction>("reject");
-  const { filters, updateFilter } = useTableFilters({
+  const { filters, updateFilter, resetFilters } = useTableFilters({
     initialFilters: {
       page: 1,
+      status:"",
     },
   });
 
@@ -129,7 +132,7 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
 
   useEffect(() => {
     loadApplications();
-  }, [filters.page]);
+  }, [filters.page, filters.status]);
 
   // Efeito para desmarcar todos os checkboxes quando applicationId estiver vazio
   useEffect(() => {
@@ -226,6 +229,11 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
     handleDrawer(id)
   };
 
+  const handleChangeApplicationStatus = (status: string) => {
+    updateFilter('status', status);
+    updateFilter('page', 1);
+  };
+
   return (
     <>
       <Head>
@@ -302,6 +310,13 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
           {/* DataTable com custom rendering para manter checkboxes */}
           <Box mt="4">
             <DataTable
+              resetFilters={resetFilters}
+              filters={
+                <Flex direction="column" alignItems="flex-start" justifyContent="flex-start">
+                  <Text>Filtre por status:</Text>
+                  <ChangeApplicationStatusFilter handleChangeApplicationStatus={handleChangeApplicationStatus} />
+                </Flex>
+              }
               columns={[
                 {
                   key: "candidate",
@@ -324,23 +339,13 @@ export default function ViewVagaApplications({ initialData }: { initialData: Job
                             title="Ver currículo do candidato"
                             href={`/candidate/curriculo/${application.candidate.id}`}
                           >
-                            <Flex gap="1.5" direction="column">
+                            <Flex gap="3" direction="column">
                               <Text fontSize="2xl" fontWeight="bold">
                                 {application.candidate.user.name}
                               </Text>
-                              <Text
-                                color="gray.300"
-                                display="flex"
-                                gap="1"
-                                alignItems="center"
-                              >
-                                {application.status === "rejected" && <FiX />}
-                                {application.status === "accepted" && <FaCheckCircle />}
-                                {application.status === "pending" && <FiLoader />}
-                                {ApplicationStatusEnum?.find(
-                                  (item) => item.value === application.status
-                                )?.label ?? application.status}
-                              </Text>
+
+                              <ApplicationStatusComponent status={application.status} />
+
                               <Text fontSize="sm" color="gray.400">
                                 Candidatou-se em: {dateFormat(application.appliedAt)}
                               </Text>

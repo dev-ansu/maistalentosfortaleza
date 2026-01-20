@@ -11,6 +11,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FiLoader, FiX } from "react-icons/fi";
 import { RemoveApplication } from "@/_components/Vagas/Apply/RemoveApplication";
 import { ApplicationStatus } from "@/_types/Job";
+import { ApplicationStatusComponent } from "../ui/ApplicationStatus/ApplicationStatus";
 
 interface CandidateApplications {
   id: string;
@@ -27,10 +28,7 @@ interface CandidateApplications {
 }
 
 export function CandidaturasTable() {
-  const { enums } = useEnumsContext();
-  const ApplicationStatusEnum = enums?.ApplicationStatus;
   const { ShowFeedbackDialog, handleOpen } = useShowFeedback();
-
   const [applications, setApplications] = useState<CandidateApplications[]>([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
@@ -88,30 +86,7 @@ export function CandidaturasTable() {
                       {application.job.title}
                     </Text>
 
-                    <Text
-                      bg={
-                        application.status === "rejected" ? "red.500":
-                        application.status === "accepted" ? "green.500":"orange.500"
-                      }
-                      alignSelf="flex-start"
-                      px="2"
-                      rounded="md"
-                      py="0.5"
-                      color="gray.300"
-                      display="flex"
-                      justifyContent="flex-start"
-                      gap="1"
-                      alignItems="center"
-                    >
-                      {application.status === "rejected" && <FiX />}
-                      {application.status === "accepted" && <FaCheckCircle />}
-                      {application.status === "pending" && <FiLoader />}
-                      {
-                        ApplicationStatusEnum?.find(
-                          (item) => item.value === application.status
-                        )?.label ?? application.status
-                      }
-                    </Text>
+                    <ApplicationStatusComponent status={application.status} />
 
                     <Text fontSize="sm" color="gray.400">
                       Candidatou-se em:{" "}
