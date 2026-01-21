@@ -80,7 +80,7 @@ export default function({ states, city, vaga }: { states: StateProps[], city: Ci
                     <Text w="full" mb="16px" borderBottomWidth="1px" borderBottomColor="gray.700">Nova vaga</Text>
                     <FormProvider {...methods}>
                         <ServerErrorsProvider<VagaFormData> watch={methods.watch} >
-                            <JobForm jobIdValue={vaga.id} states={states} city={vaga.city} onSubmit={onSubmit} />
+                            <JobForm states={states} city={vaga.city} onSubmit={onSubmit} />
                         </ServerErrorsProvider>
                     </FormProvider>
                 </Flex>

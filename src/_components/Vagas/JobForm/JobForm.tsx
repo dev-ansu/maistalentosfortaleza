@@ -14,24 +14,20 @@ import { toast } from "react-toastify";
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
 import { useRouter } from "next/navigation";
 
-
 interface Props{
-    jobIdValue?: string | null;
     states: StateProps[];
     city: CityProps;
     onSubmit: (data: VagaFormData)=> Promise<any>;
 }
 
-export const JobForm = ({ states, city, onSubmit, jobIdValue}: Props)=>{
-    
+export const JobForm = ({ states, city, onSubmit}: Props)=>{
     const { handleSubmit } = useFormContext<VagaFormData>();
     const { handleServerError, clearAllErrors  } = useServerErrorsContext();
     const router = useRouter();
 
-    const submit = async (data: VagaFormData, event?: React.BaseSyntheticEvent) => {
+    const submit = useCallback(async (data: VagaFormData, event?: React.BaseSyntheticEvent) => {
         try {
-            
-           const submitter = (event?.nativeEvent as SubmitEvent)
+                    const submitter = (event?.nativeEvent as SubmitEvent)
                 ?.submitter as HTMLButtonElement;
 
             const action = submitter?.value; // "draft" | "publish"
@@ -42,15 +38,15 @@ export const JobForm = ({ states, city, onSubmit, jobIdValue}: Props)=>{
             };
 
             const response = await onSubmit(payload);
-            
             clearAllErrors();
-            
-            router.push("/company/vagas");
-
+            if (response.data.success) {
+                toast.success(response.data.message)
+                router.push("/company/vagas");
+            };
         } catch (error: any) {
             handleServerError(error);
         }
-    }
+    }, [onSubmit]);
 
     return(
         <Flex w="full">
@@ -91,11 +87,12 @@ export const JobForm = ({ states, city, onSubmit, jobIdValue}: Props)=>{
                             name="action"
                             value="draft"
                             mt="4" type="submit">Salvar rascunho</Button>
-            
+                            
                             <Button 
                             name="action"
                             value="publish"
                             mt="4" type="submit" bg="button.cta">Publicar vaga</Button>
+                        
                     </Flex>
                 </form>
 
