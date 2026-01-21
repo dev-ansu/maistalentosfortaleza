@@ -9,8 +9,7 @@ export const ContractTypeSelect = ()=>{
     const { enums } = useEnumsContext();
     const {control, formState:{errors}} = useFormContext<VagaFormData>();
     const { serverErrors } = useServerErrorsContext();
-
-
+    
     const contractTypes = createListCollection({
         items: enums ? enums.ContractType:[],
     });

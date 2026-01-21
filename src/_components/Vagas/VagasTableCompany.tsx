@@ -27,6 +27,7 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType" | 'type'>{
   isDraft: boolean;
   createdAt: string;
   totalApplications: number;
+  publishAt: Date;
   _count: {
       applications: number;
   }
@@ -144,6 +145,11 @@ export function VagasTableCompany() {
             label: "Criado em",
             render: (c) => dateFormat(c.createdAt),
           },
+          {
+            key: "publishAt",
+            label: "Publicada em",
+            render: (c) => c.publishAt ? dateFormat(c.publishAt):null,
+          },
         ]}
         data={vagas}
         loading={loading}
@@ -167,7 +173,7 @@ export function VagasTableCompany() {
               </Link>
 
               <Button loading={isLoading} onClick={async() => await handlePublishVaga(vaga.id) } size="xs" bg="green.500" title="Publicar vaga"><FiSend /></Button>
-              <Link href={`/vagas/edit/${vaga.id}`}>
+              <Link href={`/company/vagas/edit/${vaga.id}`}>
                 <Button
                   title="Editar vaga"
                   size="xs"

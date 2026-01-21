@@ -8,50 +8,54 @@ import { SalaryWorkloadAndLocation } from "./SalaryWorkloadAndLocation";
 import { ContractTypeSelect } from "./ContractTypeSelect";
 import { SenioritySelect } from "./SenioritySelect";
 import { WorkModelSelect } from "./WorkModelSelect";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getAPIClient } from "@/_services/apiClient";
 import { toast } from "react-toastify";
 import { useServerErrorsContext } from "@/_context/ServerErrors/ServerErrorsContext";
+import { useRouter } from "next/navigation";
+
 
 interface Props{
+    jobIdValue?: string | null;
     states: StateProps[];
     city: CityProps;
+    onSubmit: (data: VagaFormData)=> Promise<any>;
 }
 
-export const JobForm = ({ states, city }: Props)=>{
-    const [jobId, setJobId] = useState<string | null>(null);
+export const JobForm = ({ states, city, onSubmit, jobIdValue}: Props)=>{
+    
     const { handleSubmit } = useFormContext<VagaFormData>();
     const { handleServerError, clearAllErrors  } = useServerErrorsContext();
-    
-    const onSubmit = async (data: VagaFormData)=>{
-        const {
-            benefits,cityId,contractType,description,
-            expiresAt,isRemoteFriendly,requirements,salary,
-            stateId,tags,title,type,workload,workloadType,
-            location,seniority
-        } = data;
-        try{
-            const response = await getAPIClient().post("/vagas",{
-                benefits,cityId,contractType,description,
-                expiresAt,isRemoteFriendly,requirements,salary,
-                stateId,tags,title,type,workload,workloadType,
-                location,seniority
-            });
+    const router = useRouter();
 
+    const submit = async (data: VagaFormData, event?: React.BaseSyntheticEvent) => {
+        try {
+            
+           const submitter = (event?.nativeEvent as SubmitEvent)
+                ?.submitter as HTMLButtonElement;
+
+            const action = submitter?.value; // "draft" | "publish"
+
+            const payload = {
+                ...data,
+                isDraft: action !== "publish",
+            };
+
+            const response = await onSubmit(payload);
+            
             clearAllErrors();
-            if(response.data.success == true) toast.success(response.data.message)
-                
+            
+            router.push("/company/vagas");
 
-        }catch(error: any){
-            console.log(error)
+        } catch (error: any) {
             handleServerError(error);
         }
     }
-    
+
     return(
         <Flex w="full">
             
-                <form  onSubmit={handleSubmit(onSubmit)} style={{ width:"100%"}}>
+                <form  onSubmit={handleSubmit(submit)} style={{ width:"100%"}}>
 
                     <Flex gap="4" direction="column" w="full">
 
@@ -83,10 +87,15 @@ export const JobForm = ({ states, city }: Props)=>{
                     </Flex>
 
                     <Flex gap="2">
-                        <Button mt="4" type="submit">Salvar rascunho</Button>
-                        {jobId && 
-                            <Button mt="4" type="submit" bg="button.cta">Publicar vaga</Button>
-                        }
+                            <Button 
+                            name="action"
+                            value="draft"
+                            mt="4" type="submit">Salvar rascunho</Button>
+            
+                            <Button 
+                            name="action"
+                            value="publish"
+                            mt="4" type="submit" bg="button.cta">Publicar vaga</Button>
                     </Flex>
                 </form>
 
