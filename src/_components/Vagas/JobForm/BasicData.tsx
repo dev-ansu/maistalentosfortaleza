@@ -40,7 +40,7 @@ export const BasicData = ({states, city}: Props)=>{
             <Field.Root w="full" invalid={!!errors.description || !!serverErrors.description}>
                 <Field.Label>Sobre a vaga</Field.Label>
                 <Textarea
-                    maxLength={500}
+                    maxLength={maxLetters}
                     placeholder="Somos uma empresa há 10 anos no mercado..."
                     {...register("description", {
                         onChange: (e) => setCountLetters(e.target.value.length)

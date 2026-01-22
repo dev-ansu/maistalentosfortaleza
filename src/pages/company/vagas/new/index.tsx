@@ -9,6 +9,7 @@ import { createVagaValidation, VagaFormData } from "@/_validations/vagas";
 import { getAPIClient } from "@/_services/apiClient";
 import { CityProps, StateProps } from "@/_types/CandidateProfile";
 import { ServerErrorsProvider } from "@/_context/ServerErrors/ServerErrorsProvider";
+import { VagaFormD } from "../edit/[id]";
 
 
 
@@ -31,13 +32,13 @@ export default function({ states, city }: { states: StateProps[], city: CityProp
             benefits,cityId,contractType,description,
             expiresAt,isRemoteFriendly,requirements,salary,
             stateId,tags,title,type,workload,workloadType,
-            location,seniority
-        } = data;
+            location,seniority, isDraft
+        } = data as VagaFormD;
         return await getAPIClient().post("/vagas",{
             benefits,cityId,contractType,description,
             expiresAt,isRemoteFriendly,requirements,salary,
             stateId,tags,title,type,workload,workloadType,
-            location,seniority
+            location,seniority,isDraft
         });
     }
     

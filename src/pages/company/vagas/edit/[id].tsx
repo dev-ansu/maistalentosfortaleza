@@ -20,7 +20,7 @@ interface VagaProps extends Omit<VagaFormData, "contractType" | "seniority" | "c
     workloadType: string;
     type: string;
 }
-interface VagaFormD extends VagaFormData{
+export interface VagaFormD extends VagaFormData{
     isDraft: boolean;
 }
 
