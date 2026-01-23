@@ -20,6 +20,8 @@ export interface EnumsProps{
     ContractType:EnumProps[];
     WorkloadType: EnumProps[];
     Seniority: EnumProps[];
+    ReportStatus: EnumProps[];
+    ReportReason: EnumProps[];
 }
 
 export interface EnumProps{
@@ -32,7 +34,7 @@ export const EnumsContext = createContext({} as EnumsContextProps)
 
 export const EnumsProvider = ({children}: { children: ReactNode })=>{
     const [enums, setEnums] = useState<EnumsProps | null>();
-
+    console.log(enums);
     useEffect(()=>{
         const api = getAPIClient();
 
