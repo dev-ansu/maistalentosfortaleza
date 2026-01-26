@@ -1,6 +1,6 @@
 import { ServerErrors } from "@/_components/ui/ServerErrors";
-import { Flex, Field, Select, Portal, ListCollection, createListCollection } from "@chakra-ui/react";
-import { Controller, Control, FieldErrors, FieldValues, Path } from "react-hook-form";
+import { Flex, Field, Select, Portal, createListCollection, ListCollection } from "@chakra-ui/react";
+import { Controller, Control, FieldValues, Path } from "react-hook-form";
 
 interface SelectProps<T extends FieldValues>{
     control: Control<T>;
@@ -8,10 +8,13 @@ interface SelectProps<T extends FieldValues>{
     serverErrors: any;
     items: any; 
     name: Path<T>;
+    helperText?: string;
     title: string;
 }
 
-export function SelectComponent<T extends FieldValues>({name, control, error, serverErrors, items, title = "Selecione uma opção"}: SelectProps<T>){
+
+export function SelectComponent<T extends FieldValues>({name, control,helperText, error, serverErrors, items, title = "Selecione uma opção"}: SelectProps<T>){
+    
 
     const list = createListCollection({
         items: [
@@ -19,7 +22,7 @@ export function SelectComponent<T extends FieldValues>({name, control, error, se
             ...(items ? items : []),
         ],
     });
-
+    
     return(
         <Flex w="full">
             <Field.Root  invalid={!!error || !!serverErrors[name]}>
@@ -68,7 +71,7 @@ export function SelectComponent<T extends FieldValues>({name, control, error, se
                 />
                 <Field.ErrorText>{error}</Field.ErrorText>
                 <ServerErrors serverErrors={serverErrors} field={name}/>
-                <Field.HelperText>Opcional</Field.HelperText>
+                {helperText &&  <Field.HelperText>{helperText}</Field.HelperText>}
             </Field.Root>
         </Flex>
     )
