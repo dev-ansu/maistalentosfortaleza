@@ -18,9 +18,10 @@ import Link from "next/link";
 import { ApplyJob } from "./Apply/ApplyJob";
 import { ApplicationsProps } from "@/_types/Job";
 import { RemoveApplication } from "./Apply/RemoveApplication";
-import { FiLoader, FiX } from "react-icons/fi";
+import { FiFlag, FiLoader, FiX } from "react-icons/fi";
 import { useShowFeedback } from "@/_hooks/useShowFeedback";
 import { ApplicationStatusComponent } from "../ui/ApplicationStatus/ApplicationStatus";
+import { CgDanger } from "react-icons/cg";
 
 
 export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
@@ -36,6 +37,8 @@ export interface VagasProps extends Omit<VagaFormData, "workloadType" | "type">{
   isDraft: boolean;
   createdAt: string;
   totalApplications: number;
+  isFlagged: boolean;
+  isBlocked: boolean;
   _count: {
       applications: number;
   }
@@ -120,7 +123,9 @@ export function VagasTable({states}: { states: StateProps[]}) {
     <Flex className="p-6" direction="column" gap="4">
       {ShowFeedbackDialog}
       <Text fontSize="2xl" fontWeight="semibold">Vagas abertas</Text>
-
+      <Flex alignItems="center" gap="1">
+        <CgDanger color="orange" size="18px" /> - <strong>Atenção:</strong> Esta vaga recebeu múltiplas denúncias da comunidade e está sob análise da moderação. Recomendamos cautela ao compartilhar informações pessoais.
+      </Flex>
       <DataTable
         resetFilters={resetAllFilters}
         filters={
@@ -128,7 +133,6 @@ export function VagasTable({states}: { states: StateProps[]}) {
               <Text>Onde?</Text>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Flex gap="2">
-
                     <StateItems states={states} />
                     <CitiesItems />
                   </Flex>
@@ -143,7 +147,10 @@ export function VagasTable({states}: { states: StateProps[]}) {
               <Flex key={c.id} direction="column" gap="2">
                   <Link href={`/company/vagas/${c.id}`}>
                     <Flex gap="1.5" direction="column">
-                      <Text fontSize="2xl" fontWeight="bold">{c.title}</Text>
+                      <Text fontSize="2xl" fontWeight="bold" display="flex" alignItems="center" gap="1.5">
+                        {c.isFlagged && <CgDanger color="orange" title="Atenção: Esta vaga recebeu múltiplas denúncias da comunidade e está sob análise da moderação. Recomendamos cautela ao compartilhar informações pessoais." size="18px" />}   
+                        {c.title}
+                      </Text>
                       <Text color="gray.300" display="flex" gap="1" alignItems="center">
                         <FaCheckCircle /> {c.company.name}
                       </Text>
@@ -155,6 +162,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
                       {c.applications[0]?.appliedAt &&
                         <Text fontSize="sm" color="gray.400">Candidatou-se em: {dateFormat(c.applications[0].appliedAt)}</Text>
                       }
+                      
                       {c.applications[0]?.updatedAt&&
                         <Text fontSize="sm" color="gray.400">Última atualização: {dateFormat(c.applications[0].updatedAt)}</Text>
                       }

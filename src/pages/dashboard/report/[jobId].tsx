@@ -10,6 +10,7 @@ import { canSSRAuth } from "@/_utils/canSSRAuth";
 import { Button, Field, Flex, Text, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import z from "zod";
@@ -31,7 +32,7 @@ export default function({ jobId }: { jobId: string }){
     const {handleServerError, serverErrors} = useServerErrors();
     const { enums } = useEnumsContext();
     const ReportReason = enums?.ReportReason;
-    
+    const router = useRouter();
     const onSubmit = async (data: ReportFormData) =>{
 
         try{
@@ -39,7 +40,9 @@ export default function({ jobId }: { jobId: string }){
                 jobId: jobId,
                 ...data
             });
-            toast.success(response.data.data.message);
+            
+            toast.success(response.data.message);
+            router.push("/candidate/vagas");
         }catch(error: any){
             handleServerError(error);
         }
