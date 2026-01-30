@@ -123,7 +123,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
     <Flex className="p-6" direction="column" gap="4">
       {ShowFeedbackDialog}
       <Text fontSize="2xl" fontWeight="semibold">Vagas abertas</Text>
-      <Flex alignItems="center" gap="1">
+      <Flex fontSize={{ md:"14px" }} alignItems="center" gap="1">
         <CgDanger color="orange" size="18px" /> - <strong>Atenção:</strong> Esta vaga recebeu múltiplas denúncias da comunidade e está sob análise da moderação. Recomendamos cautela ao compartilhar informações pessoais.
       </Flex>
       <DataTable
@@ -147,7 +147,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
               <Flex key={c.id} direction="column" gap="2">
                   <Link href={`/company/vagas/${c.id}`}>
                     <Flex gap="1.5" direction="column">
-                      <Text fontSize="2xl" fontWeight="bold" display="flex" alignItems="center" gap="1.5">
+                      <Text  fontWeight="bold" display="flex" alignItems="center" gap="1.5">
                         {c.isFlagged && <CgDanger color="orange" title="Atenção: Esta vaga recebeu múltiplas denúncias da comunidade e está sob análise da moderação. Recomendamos cautela ao compartilhar informações pessoais." size="18px" />}   
                         {c.title}
                       </Text>
