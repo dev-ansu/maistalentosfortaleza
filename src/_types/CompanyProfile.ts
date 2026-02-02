@@ -1,5 +1,5 @@
 import { CompanyProfileFormData } from "@/_validations/company_profile";
-import { CityProps, CompanyInterestList, StateProps } from "./CandidateProfile";
+import { CityProps, CompanyInterestList, StateProps, UserProps } from "./CandidateProfile";
 
 export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | "cityId" | "companyInterest" | "companySize">{
     id: string;
@@ -14,6 +14,7 @@ export interface CompanyProfile extends Omit<CompanyProfileFormData,"stateId" | 
     companyInterest: CompanyInterestList[];
     createdAt: string;
     verificationStatus: VerificationStatus;
+    user: UserProps;
 }
 
 export type VerificationStatus = "pending" | "approved" | "rejected" | "under_review"

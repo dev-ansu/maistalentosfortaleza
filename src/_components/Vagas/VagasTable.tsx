@@ -185,7 +185,7 @@ export function VagasTable({states}: { states: StateProps[]}) {
                         <RemoveApplication jobId={c.id} load={load} />
                       }
                 
-                      <Link style={{ color:"darkgray", fontSize:"12px" }} href={`/dashboard/report/${c.id}`}>
+                      <Link style={{ color:"darkgray", fontSize:"12px" }} href={`/candidate/reports/report/${c.id}`}>
                         Denunciar vaga
                       </Link>
 

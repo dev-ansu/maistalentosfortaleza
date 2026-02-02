@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { publishVaga } from "@/services/vagas/publishVaga";
+import { publishVaga } from "@/_services/vagas/publishVaga";
 import { useConfirm } from "./useConfirm";
 import { useServerErrors } from "./useServerErrors";
 
