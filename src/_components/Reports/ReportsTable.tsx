@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { CompanyProfile } from "@/_types/CompanyProfile";
 import { ReportStatusComponent, ReportStatusType } from "./ReportStatusComponent";
 import { ReportReasonComponent, ReportReasonType } from "./ReportReasonComponent";
+import { useConfirm } from "@/_hooks/useConfirm";
+import { RemoveReport } from "./RemoveReport";
 
 interface Reports {
   id: string;
@@ -79,7 +81,7 @@ export function ReportsTable() {
             key: "job",
             label: "Denúncias",
             render: (report) => (
-              <Flex direction="column" gap="3.5">
+              <Flex alignItems="flex-start" direction="column" gap="3.5">
                 <Text fontSize="2xl" fontWeight="bold">
                   {report.job.company.name}
                 </Text>
@@ -112,14 +114,7 @@ export function ReportsTable() {
                   }
                   <Text></Text>
                 </Flex>
-
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Button
-                    background="red.500"
-                    color="white"
-                    size="xs"
-                  >Remover denúncia</Button>
-                </Flex>
+                <RemoveReport  reportId={report.id} load={load} />
               </Flex>
             ),
           },
