@@ -44,7 +44,7 @@ export const RemoveReport = ({ reportId, load }: { reportId: string, load?: () =
     return (
         <>
             {ConfirmationDialog}
-            <Button loading={loading} color="red.500" onClick={() => handle(reportId)} outline="none" bg="transparent" size="xs">Remover candidatura</Button>
+            <Button loading={loading} color="red.500" onClick={() => handle(reportId)} outline="none" bg="transparent" size="xs">Remover denúncia</Button>
         </>
 
     )
