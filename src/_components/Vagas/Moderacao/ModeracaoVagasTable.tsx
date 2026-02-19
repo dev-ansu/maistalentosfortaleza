@@ -2,12 +2,13 @@ import { DataTable } from "@/_components/DataTable";
 import { buildQueryParams, useTableFilters } from "@/_hooks/useTableFilters";
 import { getAPIClient } from "@/_services/apiClient";
 import { dateFormat } from "@/_utils/dateFormat";
-import {  Flex, Text } from "@chakra-ui/react";
+import {  Button, Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CompanyProfile } from "@/_types/CompanyProfile";
 import { ReportStatusComponent, ReportStatusType } from "../../Reports/ReportStatusComponent";
 import { ReportReasonComponent, ReportReasonType } from "../../Reports/ReportReasonComponent";
+import { useShowFeedback } from "@/_hooks/useShowFeedback";
 
 
 interface Reports {
@@ -36,6 +37,7 @@ export function ModeracaoVagasTable() {
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { handleOpen, ShowFeedbackDialog } = useShowFeedback();
 
   const { filters, updateFilter } = useTableFilters({
     initialFilters: {
@@ -52,7 +54,7 @@ export function ModeracaoVagasTable() {
     });
 
     const res = await getAPIClient().get(
-      `/candidate/reports?${queryString}`
+      `/admin/vagas/moderacao?${queryString}`
     );
 
     setReports(res.data.data.data);
@@ -73,6 +75,9 @@ export function ModeracaoVagasTable() {
 
   return (
     <Flex direction="column" gap="4">
+      
+      {ShowFeedbackDialog}
+
       <Text fontSize="2xl" fontWeight="semibold">Moderação de vagas</Text>
       
       <DataTable
@@ -112,7 +117,10 @@ export function ModeracaoVagasTable() {
                   {report.reviewedAt && 
                     <Text color="gray.500" fontSize="xs">Revisado em: {dateFormat(report.reviewedAt)}</Text>
                   }
-                  <Text></Text>
+                  <Button 
+                    size="xs"
+                    variant="ghost"
+                  onClick={ () => handleOpen(report.description, { title: "Descrição da denúncia"}) }>Ver descrição</Button>
                 </Flex>
               </Flex>
             ),

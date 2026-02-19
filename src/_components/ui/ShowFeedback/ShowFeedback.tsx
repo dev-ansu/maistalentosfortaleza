@@ -1,7 +1,7 @@
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react"
 
 
-export const ShowFeedback = ({open, setOpen, feedback}:{feedback: string, open: boolean, setOpen:(e: boolean) => void; }) => {
+export const ShowFeedback = ({title, open, setOpen, feedback}:{title?: string, feedback: string, open: boolean, setOpen:(e: boolean) => void; }) => {
   
   return (
     <Dialog.Root size="lg" lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
@@ -10,7 +10,7 @@ export const ShowFeedback = ({open, setOpen, feedback}:{feedback: string, open: 
         <Dialog.Positioner>
           <Dialog.Content>
             <Dialog.Header>
-              <Dialog.Title>Feedback da candidatura</Dialog.Title>
+              <Dialog.Title>{title ?? "Feedback da candidatura"}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
                 {feedback}
