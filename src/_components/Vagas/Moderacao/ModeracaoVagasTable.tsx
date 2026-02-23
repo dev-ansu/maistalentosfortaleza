@@ -9,6 +9,10 @@ import { CompanyProfile } from "@/_types/CompanyProfile";
 import { ReportStatusComponent, ReportStatusType } from "../../Reports/ReportStatusComponent";
 import { ReportReasonComponent, ReportReasonType } from "../../Reports/ReportReasonComponent";
 import { useShowFeedback } from "@/_hooks/useShowFeedback";
+import { useConfirm } from "@/_hooks/useConfirm";
+import { toast } from "react-toastify";
+import { AxiosResponse } from "axios";
+import { useServerErrors } from "@/_hooks/useServerErrors";
 
 
 interface Reports {
@@ -38,7 +42,9 @@ export function ModeracaoVagasTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const { handleOpen, ShowFeedbackDialog } = useShowFeedback();
-
+  const {ConfirmationDialog, confirm} = useConfirm();
+  const { handleServerError } = useServerErrors();
+  
   const { filters, updateFilter } = useTableFilters({
     initialFilters: {
       page: 1,
@@ -73,9 +79,66 @@ export function ModeracaoVagasTable() {
     updateFilter("page", page);
   };
 
+  const resolved = (id?: string)=>{
+    return getAPIClient().patch(`/admin/vagas/moderacao/resolved/${id}`);
+  }
+
+  const rejected = (id?: string)=>{
+    return getAPIClient().patch(`/admin/vagas/moderacao/rejected/${id}`);
+  }
+  const underReview = (id?: string)=>{
+    return getAPIClient().patch(`/admin/vagas/moderacao/under-review/${id}`);
+  }
+
+  const handle = async(fn: (id?: string) => Promise<AxiosResponse<any, any, {}>>, id: string)=>{
+      type TranslateFnName = "rejected" | "resolved" | "underReview";
+
+      const texts = {
+        rejected: {
+          long: "marcar como rejeitada",
+          short: "Rejeitada",
+        },
+        resolved:{
+          long: "marcar como resolvida",
+          short: "Resolvida"
+        },
+        underReview:{
+          long: "revisar essa decisão",
+          short: "Revisar"
+        }
+      }
+
+      const accepted = await confirm({
+          title: "Alterar status",
+          message: `Tem certeza que deseja ${texts[fn.name as TranslateFnName].long}?`,
+          confirmText: `${texts[fn.name as TranslateFnName].short}`,
+          cancelText: "Cancelar",
+      });
+
+      if (!accepted) return;
+
+      setLoading(true);
+      
+      try{
+          
+          const response = await fn(id);
+
+          toast.success(response.data.message);
+          
+          if(load){
+              await load();
+          }
+
+      }catch(error){
+          handleServerError(error);
+      }finally{
+          setLoading(false);
+      }
+  }
+
   return (
     <Flex direction="column" gap="4">
-      
+      {ConfirmationDialog}
       {ShowFeedbackDialog}
 
       <Text fontSize="2xl" fontWeight="semibold">Moderação de vagas</Text>
@@ -87,6 +150,19 @@ export function ModeracaoVagasTable() {
             label: "Denúncias",
             render: (report) => (
               <Flex alignItems="flex-start" direction="column" gap="3.5">
+
+                {(report.status == "pending" || report.status == "under_review") &&
+                  <Flex gap="2">
+                    <Button onClick={ async ()=>  await handle(resolved, report.id)} size="xs" bg="green.500">Resolvida</Button>
+                    <Button onClick={ async ()=>  await handle(rejected, report.id)} size="xs" bg="red.500" color="gray.300">Rejeitada</Button>
+                  </Flex>
+                }
+                {(report.status == "rejected" || report.status == "resolved") &&
+                  <Flex gap="2">
+                    <Button onClick={ async ()=>  await handle(underReview, report.id)} size="xs" bg="blue.500">Revisar decisão</Button>
+                  </Flex>
+                }
+
                 <Text fontSize="2xl" fontWeight="bold">
                   {report.job.company.name}
                 </Text>
